@@ -1,0 +1,62 @@
+<div class="modal fade" id="updateMaxFlowRateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateModalLabel">Update Maximum Flow Rate</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" action="{% url 'update-max-flow-rate' row_names=0 %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="flowRateSource" class="form-label">Source Name</label>
+              <input class="form-control" id="flowRateSource" name="flow_rate_source" value="{{ source.source_name }}" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="flowRateInput" class="form-label">Max Flow Rate</label>
+              <input type="number" class="form-control" id="flowRateInput" name="flow_rate" step="0.01" required>
+            </div>
+            <div class="mb-3">
+                <label for="unitInput" class="form-label">Unit</label>
+                <select class="form-control" id="unitInput" name="unit" required>
+                    <option value="" disabled>Select the units</option>
+                    <option value="mgd">MGD (Million Gallons per Day)</option>
+                    <option value="gpm">GPM (Gallons per Minute)</option>
+                    <option value="gpy">GPY (Gallons per Year)</option>
+                    <option value="afpy">AFPY (Acre-feet per Year)</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% block extra_scripts %}
+<script>
+    // Modal logic to populate fields before showing the modal
+    var updateModal = document.getElementById('updateMaxFlowRateModal');
+    updateModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var sourceName = button.getAttribute('data-source-name');
+        var rowNames = button.getAttribute('data-row-names');
+        var flowRate = button.getAttribute('data-flow-rate');
+        var unit = button.getAttribute('data-unit');
+  
+        var modalTitle = updateModal.querySelector('.modal-title');
+        modalTitle.textContent = 'Update Max Flow Rate';
+  
+        var flowRateInput = updateModal.querySelector('#flowRateInput');
+        flowRateInput.value = flowRate;
+  
+        var unitInput = updateModal.querySelector('#unitInput');
+        unitInput.value = unit;
+  
+        // Update form action with row_names
+        var form = updateModal.querySelector('form');
+        form.action = "{% url 'update-max-flow-rate' row_names=0 %}".replace('0', rowNames);
+    });
+</script>
+{% endblock %}

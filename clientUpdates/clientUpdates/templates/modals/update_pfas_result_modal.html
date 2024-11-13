@@ -1,0 +1,194 @@
+<div class="modal fade" id="updatePfasResultModal" tabindex="-1" aria-labelledby="updatePfasResultModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-lg"> <!-- Make the modal wider with modal-lg -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updatePfasResultModalLabel">Update PFAS Result</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="updatePfasResultForm" method="post" action="">
+          {% csrf_token %}
+          <input type="hidden" name="pwsid" value="{{ source.pwsid }}">
+
+          <!-- Source Name -->
+          <div class="mb-3">
+            <label for="pfasResultSource" class="form-label">Source Name</label>
+            <input class="form-control" id="pfasResultSource" name="source_name" value="{{ source.source_name }}" readonly required>
+          </div>
+
+          <!-- Analyte Dropdown -->
+          <div class="mb-3">
+            <label for="pfasResultAnalyteInput" class="form-label">Analyte</label>
+            <select class="form-control" id="pfasResultAnalyteInput" name="analyte" required>
+              <!-- Populated by JavaScript -->
+            </select>
+            <div class="invalid-feedback" id="analyte-error"></div>
+          </div>
+
+          <!-- Result and Unit in one row -->
+          <div class="row">
+            <div class="col-md-6 mb-3" id="result-field">
+              <label for="pfasResultInput" class="form-label">Result</label>
+              <input type="number" class="form-control" id="pfasResultInput" name="result" min="0" step="0.01" value="{{ form.result.value }}" required>
+              <div class="invalid-feedback" id="result-error"></div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="pfasUnitInput" class="form-label">Unit</label>
+              <select class="form-control" id="pfasUnitInput" name="unit" required>
+                <option value="" disabled {% if not form.unit.value %} selected {% endif %}>Select the units</option>
+                <option value="ppt" {% if form.unit.value == "ppt" %} selected {% endif %}>ng/L (ppt)</option>
+                <option value="ppb" {% if form.unit.value == "ppb" %} selected {% endif %}>ug/L (ppb)</option>
+                <option value="ppm" {% if form.unit.value == "ppm" %} selected {% endif %}>mg/L (ppm)</option>
+              </select>
+              <div class="invalid-feedback" id="unit-error"></div>
+            </div>
+          </div>
+
+          <!-- Sample Date and Analysis Date in one row -->
+          <div class="row">
+            <div class="col-md-6 mb-3" id="sampling-date-field">
+              <label for="pfasSamplingDateInput" class="form-label">Sample Date</label>
+              <input type="date" class="form-control" id="pfasSamplingDateInput" name="sampling_date" value="{{ form.sampling_date.value }}" required>
+              <div class="invalid-feedback" id="sampling-date-error"></div>
+            </div>
+            <div class="col-md-6 mb-3" id="analysis-date-field">
+              <label for="pfasAnalysisDateInput" class="form-label">Analysis Date</label>
+              <input type="date" class="form-control" id="pfasAnalysisDateInput" name="analysis_date" value="{{ form.analysis_date.value }}" required>
+              <div class="invalid-feedback" id="analysis-date-error"></div>
+            </div>
+          </div>
+
+          <!-- Lab Sample ID -->
+          <div class="mb-3">
+            <label for="pfasLabSampleID" class="form-label">Lab Sample ID</label>
+            <input type="text" class="form-control" id="pfasLabSampleID" name="lab_sample_id" value="{{ form.lab_sample_id.value }}" required>
+            <div class="invalid-feedback" id="lab-sample-id-error"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="submit-button">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById('updatePfasResultForm');
+    const resultInput = document.getElementById('pfasResultInput');
+    const unitInput = document.getElementById('pfasUnitInput');
+    const samplingDateInput = document.getElementById('pfasSamplingDateInput');
+    const analysisDateInput = document.getElementById('pfasAnalysisDateInput');
+    const submitButton = document.getElementById('submit-button');
+    let currentResult = 0;
+
+    form.onsubmit = function (event) {
+      let valid = true;
+
+      // Clear previous errors
+      document.querySelectorAll('.invalid-feedback').forEach(el => el.innerHTML = '');
+      document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
+
+      // Validate result
+      const newResult = parseFloat(resultInput.value);
+      const selectedUnit = unitInput.value;
+
+      // Convert newResult to ppt for comparison
+      let newResultInPpt = newResult;
+      if (selectedUnit === 'ppb') {
+        newResultInPpt = newResult * 1000; // Convert ppb to ppt
+      } else if (selectedUnit === 'ppm') {
+        newResultInPpt = newResult * 1000000; // Convert ppm to ppt
+      }
+
+      if (newResultInPpt <= currentResult) {
+        valid = false;
+        resultInput.classList.add('is-invalid');
+        document.getElementById('result-error').innerHTML = `The new result must be higher than ${currentResult} ppt`;
+      }
+
+      // Validate sampling date
+      const samplingDate = new Date(samplingDateInput.value);
+      const today = new Date();
+      if (samplingDate > today) {
+        valid = false;
+        samplingDateInput.classList.add('is-invalid');
+        document.getElementById('sampling-date-error').innerHTML = "Sampling date cannot be in the future.";
+      }
+
+      // Validate analysis date
+      const analysisDate = new Date(analysisDateInput.value);
+      if (analysisDate < samplingDate) {
+        valid = false;
+        analysisDateInput.classList.add('is-invalid');
+        document.getElementById('analysis-date-error').innerHTML = "Analysis date cannot be before the sampling date.";
+      }
+      if (analysisDate > today) {
+        valid = false;
+        analysisDateInput.classList.add('is-invalid');
+        document.getElementById('analysis-date-error').innerHTML = "Analysis date cannot be in the future.";
+      }
+
+      // Prevent form submission if invalid
+      if (!valid) {
+        event.preventDefault();
+      }
+    };
+
+    var updatePfasResultModal = document.getElementById('updatePfasResultModal');
+    updatePfasResultModal.addEventListener('show.bs.modal', function (event) {
+      // Button that triggered the modal
+      var button = event.relatedTarget;
+
+      // Extract data from data-* attributes
+      var rowNames = button.getAttribute('data-row-names');
+      var analyte = button.getAttribute('data-analyte');
+      var pfasResult = parseFloat(button.getAttribute('data-pfas-result') || "0");  // Extract the result correctly
+      currentResult = pfasResult;  // Set the current result to the variable used in validation (don't prepopulate the input)
+      var unit = button.getAttribute('data-unit');
+
+      // Set the form action dynamically
+      var form = updatePfasResultModal.querySelector('form');
+      var newActionUrl = `/update-pfas-result/${rowNames}/`;
+      form.setAttribute('action', newActionUrl);
+
+      // Set the selected unit in the unit dropdown
+      unitInput.value = unit;
+
+      // Get the select element for the analyte input
+      var analyteSelect = updatePfasResultModal.querySelector('#pfasResultAnalyteInput');
+
+      // Clear existing options in the dropdown
+      analyteSelect.innerHTML = '';
+
+      // List of all analytes excluding PFOA and PFOS
+      var allAnalytes = ['PFBA', 'PFBS', 'PFHxS', 'PFNA', 'PFDA'];
+
+      if (analyte === 'PFOA' || analyte === 'PFOS') {
+        analyteSelect.disabled = true;
+        var option = document.createElement('option');
+        option.value = analyte;
+        option.textContent = analyte;
+        analyteSelect.appendChild(option);
+      } else {
+        analyteSelect.disabled = false;
+        var defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Select analyte';
+        defaultOption.disabled = true;
+        defaultOption.selected = true;
+        analyteSelect.appendChild(defaultOption);
+        allAnalytes.forEach(function(chem) {
+          var option = document.createElement('option');
+          option.value = chem;
+          option.textContent = chem;
+          if (chem === analyte) {
+            option.selected = true;
+          }
+          analyteSelect.appendChild(option);
+        });
+      }
+    });
+  });
+</script>

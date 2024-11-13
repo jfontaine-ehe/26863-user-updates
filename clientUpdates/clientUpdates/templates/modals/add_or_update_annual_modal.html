@@ -1,0 +1,42 @@
+<div class="modal fade" id="addOrUpdateAnnualModal" tabindex="-1" aria-labelledby="addOrUpdateModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addOrUpdateModalLabel">Update Annual Production for 2023</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="AnnualProductionForm" method="post" action="{% url 'add-update-annual-production' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="pwsid" value="{{ source.pwsid }}">
+                    <!-- <input type="hidden" name="source_name" value="{{ source.source_name }}"> -->
+                    <!-- <input type="hidden" name="year" value="2023"> -->
+                    <div class="mb-3">
+                        <label for="flowRateSource" class="form-label">Source Name</label>
+                        <input class="form-control" id="flowRateSource" name="source_name" value="{{ source.source_name }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="flowRateYear" class="form-label">Year</label>
+                        <input class="form-control" name="year" value="2023" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="flowRateInput" class="form-label">Flow Rate</label>
+                        <input type="number" class="form-control" id="flowRateInput" name="flow_rate" step="0.01" value="{{ annual_2023.flow_rate }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="unitInput" class="form-label">Unit</label>
+                        <select class="form-control" id="unitInput" name="unit" required>
+                            <option value="" disabled {% if not annual_2023.unit %} selected {% endif %}>Select the units</option>
+                            <option value="mgd" {% if annual_2023.unit == "mgd" %} selected {% endif %}>MGD (Million Gallons per Day)</option>
+                            <option value="gpm" {% if annual_2023.unit == "gpm" %} selected {% endif %}>GPM (Gallons per Minute)</option>
+                            <option value="gpy" {% if annual_2023.unit == "gpy" %} selected {% endif %}>GPY (Gallons per Year)</option>
+                            <option value="afpy" {% if annual_2023.unit == "afpy" %} selected {% endif %}>AFPY (Acre-feet per Year)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-outline-success">Save changes</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
