@@ -119,7 +119,7 @@ class DjangoSession(models.Model):
 
 ## PWS level tables ##
 class Pws(models.Model):
-    row_names = models.BigAutoField(db_column='row_names', primary_key=True)
+    row_names = models.BigAutoField(primary_key=True)
     pwsid = models.CharField(max_length=9, unique=True, blank=False, null=False)
     gfe_3m = models.FloatField(db_column='gfe_3M', blank=True, null=True)  # Field name made lowercase.
     gfe_dupont = models.FloatField(db_column='gfe_Dupont', blank=True, null=True)  # Field name made lowercase.
@@ -202,7 +202,7 @@ class Pws(models.Model):
 
 
 class PwsAddress(models.Model):
-    row_names = models.BigAutoField(db_column='row_names', primary_key=True)
+    row_names = models.BigAutoField(primary_key=True)
     pwsid = models.CharField(max_length=9, unique=False, blank=False, null=False)
     address = models.TextField(blank=True, null=True)
     city = models.TextField(blank=True, null=True)
@@ -216,7 +216,7 @@ class PwsAddress(models.Model):
 
 
 class PwsContact(models.Model):
-    row_names = models.BigAutoField(db_column='row_names', primary_key=True)
+    row_names = models.BigAutoField(primary_key=True)
     pwsid = models.CharField(max_length=9, unique=False, blank=False, null=False)
     contact_name = models.TextField(blank=True, null=True)
     contact_title = models.TextField(blank=True, null=True)
@@ -232,7 +232,8 @@ class PwsContact(models.Model):
 
 ## Source level tables ##
 class Source(models.Model):
-    row_names = models.BigAutoField(db_column='row_names', primary_key=True)
+    row_names = models.BigAutoField(primary_key=True)
+    water_source_id = models.BigIntegerField(blank=True, null=True)
     submit_date = models.DateTimeField(blank=True, null=True)
     pwsid = models.CharField(max_length=9, unique=False, blank=False, null=False)
     form_id = models.TextField(blank=True, null=True)
@@ -279,6 +280,7 @@ class Source(models.Model):
     gfe_basf = models.FloatField(db_column='gfe_BASF', blank=True, null=True)  # Field name made lowercase.
     gfe_tyco = models.FloatField(blank=True, null=True)
     gfe_total_basf_tyco = models.FloatField(blank=True, null=True)
+    data_origin = models.TextField(default="EHE portal")
 
     class Meta:
         managed = True
@@ -286,7 +288,8 @@ class Source(models.Model):
 
 
 class FlowRate(models.Model):
-    row_names = models.BigAutoField(db_column='row_names', primary_key=True)
+    row_names = models.BigAutoField(primary_key=True)
+    water_source_id = models.BigIntegerField(blank=True, null=True)
     submit_date = models.DateTimeField(blank=True, null=True)
     pwsid = models.CharField(max_length=9, unique=False, blank=False, null=False)
     sample_id = models.TextField(blank=True, null=True)
@@ -308,6 +311,8 @@ class FlowRate(models.Model):
     dms_initials = models.TextField(blank=True, null=True)
     rm_row = models.FloatField(blank=True, null=True)
     qc_flag = models.TextField(blank=True, null=True)
+    updated_by_water_provider = models.BooleanField(default=False)
+    data_origin = models.TextField(default="EHE portal")
 
     class Meta:
         managed = True
@@ -315,6 +320,7 @@ class FlowRate(models.Model):
 
 class PfasResult(models.Model):
     row_names = models.BigAutoField(primary_key=True)
+    water_source_id = models.BigIntegerField(blank=True, null=True)
     submit_date = models.DateTimeField(blank=True, null=True)
     pwsid = models.CharField(max_length=9, unique=False, blank=False, null=False)
     sample_id = models.TextField(blank=True, null=True)
@@ -340,6 +346,8 @@ class PfasResult(models.Model):
     all_nds = models.BooleanField(blank=True, null=True)
     source_name = models.TextField(blank=True, null=True)
     sample_id_from = models.TextField(blank=True, null=True)
+    updated_by_water_provider = models.BooleanField(default=False)
+    data_origin = models.TextField(default="EHE portal")
 
     class Meta:
         managed = True
@@ -348,7 +356,7 @@ class PfasResult(models.Model):
 
 ## Filenames ##
 class ProductionDataFilenames(models.Model):
-    row_names = models.BigAutoField(db_column='row_names', primary_key=True)
+    row_names = models.BigAutoField(primary_key=True)
     firm = models.TextField(blank=True, null=True)
     file_path = models.TextField(blank=True, null=True)
     client_group = models.TextField(blank=True, null=True)
@@ -362,9 +370,8 @@ class ProductionDataFilenames(models.Model):
         managed = True
         db_table = 'production_data_filenames'
 
-
 class EurofinsReportsFilenames(models.Model):
-    row_names = models.BigAutoField(db_column='row_names', primary_key=True)
+    row_names = models.BigAutoField(primary_key=True)
     excel_name = models.TextField(blank=True, null=True)
     eurofins_id = models.TextField(blank=True, null=True)
     pdf_name = models.TextField(blank=True, null=True)
@@ -378,7 +385,7 @@ class EurofinsReportsFilenames(models.Model):
         db_table = 'eurofins_reports_filenames'
 
 class PfasReportsFilenames(models.Model):
-    row_names = models.BigAutoField(db_column='row_names', primary_key=True)
+    row_names = models.BigAutoField(primary_key=True)
     firm = models.TextField(blank=True, null=True)
     file_path = models.TextField(blank=True, null=True)
     client_group = models.TextField(blank=True, null=True)
@@ -392,3 +399,194 @@ class PfasReportsFilenames(models.Model):
         managed = True
         db_table = 'pfas_reports_filenames'
 
+class DropboxLinks(models.Model):
+    row_names = models.BigAutoField(primary_key=True)  
+    pwsid = models.TextField(blank=True, null=True)
+    url_file_request = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'dropbox_links'
+
+
+
+## Claims portal tables ##
+class ClaimDocumentInfo(models.Model):
+    row_names = models.BigAutoField(primary_key=True)  
+    pwsid = models.TextField(blank=True, null=True)
+    water_system_id = models.FloatField(blank=True, null=True)
+    water_system_name = models.TextField(blank=True, null=True)
+    object_type_attached_to = models.TextField(blank=True, null=True)
+    source_name = models.TextField(blank=True, null=True)
+    law_firm_3rd_party_representative = models.TextField(blank=True, null=True)
+    test_result_date = models.DateField(blank=True, null=True)
+    entity_document_file_id = models.FloatField(blank=True, null=True)
+    entity_document_id = models.FloatField(blank=True, null=True)
+    doc_reference = models.TextField(blank=True, null=True)
+    filename = models.TextField(blank=True, null=True)
+    file_size = models.TextField(blank=True, null=True)
+    document_purpose = models.TextField(blank=True, null=True)
+    date_uploaded = models.DateField(blank=True, null=True)
+    content_type = models.TextField(blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, null=True)
+    data_origin = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'claim_document_info'
+
+
+class ClaimFlowRate(models.Model):
+    row_names = models.BigAutoField(primary_key=True)  
+    claim_number = models.FloatField(blank=True, null=True)
+    pwsid = models.TextField(blank=True, null=True)
+    source_name = models.TextField(blank=True, null=True)
+    water_source_id = models.FloatField(blank=True, null=True)
+    year = models.FloatField(blank=True, null=True)
+    flow_rate_reduced = models.BooleanField(blank=True, null=True)
+    did_not_exist = models.BooleanField(blank=True, null=True)
+    flow_rate = models.FloatField(blank=True, null=True)
+    unit = models.TextField(blank=True, null=True)
+    flow_rate_gpm = models.FloatField(blank=True, null=True)
+    filename = models.TextField(blank=True, null=True)
+    source_variable = models.TextField(blank=True, null=True)
+    max_flow_rate_explanation = models.TextField(blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, null=True)
+    data_origin = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'claim_flow_rate'
+
+
+class ClaimPfasResult(models.Model):
+    row_names = models.BigAutoField(primary_key=True)  
+    pwsid = models.TextField(blank=True, null=True)
+    source_name = models.TextField(blank=True, null=True)
+    claim_number = models.FloatField(blank=True, null=True)
+    water_source_id = models.TextField(blank=True, null=True)
+    analyte = models.TextField(blank=True, null=True)
+    result_ppt = models.FloatField(blank=True, null=True)
+    lab_sample_id = models.TextField(blank=True, null=True)
+    doc_reference = models.TextField(blank=True, null=True)
+    filename = models.TextField(blank=True, null=True)
+    result = models.TextField(blank=True, null=True)
+    unit = models.TextField(blank=True, null=True)
+    sampling_date = models.DateField(blank=True, null=True)
+    company_of_person_who_took_sample = models.TextField(blank=True, null=True)
+    analysis_date = models.DateField(blank=True, null=True)
+    analysis_method = models.TextField(blank=True, null=True)
+    lab = models.TextField(blank=True, null=True)
+    lab_street_address = models.TextField(blank=True, null=True)
+    lab_city = models.TextField(blank=True, null=True)
+    lab_state = models.TextField(blank=True, null=True)
+    lab_zip = models.TextField(blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, null=True)
+    data_origin = models.TextField(blank=True, null=True)
+    all_nds = models.BooleanField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'claim_pfas_result'
+
+
+class ClaimPws(models.Model):
+    row_names = models.BigAutoField(primary_key=True)  
+    claim_number = models.FloatField(blank=True, null=True)
+    pwsid = models.TextField(blank=True, null=True)
+    pws_name = models.TextField(blank=True, null=True)
+    law_firm_3rd_party_representative = models.TextField(blank=True, null=True)
+    certification_cst_3m = models.TextField(blank=True, null=True)
+    certification_cst_dupont = models.TextField(blank=True, null=True)
+    certification_hst_3m = models.TextField(blank=True, null=True)
+    certification_hst_dupont = models.TextField(blank=True, null=True)
+    postmark_date_3m = models.FloatField(blank=True, null=True)
+    postmark_date_dupont = models.FloatField(blank=True, null=True)
+    not_participating_3m = models.TextField(blank=True, null=True)
+    not_participating_dupont = models.FloatField(blank=True, null=True)
+    claim_status = models.TextField(blank=True, null=True)
+    cc_a_is_3m = models.BooleanField(blank=True, null=True)
+    cc_b_active_and_needs_testing_3m = models.BooleanField(blank=True, null=True)
+    cc_c_is_dupont = models.BooleanField(blank=True, null=True)
+    cc_d_active_and_needs_testing_dupont = models.BooleanField(blank=True, null=True)
+    address_1 = models.TextField(blank=True, null=True)
+    address_2 = models.TextField(blank=True, null=True)
+    city = models.TextField(blank=True, null=True)
+    state = models.TextField(blank=True, null=True)
+    zip = models.TextField(blank=True, null=True)
+    entity_lookup = models.TextField(blank=True, null=True)
+    pws_w9_filename = models.TextField(blank=True, null=True)
+    has_lawsuit = models.BooleanField(blank=True, null=True)
+    has_lawsuit_pending_mdl = models.BooleanField(blank=True, null=True)
+    lawsuit_court_name = models.TextField(blank=True, null=True)
+    lawsuit_case_number = models.TextField(blank=True, null=True)
+    litigation_filing_date = models.TextField(blank=True, null=True)
+    complaint_petition_filename = models.TextField(blank=True, null=True)
+    has_attorney_representation = models.BooleanField(blank=True, null=True)
+    test_ucmr = models.BooleanField(blank=True, null=True)
+    test_state = models.BooleanField(blank=True, null=True)
+    conn15 = models.BooleanField(blank=True, null=True)
+    residents25 = models.BooleanField(blank=True, null=True)
+    fewer_than_3300_people = models.BooleanField(blank=True, null=True)
+    usa = models.BooleanField(blank=True, null=True)
+    ownedbygov = models.BooleanField(blank=True, null=True)
+    pws_sdwis_code = models.TextField(blank=True, null=True)
+    sdwis_sf_sue = models.BooleanField(blank=True, null=True)
+    sdwis_p_type = models.TextField(blank=True, null=True)
+    pws_facility_activity_code = models.TextField(blank=True, null=True)
+    sdwis_activity_code = models.TextField(blank=True, null=True)
+    total_ground_sources = models.TextField(blank=True, null=True)
+    total_ground_sources_tested_with_pfas = models.BooleanField(blank=True, null=True)
+    total_ground_sources_ucmr5_tested_with_pfas = models.BooleanField(blank=True, null=True)
+    total_ground_sources_tested_without_pfas = models.BooleanField(blank=True, null=True)
+    total_ground_sources_ucmr5_tested_without_pfas = models.BooleanField(blank=True, null=True)
+    total_sw_sources = models.TextField(blank=True, null=True)
+    total_sw_sources_tested_with_pfas = models.BooleanField(blank=True, null=True)
+    total_sw_sources_ucmr5_tested_with_pfas = models.BooleanField(blank=True, null=True)
+    total_sw_sources_tested_without_pfas = models.BooleanField(blank=True, null=True)
+    total_sw_sources_ucmr5_tested_without_pfas = models.BooleanField(blank=True, null=True)
+    has_other_sources = models.BooleanField(blank=True, null=True)
+    other_sources_description = models.TextField(blank=True, null=True)
+    total_other_sources = models.TextField(blank=True, null=True)
+    total_other_sources_tested_with_pfas = models.BooleanField(blank=True, null=True)
+    total_other_sources_ucmr5_tested_with_pfas = models.BooleanField(blank=True, null=True)
+    total_other_sources_tested_without_pfas = models.BooleanField(blank=True, null=True)
+    total_other_sources_ucmr5_tested_without_pfas = models.BooleanField(blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, null=True)
+    in_consortium = models.BooleanField(blank=True, null=True)
+    data_origin = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'claim_pws'
+
+
+class ClaimSource(models.Model):
+    row_names = models.BigAutoField(primary_key=True)  
+    claim_number = models.FloatField(blank=True, null=True)
+    pwsid = models.TextField(blank=True, null=True)
+    pws_name = models.TextField(blank=True, null=True)
+    water_source_id = models.FloatField(blank=True, null=True)
+    source_name = models.TextField(blank=True, null=True)
+    is_part_of_idws = models.BooleanField(blank=True, null=True)
+    is_idws_cooperating = models.BooleanField(blank=True, null=True)
+    is_idws_responsible_pfas = models.BooleanField(blank=True, null=True)
+    partner_name = models.TextField(blank=True, null=True)
+    partner_pwsid = models.TextField(blank=True, null=True)
+    idws_partner_relationship = models.TextField(blank=True, null=True)
+    claimed_share_percent = models.FloatField(blank=True, null=True)
+    source_type = models.TextField(blank=True, null=True)
+    source_type_other = models.TextField(blank=True, null=True)
+    pws_owns_source = models.BooleanField(blank=True, null=True)
+    source_co_owned = models.BooleanField(blank=True, null=True)
+    pws_operates_source = models.BooleanField(blank=True, null=True)
+    source_operated_by = models.BooleanField(blank=True, null=True)
+    pws_purchased = models.BooleanField(blank=True, null=True)
+    source_original_pwsid = models.TextField(blank=True, null=True)
+    pws_drinking_water = models.BooleanField(blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, null=True)
+    data_origin = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'claim_source'

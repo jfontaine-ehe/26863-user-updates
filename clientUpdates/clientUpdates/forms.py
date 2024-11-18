@@ -30,7 +30,8 @@ class PfasResultUpdateForm(forms.ModelForm):
             'unit',
             'sampling_date',
             'analysis_date',
-            'lab_sample_id',
+            'lab_sample_id', 
+            'filename'
         ]
 
         widgets = {

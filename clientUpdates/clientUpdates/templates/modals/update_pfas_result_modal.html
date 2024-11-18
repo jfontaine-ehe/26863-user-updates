@@ -1,12 +1,12 @@
 <div class="modal fade" id="updatePfasResultModal" tabindex="-1" aria-labelledby="updatePfasResultModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-lg"> <!-- Make the modal wider with modal-lg -->
+  <div class="modal-dialog modal-lg"> 
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="updatePfasResultModalLabel">Update PFAS Result</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="updatePfasResultForm" method="post" action="">
+        <form id="updatePfasResultForm" method="post" action="" enctype="multipart/form-data">
           {% csrf_token %}
           <input type="hidden" name="pwsid" value="{{ source.pwsid }}">
 
@@ -35,10 +35,10 @@
             <div class="col-md-6 mb-3">
               <label for="pfasUnitInput" class="form-label">Unit</label>
               <select class="form-control" id="pfasUnitInput" name="unit" required>
-                <option value="" disabled {% if not form.unit.value %} selected {% endif %}>Select the units</option>
-                <option value="ppt" {% if form.unit.value == "ppt" %} selected {% endif %}>ng/L (ppt)</option>
-                <option value="ppb" {% if form.unit.value == "ppb" %} selected {% endif %}>ug/L (ppb)</option>
-                <option value="ppm" {% if form.unit.value == "ppm" %} selected {% endif %}>mg/L (ppm)</option>
+                <option value="" disabled selected>Select the units</option>
+                <option value="ppt">ng/L (ppt)</option>
+                <option value="ppb">ug/L (ppb)</option>
+                <option value="ppm">mg/L (ppm)</option>
               </select>
               <div class="invalid-feedback" id="unit-error"></div>
             </div>
@@ -48,12 +48,12 @@
           <div class="row">
             <div class="col-md-6 mb-3" id="sampling-date-field">
               <label for="pfasSamplingDateInput" class="form-label">Sample Date</label>
-              <input type="date" class="form-control" id="pfasSamplingDateInput" name="sampling_date" value="{{ form.sampling_date.value }}" required>
+              <input type="date" class="form-control" id="pfasSamplingDateInput" name="sampling_date" required>
               <div class="invalid-feedback" id="sampling-date-error"></div>
             </div>
             <div class="col-md-6 mb-3" id="analysis-date-field">
               <label for="pfasAnalysisDateInput" class="form-label">Analysis Date</label>
-              <input type="date" class="form-control" id="pfasAnalysisDateInput" name="analysis_date" value="{{ form.analysis_date.value }}" required>
+              <input type="date" class="form-control" id="pfasAnalysisDateInput" name="analysis_date" required>
               <div class="invalid-feedback" id="analysis-date-error"></div>
             </div>
           </div>
@@ -61,8 +61,15 @@
           <!-- Lab Sample ID -->
           <div class="mb-3">
             <label for="pfasLabSampleID" class="form-label">Lab Sample ID</label>
-            <input type="text" class="form-control" id="pfasLabSampleID" name="lab_sample_id" value="{{ form.lab_sample_id.value }}" required>
+            <input type="text" class="form-control" id="pfasLabSampleID" name="lab_sample_id" required>
             <div class="invalid-feedback" id="lab-sample-id-error"></div>
+          </div>
+
+          <!-- File Upload -->
+          <div class="mb-3">
+            <label for="pfasFileUpload" class="form-label">Upload lab report showing this result</label>
+            <input type="file" class="form-control" id="pfasFileUpload" name="filename" accept=".pdf, .jpg, .jpeg, .png" required>
+            <div class="invalid-feedback" id="file-upload-error">Lab report must be a pdf or a jpg.</div>
           </div>
 
           <button type="submit" class="btn btn-primary" id="submit-button">Save changes</button>
@@ -130,6 +137,18 @@
         document.getElementById('analysis-date-error').innerHTML = "Analysis date cannot be in the future.";
       }
 
+      // Validate file type
+      const fileInput = document.getElementById('pfasFileUpload');
+      const allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
+      const fileName = fileInput.value;
+      const fileExtension = fileName.split('.').pop().toLowerCase();
+
+      if (!allowedExtensions.includes(fileExtension)) {
+        valid = false;
+        fileInput.classList.add('is-invalid');
+        document.getElementById('file-upload-error').innerHTML = "Lab report must be a pdf, jpg, jpeg, or png.";
+      }
+
       // Prevent form submission if invalid
       if (!valid) {
         event.preventDefault();
@@ -142,7 +161,7 @@
       var button = event.relatedTarget;
 
       // Extract data from data-* attributes
-      var rowNames = button.getAttribute('data-row-names');
+      var rowNames = button.getAttribute('data-row-names') || 0;
       var analyte = button.getAttribute('data-analyte');
       var pfasResult = parseFloat(button.getAttribute('data-pfas-result') || "0");  // Extract the result correctly
       currentResult = pfasResult;  // Set the current result to the variable used in validation (don't prepopulate the input)
@@ -151,10 +170,8 @@
       // Set the form action dynamically
       var form = updatePfasResultModal.querySelector('form');
       var newActionUrl = `/update-pfas-result/${rowNames}/`;
+      
       form.setAttribute('action', newActionUrl);
-
-      // Set the selected unit in the unit dropdown
-      unitInput.value = unit;
 
       // Get the select element for the analyte input
       var analyteSelect = updatePfasResultModal.querySelector('#pfasResultAnalyteInput');
@@ -189,6 +206,15 @@
           analyteSelect.appendChild(option);
         });
       }
+    });
+
+    updatePfasResultModal.addEventListener('hide.bs.modal', function () {
+    // Clear form fields
+    form.reset();
+
+    // Clear any validation errors
+    document.querySelectorAll('.invalid-feedback').forEach(el => el.innerHTML = '');
+    document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
     });
   });
 </script>
