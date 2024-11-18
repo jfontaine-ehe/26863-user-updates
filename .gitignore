@@ -1,5 +1,8 @@
+mirations/
+clientUpdates/migrations/
+clientUpdates/clientUpdates/migrations/
+clientUpdates/temp/
 
-migrations/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
