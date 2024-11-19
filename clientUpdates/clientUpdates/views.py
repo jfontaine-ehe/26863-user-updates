@@ -63,7 +63,8 @@ def source_detail_view(request, pwsid, source_name):
     claim_pfas_results = ClaimPfasResult.objects.filter(pwsid=source.pwsid, source_name=source_name).exclude(analyte__isnull=True)
     updated_pfas_results = PfasResult.objects.filter(pwsid=source.pwsid, source_name=source_name, updated_by_water_provider=True)
     combined_pfas_results = get_combined_results(claim_pfas_results, updated_pfas_results, columns)
-    pfas_results = get_max_results_by_analyte(combined_pfas_results)
+    max_pfas_results = get_max_results_by_analyte(combined_pfas_results)
+    pfas_results = add_pfoas_if_missing(max_pfas_results, source.pwsid, source.water_source_id, source.source_name)
     max_other_threshold = get_max_other_threshold(pfas_results)
     
     #### Max Flow Rate ####
@@ -77,7 +78,7 @@ def source_detail_view(request, pwsid, source_name):
     claim_annuals = ClaimFlowRate.objects.filter(pwsid=source.pwsid, source_name=source_name, source_variable='AFR')
     updated_annuals = FlowRate.objects.filter(pwsid=source.pwsid, source_name=source_name, source_variable='AFR', updated_by_water_provider=True)
     combined_annuals = get_combined_results(claim_annuals, updated_annuals, columns_flow)
-    annuals = get_max_annuals_by_year(combined_annuals)
+    annuals = get_filtered_annuals(combined_annuals, source.all_nds)
 
     # Prepare context for rendering
     context = {
@@ -93,12 +94,11 @@ def source_detail_view(request, pwsid, source_name):
 
 
 @login_required
-def update_pfas_result_view(request, row_names):
+def update_pfas_result_view(request):
     
     if request.method == 'POST':
         pwsid = request.POST.get('pwsid')
         source_name = request.POST.get('source_name')
-        
         form = PfasResultUpdateForm(request.POST)
 
         if form.is_valid():
@@ -112,18 +112,18 @@ def update_pfas_result_view(request, row_names):
             pfas_result.submit_date = timezone.now()
             pfas_result.analyte = form.cleaned_data['analyte']
             pfas_result.filename = form.cleaned_data['filename']
-            # pfas_result.updated_by_user = True
+            pfas_result.updated_by_water_provider = True
             
             # Calculate result in ppt based on unit and value provided
             pfas_result.result = float(form.cleaned_data['result'])
             pfas_result.unit = form.cleaned_data['unit'] 
             pfas_result.result_ppt = calc_ppt_result(pfas_result.result, pfas_result.unit)
             
-            # Unhash this when ready to make changes to database
+            # TODO: Unhash this when ready to make changes to database
             # pfas_result.save()
 
             logger.info("Added or updated %s result of %s ppt for %s in the 'pfas-result' table.", 
-                        form.cleaned_data['analyte'], 
+                        pfas_result.analyte, 
                         pfas_result.result_ppt, 
                         pfas_result.source_name)
             
@@ -131,7 +131,6 @@ def update_pfas_result_view(request, row_names):
 
             file = request.FILES.get('filename')
             upload_to_dropbox(file, pwsid)
-
 
             return redirect('source-detail', pwsid=pwsid, source_name=source_name)
         else:
@@ -142,23 +141,10 @@ def update_pfas_result_view(request, row_names):
     # Handle GET request to render form with existing data
     form = PfasResultUpdateForm(instance=pfas_result)
     logger.debug("Rendering the form for PFAS result input")
+    messages.error(request, "Invalid request.")
     return render(request, 'update_pfas_result_modal.html', {'form': form, 'pfas_result': pfas_result})
 
 
-
-def calc_gpm_flow_rate(flow_rate, unit):
-    if unit == 'mgd':
-        flow_rate_gpm = flow_rate * 1e6 / 1440
-    elif unit == 'gpm':
-        flow_rate_gpm = flow_rate
-    elif unit == 'gpy':
-        flow_rate_gpm = flow_rate * 1e6 / (365 * 1440)
-    elif unit == 'afpy':
-        flow_rate_gpm = flow_rate * 325851 / (365 * 1440)
-    else:
-        raise ValueError(f"Unsupported unit '{unit}' provided.")
-    
-    return flow_rate_gpm
 
 @login_required
 def update_max_flow_rate_view(request, row_names):
@@ -187,73 +173,59 @@ def update_max_flow_rate_view(request, row_names):
     return redirect('source-detail', pwsid=max_flow_rate.pwsid, source_name=max_flow_rate.source_name)
 
 
+
+
 @login_required
-def add_update_annual_production_view(request):
+def update_annual_production_view(request):
     if request.method == 'POST':
         pwsid = request.POST.get('pwsid')
         source_name = request.POST.get('source_name')
         form = AnnualProductionForm(request.POST)
         
         if form.is_valid():
-            logger.debug(f"Received form data: {form.cleaned_data}")
+            logger.debug("Received valid form data: %s", form.cleaned_data)
+
+            # Save form instance without committing immediately
+            annual_production = form.save(commit=False)
+
+            annual_production.pwsid = pwsid
+            annual_production.source_name = source_name
+            annual_production.submit_date = timezone.now()
+            annual_production.year = form.cleaned_data['year']
+            annual_production.source_variable = 'AFR'
+            # TODO: add to modal
+            # annual_production.filename = form.cleaned_data['filename']
+            annual_production.updated_by_water_provider = True
+
+
+            # Calculate annual production in GPM based on unit and value provided
+            annual_production.flow_rate = form.cleaned_data['flow_rate']
+            annual_production.unit = form.cleaned_data['unit']
+            annual_production.flow_rate_gpm = calc_gpm_flow_rate(annual_production.flow_rate, annual_production.unit)
+
+            # TODO: Unhash this when ready to make changes to database
+            # annual_production.save()
+
+            logger.info("Added or updated %s annual production of %s GPM for %s in the 'flow-rate' table.", 
+                        annual_production.year, 
+                        annual_production.flow_rate_gpm, 
+                        annual_production.source_name)
             
-            year = form.cleaned_data['year'] # should just be 2023 for now
-            new_flow_rate = form.cleaned_data['flow_rate']
-            new_unit = form.cleaned_data['unit']
-            flow_rate_gpm = calc_gpm_flow_rate(new_flow_rate, new_unit)
+            messages.success(request, f"Annual production updated successfully.")
 
-            logger.debug(f"Calculated flow rate in GPM: {flow_rate_gpm}")
+            # TODO: needs to be done. 
+            # file = request.FILES.get('filename')
+            # upload_to_dropbox(file, pwsid) 
 
-            # Check if 2023 data already exists
-            # can be modified if we want the ability to update other years. 
-            annual_2023 = FlowRate.objects.filter(pwsid=pwsid, source_name=source_name, source_variable='AFR', year=year).first()
-
-            if annual_2023:
-                # Update existing 2023 entry
-                logger.info(f"Updating existing 2023 production data for source {source_name}.")
-                annual_2023.flow_rate = new_flow_rate
-                annual_2023.unit = new_unit
-                annual_2023.flow_rate_gpm = flow_rate_gpm
-                logger.info(f"Old flow_rate_gpm: {annual_2023.flow_rate_gpm}, New calculated flow_rate_gpm: {flow_rate_gpm}")
-                logger.info(f"Preparing to update annual production record for PWSID: {pwsid}, Source: {source_name}, Year: {year}")
-            else:
-                # Add a new row for 2023
-                logger.info(f"Adding new 2023 production data of {flow_rate_gpm} for source {source_name}.")
-                annual_2023 = FlowRate(
-                    pwsid=pwsid,
-                    submit_date = timezone.now(),
-                    source_name=source_name,
-                    sample_id=source_name,
-                    source_variable='AFR',
-                    year=year,
-                    flow_rate=new_flow_rate,
-                    flow_rate_gpm=flow_rate_gpm,
-                    unit=new_unit,
-                )
-                logger.info(f"Preparing to add new annual production record for PWSID: {pwsid}, Source: {source_name}, Year: {year}")
-            
-            annual_2023.save()
-            messages.success(request, f"Annual production for ", {year}, " added/updated successfully.")
             return redirect('source-detail', pwsid=pwsid, source_name=source_name)
         else:
             # Log form errors if form validation fails
-            logger.error(f"Form validation failed with errors: {form.errors}")
-    else:
-        form = AnnualProductionForm
-    
+            logger.error("Form validation failed with errors: %s", form.errors)
+            messages.error(request, "Form validation failed. Please correct the errors below.")
+            return redirect('source-detail', pwsid=pwsid, source_name=source_name)
+
+    # Handle GET request to render form with existing data
+    form = AnnualProductionForm(instance=annual_production)
     logger.debug(f"Rendering the form for Annual Production input")
     messages.error(request, "Invalid request.")
-    return redirect('source-detail', pwsid=pwsid, source_name=source_name)
-
-def calc_ppt_result(result, unit):
-    if unit == 'ppt':
-        result_ppt = result 
-    elif unit == 'ppb':
-        result_ppt = result * 1e3
-    elif unit == 'ppm':
-        result_ppt = result * 1e6
-    else:
-        raise ValueError(f"Unsupported unit '{unit}' provided.")
-
-    return result_ppt
-
+    return render(request, 'updated_annual_production_modal.html', {'form': form, 'annual_production': annual_production})

@@ -586,6 +586,7 @@ class ClaimSource(models.Model):
     pws_drinking_water = models.BooleanField(blank=True, null=True)
     timestamp = models.DateTimeField(blank=True, null=True)
     data_origin = models.TextField(blank=True, null=True)
+    all_nds = models.BooleanField(default=False)
 
     class Meta:
         managed = True

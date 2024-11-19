@@ -20,12 +20,21 @@
           <div class="mb-3">
             <label for="pfasResultAnalyteInput" class="form-label">Analyte</label>
             <select class="form-control" id="pfasResultAnalyteInput" name="analyte" required>
-              <!-- Populated by JavaScript -->
+              <option value="" disabled selected>Select the analyte</option>
+              <option value="PFOA">PFOA</option>
+              <option value="PFOS">PFOS</option>
+              <option value="PFBA">PFBA</option>
+              <option value="PFBS">PFBS</option>
+              <option value="PFHxA">PFHxA</option>
+              <option value="PFHxS">PFHxS</option>
+              <option value="PFNA">PFNA</option>
+              <option value="PFDA">PFDA</option>
+              <option value="GenX">GenX/HFPO-DA</option>
             </select>
             <div class="invalid-feedback" id="analyte-error"></div>
           </div>
 
-          <!-- Result and Unit in one row -->
+          <!-- Result and Unit (one row) -->
           <div class="row">
             <div class="col-md-6 mb-3" id="result-field">
               <label for="pfasResultInput" class="form-label">Result</label>
@@ -44,7 +53,7 @@
             </div>
           </div>
 
-          <!-- Sample Date and Analysis Date in one row -->
+          <!-- Sample Date and Analysis Date (one row) -->
           <div class="row">
             <div class="col-md-6 mb-3" id="sampling-date-field">
               <label for="pfasSamplingDateInput" class="form-label">Sample Date</label>
@@ -72,8 +81,8 @@
             <div class="invalid-feedback" id="file-upload-error">Lab report must be a pdf or a jpg.</div>
           </div>
 
-          <button type="submit" class="btn btn-primary" id="submit-button">Save changes</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-outline-success" id="submit-button">Save changes</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
         </form>
       </div>
     </div>
@@ -87,6 +96,7 @@
     const unitInput = document.getElementById('pfasUnitInput');
     const samplingDateInput = document.getElementById('pfasSamplingDateInput');
     const analysisDateInput = document.getElementById('pfasAnalysisDateInput');
+    const analyteInput = document.getElementById('pfasResultAnalyteInput'); // Added analyte input reference
     const submitButton = document.getElementById('submit-button');
     let currentResult = 0;
 
@@ -163,58 +173,36 @@
       // Extract data from data-* attributes
       var rowNames = button.getAttribute('data-row-names') || 0;
       var analyte = button.getAttribute('data-analyte');
-      var pfasResult = parseFloat(button.getAttribute('data-pfas-result') || "0");  // Extract the result correctly
+      var pfasResultAttribute = button.getAttribute('data-pfas-result');
+      var pfasResult = pfasResultAttribute && !isNaN(pfasResultAttribute) ? parseFloat(pfasResultAttribute) : 0;
       currentResult = pfasResult;  // Set the current result to the variable used in validation (don't prepopulate the input)
       var unit = button.getAttribute('data-unit');
 
       // Set the form action dynamically
       var form = updatePfasResultModal.querySelector('form');
-      var newActionUrl = `/update-pfas-result/${rowNames}/`;
-      
+      var newActionUrl = `/update-pfas-result/`;
       form.setAttribute('action', newActionUrl);
 
-      // Get the select element for the analyte input
-      var analyteSelect = updatePfasResultModal.querySelector('#pfasResultAnalyteInput');
-
-      // Clear existing options in the dropdown
-      analyteSelect.innerHTML = '';
-
-      // List of all analytes excluding PFOA and PFOS
-      var allAnalytes = ['PFBA', 'PFBS', 'PFHxS', 'PFNA', 'PFDA'];
-
-      if (analyte === 'PFOA' || analyte === 'PFOS') {
-        analyteSelect.disabled = true;
-        var option = document.createElement('option');
-        option.value = analyte;
-        option.textContent = analyte;
-        analyteSelect.appendChild(option);
+      // Prefill the analyte if applicable
+      if (analyte) {
+        analyteInput.value = analyte;
+        analyteInput.disabled = true;  // Disable the dropdown if an analyte is prefilled
       } else {
-        analyteSelect.disabled = false;
-        var defaultOption = document.createElement('option');
-        defaultOption.value = '';
-        defaultOption.textContent = 'Select analyte';
-        defaultOption.disabled = true;
-        defaultOption.selected = true;
-        analyteSelect.appendChild(defaultOption);
-        allAnalytes.forEach(function(chem) {
-          var option = document.createElement('option');
-          option.value = chem;
-          option.textContent = chem;
-          if (chem === analyte) {
-            option.selected = true;
-          }
-          analyteSelect.appendChild(option);
-        });
+        analyteInput.value = "";
+        analyteInput.disabled = false;  // Enable the dropdown if no analyte is prefilled
       }
     });
 
     updatePfasResultModal.addEventListener('hide.bs.modal', function () {
-    // Clear form fields
-    form.reset();
+      // Clear form fields
+      form.reset();
 
-    // Clear any validation errors
-    document.querySelectorAll('.invalid-feedback').forEach(el => el.innerHTML = '');
-    document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
+      // Clear any validation errors
+      document.querySelectorAll('.invalid-feedback').forEach(el => el.innerHTML = '');
+      document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
+
+      // Re-enable the analyte dropdown
+      analyteInput.disabled = false;
     });
   });
 </script>

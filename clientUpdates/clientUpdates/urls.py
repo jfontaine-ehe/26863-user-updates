@@ -26,9 +26,9 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('<str:pwsid>/source/<str:source_name>/', views.source_detail_view, name='source-detail'),
-    path('update-pfas-result/<int:row_names>/', views.update_pfas_result_view, name='update-pfas-result'),
+    path('update-pfas-result/', views.update_pfas_result_view, name='update-pfas-result'),
     path('update-max-flow-rate/<int:row_names>/', views.update_max_flow_rate_view, name='update-max-flow-rate'),
-    path('add-update-annual-production/', views.add_update_annual_production_view, name='add-update-annual-production'),
+    path('update-annual-production/', views.update_annual_production_view, name='update-annual-production'),
     #path('<str:pwsid>/source/<source_name>/add-annual-production', views.add_annual_production_view, name='add-annual-production'),
     # path('flow_rates/<int:pk>/edit/', views.update_flow_rate, name='update_flow_rate')
 ]
