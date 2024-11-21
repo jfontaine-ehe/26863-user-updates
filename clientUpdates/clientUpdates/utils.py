@@ -19,12 +19,14 @@ def calc_ppt_result(result, unit):
     return result_ppt
 
 def calc_gpm_flow_rate(flow_rate, unit):
-    """ Returns flow rate after converting form MGD, GPM, GPY, or AFPY to GPM. """
+    """ Returns flow rate after converting form MGD, MGY, GPM, GPY, or AFPY to GPM. """
     if unit == 'mgd':
         flow_rate_gpm = flow_rate * 1e6 / 1440
     elif unit == 'gpm':
         flow_rate_gpm = flow_rate
     elif unit == 'gpy':
+        flow_rate_gpm = flow_rate / (365 * 1440)
+    elif unit == 'mgy':
         flow_rate_gpm = flow_rate * 1e6 / (365 * 1440)
     elif unit == 'afpy':
         flow_rate_gpm = flow_rate * 325851 / (365 * 1440)
@@ -131,46 +133,95 @@ def get_filtered_annuals(combined_annuals, all_nds):
 
     return filtered_annuals
 
-# def get_max_annuals_by_year(combined_annuals):
-#     """ Finds the maximum annual production by year from a combined list of records. """
-#     max_annuals_by_year = defaultdict(lambda: None)
-#     for record in combined_annuals:
-#         year = record['year']
-#         if max_annuals_by_year[year] is None or record['flow_rate_gpm'] > max_annuals_by_year[year]['flow_rate_gpm']:
-#             max_annuals_by_year[year] = record
-#     return list(max_annuals_by_year.values())
+def get_max_annuals_by_year(combined_annuals):
+    """ Finds the maximum annual production by year from a combined list of records. """
+    max_annuals_by_year = defaultdict(lambda: None)
+    for record in combined_annuals:
+        year = record['year']
+        if max_annuals_by_year[year] is None or record['flow_rate_gpm'] > max_annuals_by_year[year]['flow_rate_gpm']:
+            max_annuals_by_year[year] = record
+    return list(max_annuals_by_year.values())
 
+
+
+# def upload_to_dropbox(file, pwsid):
+#     if not file: 
+#         return JsonResponse({'error': 'No file uploaded'}, status=400)
+    
+#     # Save file to temporary location on server
+#     file_path = default_storage.save(f'temp/{file.name}', file)
+    
+#     # Dropbox Access Token (OAuth2 token, not refresh token)
+#     dropbox_access_token = settings.DROPBOX_OAUTH2_TOKEN
+    
+#     # Upload to Dropbox
+#     try:
+#         dbx = dropbox.Dropbox(dropbox_access_token)
+        
+#         # Check if the folder exists or create it
+#         folder_path = f"/PFAS results/{pwsid}"
+#         try:
+#             dbx.files_get_metadata(folder_path)
+#         except dropbox.exceptions.ApiError as e:
+#             if isinstance(e.error, dropbox.files.GetMetadataError):
+#                 dbx.files_create_folder_v2(folder_path)
+
+#         # Upload the file
+#         with default_storage.open(file_path, 'rb') as f:
+#             dropbox_file_path = f"{folder_path}/{file.name}"
+#             dbx.files_upload(f.read(), dropbox_file_path, mode=dropbox.files.WriteMode.overwrite)
+
+#         return JsonResponse({'success': 'File uploaded to Dropbox successfully'})
+
+#     except Exception as e:
+#         print(f"Error occurred: {str(e)}")
+#         return JsonResponse({'error': str(e)}, status=500)
 
 
 def upload_to_dropbox(file, pwsid):
-    if not file: 
+    """
+    Upload a file to Dropbox under the specified folder.
+    
+    Args:
+        file: The uploaded file object.
+        pwsid: A unique identifier for the folder in Dropbox.
+    
+    Returns:
+        JsonResponse: A response indicating success or failure.
+    """
+    if not file:
         return JsonResponse({'error': 'No file uploaded'}, status=400)
     
-    # Save file to temporary location on server
-    file_path = default_storage.save(f'temp/{file.name}', file)
     
-    # Dropbox Access Token (OAuth2 token, not refresh token)
     dropbox_access_token = settings.DROPBOX_OAUTH2_TOKEN
+    if not dropbox_access_token:
+        return JsonResponse({'error': 'Dropbox access token not configured'}, status=500)
     
-    # Upload to Dropbox
     try:
+        # Initialize Dropbox client
         dbx = dropbox.Dropbox(dropbox_access_token)
         
-        # Check if the folder exists or create it
+        # Define the folder and file paths in Dropbox
         folder_path = f"/PFAS results/{pwsid}"
+        dropbox_file_path = f"{folder_path}/{file.name}"
+        
+        # Ensure the folder exists
         try:
             dbx.files_get_metadata(folder_path)
         except dropbox.exceptions.ApiError as e:
             if isinstance(e.error, dropbox.files.GetMetadataError):
                 dbx.files_create_folder_v2(folder_path)
-
+        
         # Upload the file
-        with default_storage.open(file_path, 'rb') as f:
-            dropbox_file_path = f"{folder_path}/{file.name}"
-            dbx.files_upload(f.read(), dropbox_file_path, mode=dropbox.files.WriteMode.overwrite)
+        dbx.files_upload(file.read(), dropbox_file_path, mode=dropbox.files.WriteMode.overwrite)
+        
+        # Return success response
+        return JsonResponse({'success': 'File uploaded to Dropbox successfully', 'path': dropbox_file_path})
 
-        return JsonResponse({'success': 'File uploaded to Dropbox successfully'})
-
+    except dropbox.exceptions.AuthError:
+        return JsonResponse({'error': 'Invalid Dropbox access token'}, status=401)
+    except dropbox.exceptions.ApiError as e:
+        return JsonResponse({'error': f'Dropbox API error: {str(e)}'}, status=500)
     except Exception as e:
-        print(f"Error occurred: {str(e)}")
-        return JsonResponse({'error': str(e)}, status=500)
+        return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=500)
+

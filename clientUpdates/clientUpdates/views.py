@@ -78,7 +78,8 @@ def source_detail_view(request, pwsid, source_name):
     claim_annuals = ClaimFlowRate.objects.filter(pwsid=source.pwsid, source_name=source_name, source_variable='AFR')
     updated_annuals = FlowRate.objects.filter(pwsid=source.pwsid, source_name=source_name, source_variable='AFR', updated_by_water_provider=True)
     combined_annuals = get_combined_results(claim_annuals, updated_annuals, columns_flow)
-    annuals = get_filtered_annuals(combined_annuals, source.all_nds)
+    filtered_annuals = get_filtered_annuals(combined_annuals, source.all_nds)
+    annuals = get_max_annuals_by_year(filtered_annuals)
 
     # Prepare context for rendering
     context = {
@@ -99,8 +100,8 @@ def update_pfas_result_view(request):
     if request.method == 'POST':
         pwsid = request.POST.get('pwsid')
         source_name = request.POST.get('source_name')
-        form = PfasResultUpdateForm(request.POST)
-
+        form = PfasResultUpdateForm(request.POST, request.FILES)
+        
         if form.is_valid():
             logger.debug("Received valid form data: %s", form.cleaned_data)
             
@@ -109,15 +110,23 @@ def update_pfas_result_view(request):
 
             pfas_result.pwsid = pwsid
             pfas_result.source_name = source_name
+            pfas_result.sample_id = source_name
             pfas_result.submit_date = timezone.now()
             pfas_result.analyte = form.cleaned_data['analyte']
-            pfas_result.filename = form.cleaned_data['filename']
-            pfas_result.updated_by_water_provider = True
             
             # Calculate result in ppt based on unit and value provided
             pfas_result.result = float(form.cleaned_data['result'])
             pfas_result.unit = form.cleaned_data['unit'] 
             pfas_result.result_ppt = calc_ppt_result(pfas_result.result, pfas_result.unit)
+
+            pfas_result.sampling_date = form.cleaned_data['sampling_date']
+            pfas_result.analysis_date = form.cleaned_data['analysis_date']
+            pfas_result.lab = form.cleaned_data['lab']
+            pfas_result.analysis_method = form.cleaned_data['analysis_method']
+            pfas_result.lab_sample_id = form.cleaned_data['lab_sample_id']
+            pfas_result.filename = form.cleaned_data['filename']
+            pfas_result.data_origin = "EHE Update Portal"
+            pfas_result.updated_by_water_provider = True
             
             # TODO: Unhash this when ready to make changes to database
             # pfas_result.save()
@@ -192,16 +201,16 @@ def update_annual_production_view(request):
             annual_production.source_name = source_name
             annual_production.submit_date = timezone.now()
             annual_production.year = form.cleaned_data['year']
-            annual_production.source_variable = 'AFR'
-            # TODO: add to modal
-            # annual_production.filename = form.cleaned_data['filename']
-            annual_production.updated_by_water_provider = True
-
 
             # Calculate annual production in GPM based on unit and value provided
             annual_production.flow_rate = form.cleaned_data['flow_rate']
             annual_production.unit = form.cleaned_data['unit']
             annual_production.flow_rate_gpm = calc_gpm_flow_rate(annual_production.flow_rate, annual_production.unit)
+
+            annual_production.source_variable = 'AFR'
+            annual_production.filename = form.cleaned_data['filename']
+            annual_production.data_origin = "EHE Update Portal"
+            annual_production.updated_by_water_provider = True
 
             # TODO: Unhash this when ready to make changes to database
             # annual_production.save()

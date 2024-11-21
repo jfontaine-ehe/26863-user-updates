@@ -280,7 +280,7 @@ class Source(models.Model):
     gfe_basf = models.FloatField(db_column='gfe_BASF', blank=True, null=True)  # Field name made lowercase.
     gfe_tyco = models.FloatField(blank=True, null=True)
     gfe_total_basf_tyco = models.FloatField(blank=True, null=True)
-    data_origin = models.TextField(default="EHE portal")
+    data_origin = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True
@@ -307,12 +307,12 @@ class FlowRate(models.Model):
     gswc_loc = models.TextField(blank=True, null=True)
     source_name = models.TextField(blank=True, null=True)
     sample_id_from = models.TextField(blank=True, null=True)
-    filename = models.TextField(blank=True, null=True)
+    filename = models.FileField(upload_to='uploads/', blank=True, null=True)
     dms_initials = models.TextField(blank=True, null=True)
     rm_row = models.FloatField(blank=True, null=True)
     qc_flag = models.TextField(blank=True, null=True)
     updated_by_water_provider = models.BooleanField(default=False)
-    data_origin = models.TextField(default="EHE portal")
+    data_origin = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True
@@ -339,7 +339,7 @@ class PfasResult(models.Model):
     cas_number = models.TextField(blank=True, null=True)
     mdl = models.FloatField(blank=True, null=True)
     rl = models.FloatField(blank=True, null=True)
-    filename = models.TextField(blank=True, null=True)
+    filename = models.FileField(upload_to='uploads/', blank=True, null=True)
     analysis_date = models.DateField(blank=True, null=True)
     comments = models.BooleanField(blank=True, null=True)
     dms_initials = models.TextField(blank=True, null=True)
@@ -347,7 +347,7 @@ class PfasResult(models.Model):
     source_name = models.TextField(blank=True, null=True)
     sample_id_from = models.TextField(blank=True, null=True)
     updated_by_water_provider = models.BooleanField(default=False)
-    data_origin = models.TextField(default="EHE portal")
+    data_origin = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True
@@ -429,7 +429,7 @@ class ClaimDocumentInfo(models.Model):
     date_uploaded = models.DateField(blank=True, null=True)
     content_type = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(blank=True, null=True)
-    data_origin = models.TextField(blank=True, null=True)
+    data_origin = models.TextField(default="Claims Portal")
 
     class Meta:
         managed = True
@@ -452,7 +452,7 @@ class ClaimFlowRate(models.Model):
     source_variable = models.TextField(blank=True, null=True)
     max_flow_rate_explanation = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(blank=True, null=True)
-    data_origin = models.TextField(blank=True, null=True)
+    data_origin = models.TextField(default="Claims Portal")
 
     class Meta:
         managed = True
@@ -482,7 +482,7 @@ class ClaimPfasResult(models.Model):
     lab_state = models.TextField(blank=True, null=True)
     lab_zip = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(blank=True, null=True)
-    data_origin = models.TextField(blank=True, null=True)
+    data_origin = models.TextField(default="Claims Portal")
     all_nds = models.BooleanField(blank=True, null=True)
 
     class Meta:
@@ -554,7 +554,7 @@ class ClaimPws(models.Model):
     total_other_sources_ucmr5_tested_without_pfas = models.BooleanField(blank=True, null=True)
     timestamp = models.DateTimeField(blank=True, null=True)
     in_consortium = models.BooleanField(blank=True, null=True)
-    data_origin = models.TextField(blank=True, null=True)
+    data_origin = models.TextField(default="Claims Portal")
 
     class Meta:
         managed = True
@@ -585,7 +585,7 @@ class ClaimSource(models.Model):
     source_original_pwsid = models.TextField(blank=True, null=True)
     pws_drinking_water = models.BooleanField(blank=True, null=True)
     timestamp = models.DateTimeField(blank=True, null=True)
-    data_origin = models.TextField(blank=True, null=True)
+    data_origin = models.TextField(default="Claims Portal")
     all_nds = models.BooleanField(default=False)
 
     class Meta:
