@@ -116,11 +116,12 @@ def update_pfas_result_view(request):
             
             # Calculate result in ppt based on unit and value provided
             pfas_result.result = float(form.cleaned_data['result'])
-            pfas_result.unit = form.cleaned_data['unit'] 
+            pfas_result.unit = form.cleaned_data['unit']
             pfas_result.result_ppt = calc_ppt_result(pfas_result.result, pfas_result.unit)
             
             # TODO: Unhash this when ready to make changes to database
-            # pfas_result.save()
+            # saves to the database
+            pfas_result.save()
 
             logger.info("Added or updated %s result of %s ppt for %s in the 'pfas-result' table.", 
                         pfas_result.analyte, 
