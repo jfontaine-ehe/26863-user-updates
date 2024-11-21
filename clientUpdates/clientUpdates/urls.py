@@ -21,7 +21,7 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.root_redirect, name='root-rediret'),
+    path('', views.root_redirect, name='root-redirect'),
     path('login/', views.CustomLoginView.as_view(), name='login'), 
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),

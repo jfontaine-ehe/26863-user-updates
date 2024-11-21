@@ -1,38 +1,54 @@
 <div class="modal fade" id="addOrUpdateAnnualModal" tabindex="-1" aria-labelledby="addOrUpdateModalLabel" aria-hidden="true"  data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addOrUpdateModalLabel">Update Annual Production for 2023</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="AnnualProductionForm" method="post" action="{% url 'update-annual-production' %}">
+                <form id="updateAnnualProductionForm" method="post" action="{% url 'update-annual-production' %}">
                     {% csrf_token %}
                     <input type="hidden" name="pwsid" value="{{ source.pwsid }}">
-                    <!-- <input type="hidden" name="source_name" value="{{ source.source_name }}"> -->
-                    <!-- <input type="hidden" name="year" value="2023"> -->
                     <div class="mb-3">
                         <label for="flowRateSource" class="form-label">Source Name</label>
                         <input class="form-control" id="flowRateSource" name="source_name" value="{{ source.source_name }}" readonly>
                     </div>
+                    
+                    <!-- Flow rate year (disabled) -->
                     <div class="mb-3">
                         <label for="flowRateYear" class="form-label">Year</label>
                         <input class="form-control" id="flowRateYear" name="year" readonly>
                     </div>
-                    <div class="mb-3">
-                        <label for="flowRateInput" class="form-label">Flow Rate</label>
-                        <input type="number" class="form-control" id="flowRateInput" name="flow_rate" step="0.01" required>
+
+                    <!-- Flow rate and unit (one row) -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="flowRateInput" class="form-label">Flow</label>
+                            <input type="number" class="form-control" id="flowRateInput" name="flow_rate" step="0.01" required>
+                            <div class="invalid-feedback" id="year-error"></div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="unitInput" class="form-label">Unit</label>
+                            <select class="form-control" id="unitInput" name="unit" required>
+                                <option value="" disabled selected>Select the units</option>
+                                <option value="mgd">MGD (Million Gallons per Day)</option>
+                                <option value="gpm">GPM (Gallons per Minute)</option>
+                                <option value="mgy">MGY (Million Gallons per Year)</option>
+                                <option value="gpy">GPY (Gallons per Year)</option>
+                                <option value="afpy">AFPY (Acre-feet per Year)</option>
+                            </select>
+                            <div class="invalid-feedback" id="unit-error"></div>
+                        </div>
                     </div>
+                    
+                     <!-- File Upload -->
                     <div class="mb-3">
-                        <label for="unitInput" class="form-label">Unit</label>
-                        <select class="form-control" id="unitInput" name="unit" required>
-                            <option value="" disabled selected>Select the units</option>
-                            <option value="mgd">MGD (Million Gallons per Day)</option>
-                            <option value="gpm">GPM (Gallons per Minute)</option>
-                            <option value="gpy">GPY (Gallons per Year)</option>
-                            <option value="afpy">AFPY (Acre-feet per Year)</option>
-                        </select>
+                        <label for="annualProductionFileUpload" class="form-label">Upload Annual Production File</label>
+                        <input type="file" class="form-control" id="annualProductionFileUpload" name="filename" accept=".xls, .xlsx, .xlsm, .pdf, .jpg, .jpeg, .png" required>
+                        <div class="invalid-feedback" id="file-upload-error"></div>
                     </div>
+
                     <button type="submit" class="btn btn-outline-success">Save changes</button>
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                 </form>
@@ -55,6 +71,35 @@ document.addEventListener("DOMContentLoaded", function () {
         var yearInput = document.getElementById('flowRateYear');
         yearInput.value = year;
     });
+    
+    const form = document.getElementById('updateAnnualProductionForm');
+    form.onsubmit = function (event) {
+        let valid = true;
+
+        // Clear previous errors
+        document.querySelectorAll('.invalid-feedback').forEach(el => el.innerHTML = '');
+        document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));  
+        
+        // Validate file type
+        const fileInput = document.getElementById('pfasFileUpload');
+        const allowedExtensions = ['.xls', '.xlsx', '.xlsm', '.pdf', '.jpg', '.jpeg', '.png'];
+        const fileName = fileInput.value;
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+
+        if (!allowedExtensions.includes(fileExtension)) {
+            valid = false;
+            fileInput.classList.add('is-invalid');
+            document.getElementById('file-upload-error').innerHTML = "Annual production file must be a spreadsheet, pdf or an image file.";
+        }
+
+        // Prevent form submission if invalid
+        if (!valid) {
+            event.preventDefault();
+        }
+    };
+
+
+    
 });
 
 </script>

@@ -8,14 +8,30 @@ class MaxFlowRateUpdateForm(forms.ModelForm):
         fields = ['flow_rate', 'unit']
 
 class AnnualProductionForm(forms.Form):
-    year = forms.IntegerField(widget=forms.HiddenInput(), initial=2023)
-    flow_rate = forms.FloatField(required=True)
-    unit = forms.ChoiceField(
-        choices=[('mgd', 'MGD (Million Gallons per Day)'),
-                 ('gpm', 'GPM (Gallons per Year)'),
-                 ('gpy', 'GPY (Gallons per Year)'),
-                 ('afpy', 'AFPY (Acre-feet per Year)')]
-    )
+    """
+    Form for updating Annual production. 
+    """
+    class Meta:
+        model = FlowRate
+        fields = [
+            'year',
+            'flow_rate',
+            'unit',
+            'filename'
+        ]
+    
+    def clean_flow_rate(self):
+        flow_rate = self.cleaned_data.get('flow_rate')
+        if flow_rate is None:
+            raise forms.ValidationError("Flow Rate is required and must be a valid number.")
+        
+        return flow_rate
+    
+    def clean_filename(self):
+        filename = self.cleaned_data.get('filename')
+        if not filename:
+            raise forms.ValidationError("A file is required.")
+        return filename
 
 class PfasResultUpdateForm(forms.ModelForm):
     """
@@ -30,21 +46,13 @@ class PfasResultUpdateForm(forms.ModelForm):
             'unit',
             'sampling_date',
             'analysis_date',
+            'lab',
+            'analysis_method',
             'lab_sample_id', 
             'filename'
         ]
 
         widgets = {
-            'analyte': forms.Select(choices=[
-                ('', 'Select analyte'),
-                ('PFBA', 'PFBA'),
-                ('PFBS', 'PFBS'),
-                ('PFHxS', 'PFHxS'),
-                ('PFNA', 'PFNA'),
-                ('PFDA', 'PFDA'),
-                ('PFOA', 'PFOA'),
-                ('PFOS', 'PFOS'),
-            ]),
             'sampling_date': forms.DateInput(attrs={'type': 'date'}),
             'analysis_date': forms.DateInput(attrs={'type': 'date'}),
         }
@@ -78,3 +86,9 @@ class PfasResultUpdateForm(forms.ModelForm):
             if analysis_date > timezone.now().date():
                 raise forms.ValidationError("Analysis date cannot be in the future.")
         return analysis_date
+    
+    def clean_filename(self):
+        filename = self.cleaned_data.get('filename')
+        if not filename:
+            raise forms.ValidationError("A file is required.")
+        return filename

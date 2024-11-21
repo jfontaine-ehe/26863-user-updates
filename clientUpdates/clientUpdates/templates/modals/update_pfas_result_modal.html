@@ -67,18 +67,46 @@
             </div>
           </div>
 
-          <!-- Lab Sample ID -->
-          <div class="mb-3">
-            <label for="pfasLabSampleID" class="form-label">Lab Sample ID</label>
-            <input type="text" class="form-control" id="pfasLabSampleID" name="lab_sample_id" required>
-            <div class="invalid-feedback" id="lab-sample-id-error"></div>
+          <!-- Lab name, Method, Lab Sample ID -->
+          <div class="row">
+            <div class="col-md-4 mb-3" id="lab-name">
+              <label for="pfasLabName" class="form-label">Lab</label>
+              <select class="form-control" id="pfaLabName" name="lab" required>
+                <option value="" disabled selected>Select analytical lab</option>
+                <option value="Eurofins">Eurofins</option>
+                <option value="Pace Analytical">Pace Analytical</option>
+                <option value="Enthalpy">Enthalpy</option>
+                <option value="Babcock">Babcock</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="invalid-feedback" id="lab-name-error"></div>
+            </div>
+
+            <div class="col-md-4 mb-3" id="analysis-method">
+              <label for="pfasAnalysisMethod" class="form-label">Analysis Method</label>
+              <select class="form-control" id="pfasAnalysisMethod" name="analysis_method" required>
+                <option value="" disabled selected>Select analysis method</option>
+                <option value="537.1">Method 537.1</option>
+                <option value="537 (Mod)">Method 537 (Modified)</option>
+                <option value="533">Method 533</option>
+                <option value="537.1 + 533">Methods 537.1 + 533</option>
+              </select>
+              <div class="invalid-feedback" id="analysis-method-error"></div>
+            </div>
+
+            <div class="col-md-4 mb-3" id="lab-sample-id">
+              <label for="pfasLabSampleID" class="form-label">Lab Sample ID</label>
+              <input type="text" class="form-control" id="pfasLabSampleID" name="lab_sample_id" required>
+              <div class="invalid-feedback" id="lab-sample-id-error"></div>
+            </div>
           </div>
+          
 
           <!-- File Upload -->
           <div class="mb-3">
             <label for="pfasFileUpload" class="form-label">Upload lab report showing this result</label>
             <input type="file" class="form-control" id="pfasFileUpload" name="filename" accept=".pdf, .jpg, .jpeg, .png" required>
-            <div class="invalid-feedback" id="file-upload-error">Lab report must be a pdf or a jpg.</div>
+            <div class="invalid-feedback" id="file-upload-error"></div>
           </div>
 
           <button type="submit" class="btn btn-outline-success" id="submit-button">Save changes</button>
@@ -159,7 +187,7 @@
       if (!allowedExtensions.includes(fileExtension)) {
         valid = false;
         fileInput.classList.add('is-invalid');
-        document.getElementById('file-upload-error').innerHTML = "Lab report must be a pdf, jpg, jpeg, or png.";
+        document.getElementById('file-upload-error').innerHTML = "Lab report must be a pdf or an image file.";
       }
 
       // Prevent form submission if invalid
