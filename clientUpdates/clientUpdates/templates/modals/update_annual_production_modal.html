@@ -6,7 +6,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="updateAnnualProductionForm" method="post" action="" enctype="multipart/form-data">
+                <form id="updateAnnualProductionForm" method="post" action="/update-annual-production/" enctype="multipart/form-data">
                     {% csrf_token %}
                     <input type="hidden" name="pwsid" value="{{ source.pwsid }}">
                     <div class="mb-3">
@@ -50,7 +50,7 @@
                         <div class="invalid-feedback" id="file-upload-error"></div>
                     </div>
 
-                    <button type="submit" class="btn btn-outline-success">Save changes</button>
+                    <button type="submit" class="btn btn-outline-success" id="submit-button">Save changes</button>
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                 </form>
             </div>
@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var form = document.getElementById('updateAnnualProductionForm');
     var yearInput = document.getElementById('flowRateYear');
     var fileInput = document.getElementById('annualProductionFileUpload');
+    const submitButton = document.getElementById('submit-button');
     var allowedExtensions = ['xls', 'xlsx', 'xlsm', 'pdf', 'jpg', 'jpeg', 'png'];
 
     // When the modal is shown

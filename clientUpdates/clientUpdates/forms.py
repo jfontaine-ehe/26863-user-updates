@@ -3,6 +3,9 @@ from django.utils import timezone
 from .models import FlowRate, PfasResult
 
 class MaxFlowRateUpdateForm(forms.ModelForm):
+    """
+    Form for updating Max Flow Rate. 
+    """
     class Meta:
         model = FlowRate
         fields = [
@@ -17,7 +20,7 @@ class MaxFlowRateUpdateForm(forms.ModelForm):
             raise forms.ValidationError("A file is required.")
         return filename
 
-class AnnualProductionForm(forms.Form):
+class AnnualProductionForm(forms.ModelForm):
     """
     Form for updating Annual production. 
     """

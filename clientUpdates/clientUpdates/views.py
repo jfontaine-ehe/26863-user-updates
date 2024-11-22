@@ -22,6 +22,19 @@ def root_redirect(request):
     else: 
         return redirect('login')
 
+def info_bar_view(request):
+    # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
+    pws_record = Pws.objects.get(form_userid=request.user.username)
+
+    if not pws_record: 
+        return redirect('some-error-page') 
+    
+    context = {
+        'pws': pws_record
+    }
+
+    return render(request, 'info_bar.html', context)
+
 @login_required
 def dashboard(request):
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
