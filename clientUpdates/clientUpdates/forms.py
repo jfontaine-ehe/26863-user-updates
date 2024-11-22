@@ -5,7 +5,17 @@ from .models import FlowRate, PfasResult
 class MaxFlowRateUpdateForm(forms.ModelForm):
     class Meta:
         model = FlowRate
-        fields = ['flow_rate', 'unit']
+        fields = [
+            'flow_rate', 
+            'unit', 
+            'filename'
+        ]
+        
+    def clean_filename(self):
+        filename = self.cleaned_data.get('filename')
+        if not filename:
+            raise forms.ValidationError("A file is required.")
+        return filename
 
 class AnnualProductionForm(forms.Form):
     """
