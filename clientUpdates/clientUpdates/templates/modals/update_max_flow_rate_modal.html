@@ -8,11 +8,12 @@
         <div class="modal-body">
           <form id="updateMaxFlowRateForm" method="post" action="/update-max-flow-rate/" enctype="multipart/form-data">
             {% csrf_token %}
+            <input type="hidden" name="pwsid" value="{{ source.pwsid }}">
 
-            <!-- Flow rate year (disabled) -->
+            <!-- Source Name -->
             <div class="mb-3">
               <label for="flowRateSource" class="form-label">Source Name</label>
-              <input class="form-control" id="flowRateSource" name="flow_rate_source" value="{{ source.source_name }}" readonly>
+              <input class="form-control" id="flowRateSource" name="source_name" value="{{ source.source_name }}" readonly>
             </div>
 
             <!-- Flow rate and unit (one row) -->
