@@ -1,9 +1,80 @@
+import dropbox
+import logging
 from itertools import chain
 from collections import defaultdict
 from django.core.files.storage import default_storage
 from django.http import JsonResponse
-import dropbox
+from django.utils import timezone
 from django.conf import settings
+from django.contrib import messages
+from django.shortcuts import redirect
+
+logger = logging.getLogger('clientUpdates')
+
+def handle_update(request, form_class, extra_fields, calc_func=None, source_variable=None):
+    """
+    Handles common update logic for PFAS results, max flow rate, and annual production.
+    """
+    if request.method == 'POST':
+        pwsid = request.POST.get('pwsid')
+        source_name = request.POST.get('source_name')
+        form = form_class(request.POST, request.FILES)
+
+        if form.is_valid():
+            logger.debug("Received valid form data: %s", form.cleaned_data)
+
+            # Save form instance without committing immediately
+            instance = form.save(commit=False)
+
+            # Add shared fields
+            instance.pwsid = pwsid
+            instance.source_name = source_name
+            instance.submit_date = timezone.now()
+            instance.filename = form.cleaned_data.get('filename')
+            instance.data_origin = "EHE Update Portal"
+            instance.updated_by_water_provider = True
+
+            # Add extra fields
+            for field, value in extra_fields.items():
+                setattr(instance, field, form.cleaned_data.get(value, value))
+
+            # Calculate additional fields if calc_func is provided
+            if calc_func:
+                calc_func(instance, form.cleaned_data)
+
+            # Add source variable if provided
+            if source_variable:
+                instance.source_variable = source_variable
+
+            try:
+                # TODO: Joe, please ensure this works for PFAS results, max flow rate, and annual production updates. 
+                instance.save()
+            except Exception as e:
+                logger.error("Error saving instance: %s", e)
+                messages.error(request, "Failed to save updates due to a system error.")
+                return redirect('source-detail', pwsid=pwsid, source_name=source_name)
+            
+            logger.info(f"{source_variable} updated successfully for {source_name}.")
+            messages.success(request, f"{source_variable} updated successfully.")
+
+            # Upload file to Dropbox
+            # TODO: Joe, pleae ensure that this works.
+            file = request.FILES.get('filename')
+            filetype = 'Flow Rate' if source_variable else 'PFAS Results'
+            if file:
+                upload_to_dropbox(file, filetype, pwsid)
+
+            return redirect('source-detail', pwsid=pwsid, source_name=source_name)
+
+        else:
+            logger.error("Form validation failed with errors: %s", form.errors)
+            messages.error(request, "Form validation failed. Please correct the errors below.")
+            return redirect('source-detail', pwsid=pwsid, source_name=source_name)
+
+    messages.error(request, "Invalid request.")
+    return redirect('source-detail', pwsid=request.POST.get('pwsid'), source_name=request.POST.get('source_name'))
+
+
 
 def calc_ppt_result(result, unit):
     """ Returns results after converting from ppm, ppb, or ppt to ppt. """
@@ -38,6 +109,9 @@ def calc_gpm_flow_rate(flow_rate, unit):
 
 def get_max_entry(entries, key):
     """ Returns the entry with the maximum value for the given key. """
+    if not entries:
+        return None
+    
     return max(entries, key=lambda x: x[key], default=None)
 
 def get_combined_results(queryset_1, queryset_2, columns):
@@ -143,42 +217,7 @@ def get_max_annuals_by_year(combined_annuals):
     return list(max_annuals_by_year.values())
 
 
-
-# def upload_to_dropbox(file, pwsid):
-#     if not file: 
-#         return JsonResponse({'error': 'No file uploaded'}, status=400)
-    
-#     # Save file to temporary location on server
-#     file_path = default_storage.save(f'temp/{file.name}', file)
-    
-#     # Dropbox Access Token (OAuth2 token, not refresh token)
-#     dropbox_access_token = settings.DROPBOX_OAUTH2_TOKEN
-    
-#     # Upload to Dropbox
-#     try:
-#         dbx = dropbox.Dropbox(dropbox_access_token)
-        
-#         # Check if the folder exists or create it
-#         folder_path = f"/PFAS results/{pwsid}"
-#         try:
-#             dbx.files_get_metadata(folder_path)
-#         except dropbox.exceptions.ApiError as e:
-#             if isinstance(e.error, dropbox.files.GetMetadataError):
-#                 dbx.files_create_folder_v2(folder_path)
-
-#         # Upload the file
-#         with default_storage.open(file_path, 'rb') as f:
-#             dropbox_file_path = f"{folder_path}/{file.name}"
-#             dbx.files_upload(f.read(), dropbox_file_path, mode=dropbox.files.WriteMode.overwrite)
-
-#         return JsonResponse({'success': 'File uploaded to Dropbox successfully'})
-
-#     except Exception as e:
-#         print(f"Error occurred: {str(e)}")
-#         return JsonResponse({'error': str(e)}, status=500)
-
-
-def upload_to_dropbox(file, pwsid):
+def upload_to_dropbox(file, filetype, pwsid):
     """
     Upload a file to Dropbox under the specified folder.
     
@@ -202,7 +241,7 @@ def upload_to_dropbox(file, pwsid):
         dbx = dropbox.Dropbox(dropbox_access_token)
         
         # Define the folder and file paths in Dropbox
-        folder_path = f"/PFAS results/{pwsid}"
+        folder_path = f"/{filetype}/{pwsid}"
         dropbox_file_path = f"{folder_path}/{file.name}"
         
         # Ensure the folder exists

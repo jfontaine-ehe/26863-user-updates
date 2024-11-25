@@ -47,9 +47,10 @@
 
     <!-- Main content -->
     <div class="container" style="padding-top: 80px;">
+        {% include 'info_bar.html' %}
         {% block content %}{% endblock %}
     </div>
-
+    
     <!-- Footer -->
     <footer class="container bg-light mt-auto text-center" style="padding-top: 20px;">
         <p class="text-muted mb-0"><a href="https://www.eheinc.com">Environmental Health & Engineering, Inc. (EH&E)</a> © 2024</p>
