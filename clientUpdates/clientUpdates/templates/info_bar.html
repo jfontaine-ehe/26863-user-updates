@@ -1,14 +1,18 @@
 {% load humanize %}
 
 {% if user.is_authenticated %}
-    <div id="info-bar" class="container">
-        Here, we want to show the following in two rows with some styling to make it stand out a bit: 
-        <ul>
-            <li>claim id: {{ claim_pws.claim_number|stringformat:'d' }}</li>
-            <li>entity: {{ pws.client_group }}</li>
-            <li>pwsid: {{ pws.pwsid }}</li>
-            <li>water system name: {{ pws.pws_name }}</li>
-            <li>representing law firm: {{ pws.firm }}</li>
-        </ul>
+    <div id="info-bar" class="container text-center">
+        <div class="row">
+            <div class="col"><b>Claim ID: </b>{{ claim_pws.claim_number|stringformat:'d' }}</div>
+            <div class="col"><b>PWSID: </b>{{ pws.pwsid }}</div>
+            <div class="col"><b>3M + DuPont Phase: </b>{{ pws.phase }}</div>
+            <div class="col"><b>Tyco + BASF Phase: </b>{{ pws.phase_tb }}</div>    
+        </div>
+        <div>
+            <li><b>Entity: </b>{{ pws.client_group }}</li>
+            <li><b>Water System Name: </b>{{ claim_pws.pws_name }}</li>
+            <li><b>Law Firm: </b>{{ claim_pws.law_firm_3rd_party_representative }}</li>
+            </div>
+        </div>
     </div>
 {% endif %}

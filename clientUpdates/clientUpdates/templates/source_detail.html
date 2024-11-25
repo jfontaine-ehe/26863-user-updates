@@ -73,92 +73,91 @@
     </div> 
 
     {% if not source.all_nds %}
-        <div class="card">
-            <div class="card-body">
-                <div id="max-flow-rate-section">
-                    <h4>Maximum Flow Rate</h4>
-                    <table class="table">
-                        <thead>
+    <div class="card">
+        <div class="card-body">
+            <div id="max-flow-rate-section">
+                <h4>Maximum Flow Rate</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Flow Rate</th>
+                            <th>Unit</th>
+                            <th class="actions-col text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ max_flow_rate.flow_rate|floatformat:0|intcomma }}</td>
+                            <td>{{ max_flow_rate.unit|upper }}</td>
+                            <td class="actions-col text-center">
+                                <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#updateMaxFlowRateModal" 
+                                        data-row-names="{{ max_flow_rate.row_names }}" data-flow-rate="{{ max_flow_rate.flow_rate }}" data-unit="{{ max_flow_rate.unit }}" data-source-name="{{ max_flow_rate.source_name }}">
+                                    Update
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                {% include 'modals/update_max_flow_rate_modal.html' %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div class="card-body">
+            <div id="annual-production-section">
+                <h4>Annual Production</h4>
+                <p>
+                    Only the three highest years of annual production are needed. If the annual production for this source for 2023 is higher
+                    than other years, please provide the annual production for 2023. Otherwise, it is not needed but you may update it if you want to. 
+                </p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Flow Rate</th>
+                            <th>Unit</th>
+                            <th class="actions-col text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for annual in annuals %}
                             <tr>
-                                <th>Flow Rate</th>
-                                <th>Unit</th>
-                                <th class="actions-col text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>{{ max_flow_rate.flow_rate|floatformat:0|intcomma }}</td>
-                                <td>{{ max_flow_rate.unit|upper }}</td>
+                                <td>{{ annual.year|stringformat:'d' }}</td>
+                                <td>{{ annual.flow_rate|floatformat:0|intcomma }}</td>
+                                <td>{{ annual.unit|upper }}</td>
+                                
                                 <td class="actions-col text-center">
-                                    <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#updateMaxFlowRateModal" 
-                                            data-row-names="{{ max_flow_rate.row_names }}" data-flow-rate="{{ max_flow_rate.flow_rate }}" data-unit="{{ max_flow_rate.unit }}" data-source-name="{{ max_flow_rate.source_name }}">
-                                        Update
-                                    </button>
+                                    {% if source.all_nds or annual.year == 2023 %}
+                                        <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addOrUpdateAnnualModal"
+                                                data-source-name="{{ source.source_name }}" data-year="{{ annual.year }}">
+                                            Update
+                                        </button>
+                                    {% else %}
+                                        <div class='text-center'>--</div>
+                                    {% endif %}
                                 </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    {% include 'modals/update_max_flow_rate_modal.html' %}
-                </div>
+                                
+                            </tr>        
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% include 'modals/update_annual_production_modal.html' %}
             </div>
         </div>
-        
-        <div class="card">
-            <div class="card-body">
-                <div id="annual-production-section">
-                    <h4>Annual Production</h4>
-                    <p>
-                        Only the three highest years of annual production are needed. If the annual production for this source for 2023 is higher
-                        than other years, please provide the annual production for 2023. Otherwise, it is not needed but you may update it if you want to. 
-                    </p>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Year</th>
-                                <th>Flow Rate</th>
-                                <th>Unit</th>
-                                <th class="actions-col text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for annual in annuals %}
-                                <tr>
-                                    <td>{{ annual.year|stringformat:'d' }}</td>
-                                    <td>{{ annual.flow_rate|floatformat:0|intcomma }}</td>
-                                    <td>{{ annual.unit|upper }}</td>
-                                    
-                                    <td class="actions-col text-center">
-                                        {% if source.all_nds or annual.year == 2023 %}
-                                            <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addOrUpdateAnnualModal"
-                                                    data-source-name="{{ source.source_name }}" data-year="{{ annual.year }}">
-                                                Update
-                                            </button>
-                                        {% else %}
-                                            <div class='text-center'>--</div>
-                                        {% endif %}
-                                    </td>
-                                    
-                                </tr>        
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    {% include 'modals/update_annual_production_modal.html' %}
-                </div>
-            </div>
-        </div>
+    </div>
 
     {% else %}
-        <div class="card">
-            <div class="card-body">
-                <h4>Maximum Flow Rates and Annual Production</h4>
-                <p>Since PFAS have not been detected at this source, annual production and maximum flow rates are not needed.</p>
-                <p>
-                    If PFAS have been detected, please update the PFAS results above. Doing so will allow you to enter the annual production 
-                    and maximum flow rates. 
-                </p>
-            </div>
+    <div class="card">
+        <div class="card-body">
+            <h4>Maximum Flow Rates and Annual Production</h4>
+            <p>Since PFAS have not been detected at this source, annual production and maximum flow rates are not needed.</p>
+            <p>
+                If PFAS have been detected, please update the PFAS results above. Doing so will allow you to enter the annual production 
+                and maximum flow rates. 
+            </p>
         </div>
-        
+    </div>
     {% endif %}
 </div>
 
