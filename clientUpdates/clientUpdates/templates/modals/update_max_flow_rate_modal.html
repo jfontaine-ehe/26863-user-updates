@@ -1,58 +1,60 @@
 <div class="modal fade" id="updateMaxFlowRateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog modal-lg">
+  <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="updateModalLabel">Update Maximum Flow Rate</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="updateMaxFlowRateForm" method="post" action="/update-max-flow-rate/" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="hidden" name="pwsid" value="{{ source.pwsid }}">
-
-            <!-- Source Name -->
-            <div class="mb-3">
-              <label for="flowRateSource" class="form-label">Source Name</label>
-              <input class="form-control" id="flowRateSource" name="source_name" value="{{ source.source_name }}" readonly>
-            </div>
-
-            <!-- Flow rate and unit (one row) -->
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                  <label for="flowRateInput" class="form-label">Flow Rate</label>
-                  <input type="number" class="form-control" id="flowRateInput" name="flow_rate" min="0" step="0.01" required>
-                  <div class="invalid-feedback" id="flow-rate-error"></div>
-              </div>
-              
-              <div class="col-md-6 mb-3">
-                  <label for="unitInput" class="form-label">Unit</label>
-                  <select class="form-control" id="unitInput" name="unit" required>
-                      <option value="" disabled selected>Select the units</option>
-                      <option value="mgd">MGD (Million Gallons per Day)</option>
-                      <option value="gpm">GPM (Gallons per Minute)</option>
-                      <option value="mgy">MGY (Million Gallons per Year)</option>
-                      <option value="gpy">GPY (Gallons per Year)</option>
-                      <option value="afpy">AFPY (Acre-feet per Year)</option>
-                  </select>
-                  <div class="invalid-feedback" id="unit-error"></div>
-              </div>
+          <div class="modal-header">
+              <h5 class="modal-title" id="updateModalLabel">Update Maximum Flow Rate</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          
-          <!-- File Upload -->
-          <div class="mb-3">
-              <label for="maxFlowRateFileUpload" class="form-label">Upload Max Flow Rate File</label>
-              <input type="file" class="form-control" id="maxFlowRateFileUpload" name="filename" accept=".xls, .xlsx, .xlsm, .pdf, .jpg, .jpeg, .png" required>
-              <small class="text-muted">Supported file types: .xls, .xlsx, .xlsm, .pdf, .jpg, .jpeg, .png</small>
-              <div class="invalid-feedback" id="file-upload-error"></div>
-          </div>
+          <div class="modal-body">
+              <form id="updateMaxFlowRateForm" method="post" action="/update-max-flow-rate/" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <input type="hidden" name="pwsid" value="{{ source.pwsid }}">
 
-          <div class="mb-3">
-            <button type="submit" class="btn btn-outline-success" id="submit-button">Save changes</button>
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-          </form>
-        </div>
+                  <!-- Source Name -->
+                  <div class="mb-3">
+                      <label for="flowRateSource" class="form-label">Source Name</label>
+                      <input class="form-control" id="flowRateSource" name="source_name" value="{{ source.source_name }}" readonly>
+                  </div>
+
+                  <!-- Flow Rate and Unit (one row) -->
+                  <div class="row">
+                      <div class="col-md-6 mb-3">
+                          <label for="flowRateInput" class="form-label">Flow Rate</label>
+                          <input type="number" class="form-control" id="flowRateInput" name="flow_rate" min="0" step="0.01" required>
+                          <div class="invalid-feedback" id="flow-rate-error"></div>
+                      </div>
+
+                      <div class="col-md-6 mb-3">
+                          <label for="unitInput" class="form-label">Unit</label>
+                          <select class="form-control" id="unitInput" name="unit" required>
+                              <option value="" disabled selected>Select the units</option>
+                              <option value="mgd">MGD (Million Gallons per Day)</option>
+                              <option value="gpm">GPM (Gallons per Minute)</option>
+                              <option value="mgy">MGY (Million Gallons per Year)</option>
+                              <option value="gpy">GPY (Gallons per Year)</option>
+                              <option value="afpy">AFPY (Acre-feet per Year)</option>
+                          </select>
+                          <div class="invalid-feedback" id="unit-error"></div>
+                      </div>
+                  </div>
+
+                  <!-- File Upload -->
+                  <div class="mb-3">
+                      <label for="maxFlowRateFileUpload" class="form-label">Upload Max Flow Rate File</label>
+                      <input type="file" class="form-control" id="maxFlowRateFileUpload" name="filename" accept=".xls, .xlsx, .xlsm, .pdf, .jpg, .jpeg, .png" required>
+                      <small class="text-muted">Supported file types: .xls, .xlsx, .xlsm, .pdf, .jpg, .jpeg, .png</small>
+                      <div class="invalid-feedback" id="file-upload-error"></div>
+                  </div>
+
+                  <!-- Buttons -->
+                  <div class="mb-3">
+                      <button type="submit" class="btn btn-outline-success" id="submit-button">Save changes</button>
+                      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                  </div>
+              </form>
+          </div>
       </div>
-    </div>
+  </div>
 </div>
 
 <script>
