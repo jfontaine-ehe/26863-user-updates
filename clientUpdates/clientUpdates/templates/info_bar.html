@@ -1,7 +1,7 @@
 {% load humanize %}
 
 {% if user.is_authenticated %}
-    <div id="info-bar" class="container text-center">
+    <div id="info-bar" class="container">
         <div class="row">
             <div class="col"><b>Claim ID: </b>{{ claim_pws.claim_number|stringformat:'d' }}</div>
             <div class="col"><b>PWSID: </b>{{ pws.pwsid }}</div>
