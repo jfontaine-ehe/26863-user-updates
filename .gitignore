@@ -162,3 +162,6 @@ uploads/
 # Static files
 staticfiles/
 static/
+.Rproj.user
+*.Rproj
+*.Rhistory
