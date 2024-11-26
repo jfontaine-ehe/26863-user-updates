@@ -1,10 +1,12 @@
 import dropbox
 import logging
+import requests
 from itertools import chain
 from collections import defaultdict
 from django.core.files.storage import default_storage
 from django.http import JsonResponse
 from django.utils import timezone
+from datetime import datetime, timedelta
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -48,19 +50,21 @@ def handle_update(request, form_class, extra_fields, calc_func=None, source_vari
 
             try:
                 # TODO: Joe, please ensure this works for PFAS results, max flow rate, and annual production updates. 
-                instance.save()
+                # instance.save()
+                print('test')
             except Exception as e:
                 logger.error("Error saving instance: %s", e)
                 messages.error(request, "Failed to save updates due to a system error.")
                 return redirect('source-detail', pwsid=pwsid, source_name=source_name)
             
-            logger.info(f"{source_variable} updated successfully for {source_name}.")
-            messages.success(request, f"{source_variable} updated successfully.")
+            filetype = 'Flow Rate' if source_variable else 'PFAS Results'
+            logger.info(f"{filetype} updated successfully for {source_name}.")
+            messages.success(request, f"{filetype} updated successfully.")
 
             # Upload file to Dropbox
             # TODO: Joe, pleae ensure that this works.
             file = request.FILES.get('filename')
-            filetype = 'Flow Rate' if source_variable else 'PFAS Results'
+            
             if file:
                 upload_to_dropbox(file, filetype, pwsid)
 
@@ -217,50 +221,104 @@ def get_max_annuals_by_year(combined_annuals):
     return list(max_annuals_by_year.values())
 
 
+DROPBOX_TOKEN_URL = "https://api.dropbox.com/oauth2/token"
+
+def refresh_dropbox_access_token():
+    """
+    Refresh the Dropbox access token using the refresh token.
+    
+    Returns:
+        str: The new access token if successful, or None if failed.
+    """
+    try:
+        response = requests.post(
+            DROPBOX_TOKEN_URL,
+            data={
+                'grant_type': 'refresh_token',
+                'refresh_token': settings.DROPBOX['refresh_token'],
+            },
+            auth=(settings.DROPBOX['app_key'], settings.DROPBOX['app_secret'])
+        )
+        response.raise_for_status()  # Fixed missing parentheses
+        token_data = response.json()
+
+        # Update access token in settings or database
+        settings.DROPBOX['access_token'] = token_data['access_token']
+        return token_data['access_token']
+    except requests.exceptions.RequestException as e:
+        print(f"Error refreshing Dropbox access token: {e}")
+        return None
+
+def ensure_dropbox_folder(dbx, folder_path):
+    """
+    Ensure the specified folder exists in Dropbox.
+    
+    Args:
+        dbx (dropbox.Dropbox): Authenticated Dropbox client.
+        folder_path (str): The folder path in Dropbox.
+    """
+    try:
+        dbx.files_get_metadata(folder_path)
+    except dropbox.exceptions.ApiError as e:
+        if isinstance(e.error, dropbox.files.GetMetadataError):
+            dbx.files_create_folder_v2(folder_path)
+
 def upload_to_dropbox(file, filetype, pwsid):
     """
     Upload a file to Dropbox under the specified folder.
     
     Args:
         file: The uploaded file object.
-        pwsid: A unique identifier for the folder in Dropbox.
+        filetype (str): Type of the file to organize folders (e.g., 'documents').
+        pwsid (str): A unique identifier for the folder in Dropbox.
     
     Returns:
         JsonResponse: A response indicating success or failure.
     """
     if not file:
         return JsonResponse({'error': 'No file uploaded'}, status=400)
-    
-    
-    dropbox_access_token = settings.DROPBOX_OAUTH2_TOKEN
+
+    # Get the current access token
+    dropbox_access_token = settings.DROPBOX['access_token']
     if not dropbox_access_token:
-        return JsonResponse({'error': 'Dropbox access token not configured'}, status=500)
-    
+        dropbox_access_token = refresh_dropbox_access_token()
+        if not dropbox_access_token:
+            return JsonResponse({'error': 'Failed to refresh Dropbox token'}, status=401)
+
     try:
         # Initialize Dropbox client
         dbx = dropbox.Dropbox(dropbox_access_token)
-        
-        # Define the folder and file paths in Dropbox
-        folder_path = f"/{filetype}/{pwsid}"
-        dropbox_file_path = f"{folder_path}/{file.name}"
-        
-        # Ensure the folder exists
-        try:
-            dbx.files_get_metadata(folder_path)
-        except dropbox.exceptions.ApiError as e:
-            if isinstance(e.error, dropbox.files.GetMetadataError):
-                dbx.files_create_folder_v2(folder_path)
-        
-        # Upload the file
-        dbx.files_upload(file.read(), dropbox_file_path, mode=dropbox.files.WriteMode.overwrite)
-        
-        # Return success response
-        return JsonResponse({'success': 'File uploaded to Dropbox successfully', 'path': dropbox_file_path})
 
+        # Define folder and file paths
+        folder_path = f"/uploads/{pwsid}/{filetype}"
+        dropbox_path = f"{folder_path}/{file.name}"
+
+        # Save locally
+        # TODO: Joe, might be a good idea to save locally temporarily and delete after 5 days. 
+        # safeguard against dropbox not working. 
+        # deleting after 5 days or so will help with storage issues if that becomes a problem. 
+        # default_storage.save(dropbox_path, file)
+
+        # Ensure folder exists
+        ensure_dropbox_folder(dbx, folder_path)
+
+        # Upload the file
+        with file.open('rb') as f:
+            dbx.files_upload(f.read(), dropbox_path, mode=dropbox.files.WriteMode.overwrite)
+
+        # Return success response
+        logger.info(f"{file} uploaded to Dropbox under /uploads/{pwsid}/{filetype}/ successfully.")
+        return JsonResponse({'success': 'File uploaded to Dropbox successfully', 'path': dropbox_path})
     except dropbox.exceptions.AuthError:
-        return JsonResponse({'error': 'Invalid Dropbox access token'}, status=401)
+        # Refresh token and retry
+        dropbox_access_token = refresh_dropbox_access_token()
+        if dropbox_access_token:
+            dbx = dropbox.Dropbox(dropbox_access_token)
+            with file.open('rb') as f:
+                dbx.files_upload(f.read(), dropbox_path, mode=dropbox.files.WriteMode.overwrite)
+            return JsonResponse({'success': 'File uploaded to Dropbox successfully', 'path': dropbox_path})
+        return JsonResponse({'error': 'Dropbox authentication failed'}, status=401)
     except dropbox.exceptions.ApiError as e:
         return JsonResponse({'error': f'Dropbox API error: {str(e)}'}, status=500)
     except Exception as e:
         return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=500)
-

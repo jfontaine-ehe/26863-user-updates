@@ -89,12 +89,14 @@ DATABASES = {
     }
 }
 
-# DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
-DROPBOX_OAUTH2_TOKEN = os.getenv('DROPBOX_OAUTH2_TOKEN')
-DROPBOX_APP_KEY = os.getenv('DROPBOX_APP_KEY')
-DROPBOX_APP_SECRET = os.getenv('DROPBOX_APP_SECRET')
-DROPBOX_OAUTH2_REFRESH_TOKEN = os.getenv('DROPBOX_OAUTH2_REFRESH_TOKEN')
+DROPBOX = {
+    'app_key': os.getenv('DROPBOX_APP_KEY'), 
+    'app_secret': os.getenv('DROPBOX_APP_SECRET'), 
+    'refresh_token': os.getenv('REFRESH_TOKEN'), 
+    'access_token': '',
+}
 
+# DEFAULT_FILE_STORAGE = 'uploads/'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

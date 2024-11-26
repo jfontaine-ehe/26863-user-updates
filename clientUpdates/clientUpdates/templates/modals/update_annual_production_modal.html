@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var form = document.getElementById('updateAnnualProductionForm');
     var yearInput = document.getElementById('flowRateYear');
     var fileInput = document.getElementById('annualProductionFileUpload');
+    const maxFileSizeBytes = 25 * 1024 * 1024 // Max file size: 25 MB
     const submitButton = document.getElementById('submit-button');
     var allowedExtensions = ['xls', 'xlsx', 'xlsm', 'pdf', 'jpg', 'jpeg', 'png'];
 
@@ -102,11 +103,16 @@ document.addEventListener("DOMContentLoaded", function () {
         // Validate file type
         const fileName = fileInput.value;
         const fileExtension = fileName.split('.').pop().toLowerCase();
+        const file = fileInput.files[0];
 
         if (!allowedExtensions.includes(fileExtension)) {
             valid = false;
             fileInput.classList.add('is-invalid');
             document.getElementById('file-upload-error').innerHTML = "Annual production file must be a spreadsheet, pdf, or an image file.";
+        } else if (file && file.size > maxFileSizeBytes) {
+            valid = false;
+            fileInput.classList.add('is-invalid');
+            document.getElementById('file-upload-error').innerHTML = "File size must not exceed 25 MB.";
         }
 
         // Prevent form submission if invalid

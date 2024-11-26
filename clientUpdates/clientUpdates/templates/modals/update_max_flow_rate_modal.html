@@ -60,10 +60,11 @@
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById('updateMaxFlowRateForm');
-    const fileInput = document.getElementById('maxFlowRateFileUpload');
     const allowedExtensions = ['xls', 'xlsx', 'xlsm', 'pdf', 'jpg', 'jpeg', 'png'];
     const updateMaxFlowRateModal = document.getElementById('updateMaxFlowRateModal');
-    
+    const fileInput = document.getElementById('maxFlowRateFileUpload');    
+    const maxFileSizeBytes = 25 * 1024 * 1024 // Max file size: 25 MB
+
     // When the modal is hidden
     updateMaxFlowRateModal.addEventListener('hide.bs.modal', function () {
         // Reset the form and clear validation errors
@@ -74,26 +75,31 @@
 
     // Form submission validation
     form.onsubmit = function (event) {
-          let valid = true;
-  
-          // Clear previous errors
-          document.querySelectorAll('.invalid-feedback').forEach(el => el.innerHTML = '');
-          document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));  
-          
-          // Validate file type
-          const fileName = fileInput.value;
-          const fileExtension = fileName.split('.').pop().toLowerCase();
-  
-          if (!allowedExtensions.includes(fileExtension)) {
-              valid = false;
-              fileInput.classList.add('is-invalid');
-              document.getElementById('file-upload-error').innerHTML = "Max Flow Rate file must be a spreadsheet, pdf or an image file.";
-          }
-  
-          // Prevent form submission if invalid
-          if (!valid) {
-              event.preventDefault();
-          }
-      };
+      let valid = true;
+
+      // Clear previous errors
+      document.querySelectorAll('.invalid-feedback').forEach(el => el.innerHTML = '');
+      document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));  
+      
+      // Validate file type
+      const fileName = fileInput.value;
+      const file = fileInput.files[0];
+      const fileExtension = fileName.split('.').pop().toLowerCase();
+
+      if (!allowedExtensions.includes(fileExtension)) {
+          valid = false;
+          fileInput.classList.add('is-invalid');
+          document.getElementById('file-upload-error').innerHTML = "Max Flow Rate file must be a spreadsheet, pdf or an image file.";
+      } else if (file && file.size > maxFileSizeBytes) {
+        valid = false;
+        fileInput.classList.add('is-invalid');
+        document.getElementById('file-upload-error').innerHTML = "File size must not exceed 25 MB.";
+      }
+
+      // Prevent form submission if invalid
+      if (!valid) {
+          event.preventDefault();
+      }
+  };
   });
 </script>
