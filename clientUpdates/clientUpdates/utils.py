@@ -32,7 +32,7 @@ def handle_update(request, form_class, extra_fields, calc_func=None, source_vari
             instance.pwsid = pwsid
             instance.source_name = source_name
             instance.submit_date = timezone.now()
-            instance.filename = form.cleaned_data.get('filename')
+            instance.filename = form.cleaned_data.get('filename').name
             instance.data_origin = "EHE Update Portal"
             instance.updated_by_water_provider = True
 

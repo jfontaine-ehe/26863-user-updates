@@ -136,6 +136,8 @@
     form.onsubmit = function (event) {
       let valid = true;
 
+      // When the form is submitted, the analyteInput field should not be disabled so it can
+      // pass the anlayte value to the view. Keeping it disabled will pass an empty string.
       analyteInput.disabled = false;
 
       // Clear previous errors
@@ -201,6 +203,8 @@
 
       // Prevent form submission if invalid
       if (!valid) {
+        // switch analyteInput back to true so this field does not become enabled when a user has a failed submission
+        analyteInput.disabled = true
         event.preventDefault();
       }
     };
