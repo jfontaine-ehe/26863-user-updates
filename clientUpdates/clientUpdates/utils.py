@@ -1,3 +1,5 @@
+import os
+
 import dropbox
 import logging
 from itertools import chain
@@ -30,7 +32,7 @@ def handle_update(request, form_class, extra_fields, calc_func=None, source_vari
             instance.pwsid = pwsid
             instance.source_name = source_name
             instance.submit_date = timezone.now()
-            instance.filename = form.cleaned_data.get('filename')
+            instance.filename = form.cleaned_data.get('filename').name
             instance.data_origin = "EHE Update Portal"
             instance.updated_by_water_provider = True
 
@@ -58,7 +60,7 @@ def handle_update(request, form_class, extra_fields, calc_func=None, source_vari
             messages.success(request, f"{source_variable} updated successfully.")
 
             # Upload file to Dropbox
-            # TODO: Joe, pleae ensure that this works.
+            # TODO: Joe, please ensure that this works.
             file = request.FILES.get('filename')
             filetype = 'Flow Rate' if source_variable else 'PFAS Results'
             if file:
@@ -234,11 +236,13 @@ def upload_to_dropbox(file, filetype, pwsid):
     
     dropbox_access_token = settings.DROPBOX_OAUTH2_TOKEN
     if not dropbox_access_token:
-        return JsonResponse({'error': 'Dropbox access token not configured'}, status=500)
+        return print("no token")
+        #return JsonResponse({'error': 'Dropbox access token not configured'}, status=500)
     
     try:
         # Initialize Dropbox client
-        dbx = dropbox.Dropbox(dropbox_access_token)
+        dbx = dropbox.Dropbox(oauth2_access_token=dropbox_access_token, oauth2_refresh_token= settings.DROPBOX_OAUTH2_REFRESH_TOKEN,
+                              app_key = settings.DROPBOX_APP_KEY, app_secret= settings.DROPBOX_APP_SECRET)
         
         # Define the folder and file paths in Dropbox
         folder_path = f"/{filetype}/{pwsid}"
@@ -257,7 +261,7 @@ def upload_to_dropbox(file, filetype, pwsid):
         # Return success response
         return JsonResponse({'success': 'File uploaded to Dropbox successfully', 'path': dropbox_file_path})
 
-    except dropbox.exceptions.AuthError:
+    except dropbox.exceptions.AuthError as e:
         return JsonResponse({'error': 'Invalid Dropbox access token'}, status=401)
     except dropbox.exceptions.ApiError as e:
         return JsonResponse({'error': f'Dropbox API error: {str(e)}'}, status=500)
