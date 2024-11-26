@@ -1,3 +1,5 @@
+import os
+
 import dropbox
 import logging
 import requests
@@ -50,8 +52,7 @@ def handle_update(request, form_class, extra_fields, calc_func=None, source_vari
 
             try:
                 # TODO: Joe, please ensure this works for PFAS results, max flow rate, and annual production updates. 
-                # instance.save()
-                print('test')
+                instance.save()
             except Exception as e:
                 logger.error("Error saving instance: %s", e)
                 messages.error(request, "Failed to save updates due to a system error.")
@@ -232,10 +233,12 @@ def refresh_dropbox_access_token():
     """
     try:
         response = requests.post(
-            DROPBOX_TOKEN_URL,
+            "https://api.dropbox.com/oauth2/token",
             data={
                 'grant_type': 'refresh_token',
-                'refresh_token': settings.DROPBOX['refresh_token'],
+                'refresh_token': settings.DROPBOX['refresh_token']
+                #'client_id': settings.DROPBOX['app_key'],
+                #'client_secret': settings.DROPBOX['app_secret']
             },
             auth=(settings.DROPBOX['app_key'], settings.DROPBOX['app_secret'])
         )
@@ -293,11 +296,17 @@ def upload_to_dropbox(file, filetype, pwsid):
         folder_path = f"/uploads/{pwsid}/{filetype}"
         dropbox_path = f"{folder_path}/{file.name}"
 
+        # Path for local upload
+        local_path = f"{pwsid}/{filetype}/{file.name}"
+
         # Save locally
         # TODO: Joe, might be a good idea to save locally temporarily and delete after 5 days. 
         # safeguard against dropbox not working. 
         # deleting after 5 days or so will help with storage issues if that becomes a problem. 
-        # default_storage.save(dropbox_path, file)
+
+        # if the file does not already exist, save to local storage.
+        if not os.path.exists(default_storage.path(local_path)):
+            default_storage.save(local_path, file)
 
         # Ensure folder exists
         ensure_dropbox_folder(dbx, folder_path)
