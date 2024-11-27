@@ -51,7 +51,7 @@ def handle_update(request, form_class, extra_fields, calc_func=None, source_vari
                 instance.source_variable = source_variable
 
             try:
-                # TODO: Joe, please ensure this works for PFAS results, max flow rate, and annual production updates. 
+                # TODO: Joe, please ensure this works for PFAS results, max flow rate, and annual production updates.
                 # instance.save()
             except Exception as e:
                 logger.error("Error saving instance: %s", e)
@@ -154,7 +154,7 @@ def add_pfoas_if_missing(pfas_results, pwsid, water_source_id, source_name):
 
 
 def get_max_other_threshold(pfas_results):
-    """ Finds the the threshold result for the maximum another analyte. """
+    """ Finds the threshold result for the maximum another analyte. """
     pfoa_result = next((result['result_ppt'] for result in pfas_results if result['analyte'] == 'PFOA'), 0)
     pfos_result = next((result['result_ppt'] for result in pfas_results if result['analyte'] == 'PFOS'), 0)
     return round((pfoa_result + pfos_result) ** 2, 1)
