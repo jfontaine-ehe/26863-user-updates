@@ -172,11 +172,11 @@ class Pws(models.Model):
     form_pw = models.TextField(blank=True, null=True)
     gs_version_control = models.TextField(blank=True, null=True)
     data_entry_status = models.TextField(blank=True, null=True)
-    gfe_requests = models.TextField(blank=True, null=True)
-    gfe_estimate_basis = models.TextField(blank=True, null=True)
-    gfe_already_provided_by_firm = models.TextField(blank=True, null=True)
+    #gfe_requests = models.TextField(blank=True, null=True)
+    #gfe_estimate_basis = models.TextField(blank=True, null=True)
+    #gfe_already_provided_by_firm = models.TextField(blank=True, null=True)
     form_entry_started = models.TextField(blank=True, null=True)
-    gfe_ready = models.BooleanField(blank=True, null=True)
+    #gfe_ready = models.BooleanField(blank=True, null=True)
     final_opt_decision = models.TextField(blank=True, null=True)
     doc_letter = models.TextField(blank=True, null=True)
     letter_group = models.TextField(blank=True, null=True)
@@ -187,14 +187,14 @@ class Pws(models.Model):
     production_qc = models.BooleanField(blank=True, null=True)
     baseline_qc = models.BooleanField(blank=True, null=True)
     date_reviewed = models.DateField(blank=True, null=True)
-    pfas_files_associated = models.FloatField(blank=True, null=True)
-    n_x = models.IntegerField(db_column='n.x', blank=True, null=True)  # Field renamed to remove unsuitable characters.
-    pct_pfas_associated = models.FloatField(blank=True, null=True)
-    n_pfas_files_rcvd = models.IntegerField(blank=True, null=True)
-    prod_files_associated = models.FloatField(blank=True, null=True)
-    n_y = models.IntegerField(db_column='n.y', blank=True, null=True)  # Field renamed to remove unsuitable characters.
-    pct_prod_associated = models.FloatField(blank=True, null=True)
-    n_prod_files_rcvd = models.IntegerField(blank=True, null=True)
+    #pfas_files_associated = models.FloatField(blank=True, null=True)
+    #n_x = models.IntegerField(db_column='n.x', blank=True, null=True)  # Field renamed to remove unsuitable characters.
+    #pct_pfas_associated = models.FloatField(blank=True, null=True)
+    #n_pfas_files_rcvd = models.IntegerField(blank=True, null=True)
+    #prod_files_associated = models.FloatField(blank=True, null=True)
+    #n_y = models.IntegerField(db_column='n.y', blank=True, null=True)  # Field renamed to remove unsuitable characters.
+    #pct_prod_associated = models.FloatField(blank=True, null=True)
+    #n_prod_files_rcvd = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = True

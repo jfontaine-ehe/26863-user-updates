@@ -1,3 +1,5 @@
+import os
+
 import dropbox
 import logging
 import requests
@@ -32,7 +34,7 @@ def handle_update(request, form_class, extra_fields, calc_func=None, source_vari
             instance.pwsid = pwsid
             instance.source_name = source_name
             instance.submit_date = timezone.now()
-            instance.filename = form.cleaned_data.get('filename')
+            instance.filename = form.cleaned_data.get('filename').name
             instance.data_origin = "EHE Update Portal"
             instance.updated_by_water_provider = True
 
@@ -49,9 +51,8 @@ def handle_update(request, form_class, extra_fields, calc_func=None, source_vari
                 instance.source_variable = source_variable
 
             try:
-                # TODO: Joe, please ensure this works for PFAS results, max flow rate, and annual production updates. 
+                # TODO: Joe, please ensure this works for PFAS results, max flow rate, and annual production updates.
                 # instance.save()
-                print('test')
             except Exception as e:
                 logger.error("Error saving instance: %s", e)
                 messages.error(request, "Failed to save updates due to a system error.")
@@ -153,7 +154,7 @@ def add_pfoas_if_missing(pfas_results, pwsid, water_source_id, source_name):
 
 
 def get_max_other_threshold(pfas_results):
-    """ Finds the the threshold result for the maximum another analyte. """
+    """ Finds the threshold result for the maximum another analyte. """
     pfoa_result = next((result['result_ppt'] for result in pfas_results if result['analyte'] == 'PFOA'), 0)
     pfos_result = next((result['result_ppt'] for result in pfas_results if result['analyte'] == 'PFOS'), 0)
     return round((pfoa_result + pfos_result) ** 2, 1)
@@ -232,10 +233,12 @@ def refresh_dropbox_access_token():
     """
     try:
         response = requests.post(
-            DROPBOX_TOKEN_URL,
+            "https://api.dropbox.com/oauth2/token",
             data={
                 'grant_type': 'refresh_token',
-                'refresh_token': settings.DROPBOX['refresh_token'],
+                'refresh_token': settings.DROPBOX['refresh_token']
+                #'client_id': settings.DROPBOX['app_key'],
+                #'client_secret': settings.DROPBOX['app_secret']
             },
             auth=(settings.DROPBOX['app_key'], settings.DROPBOX['app_secret'])
         )
@@ -293,11 +296,17 @@ def upload_to_dropbox(file, filetype, pwsid):
         folder_path = f"/uploads/{pwsid}/{filetype}"
         dropbox_path = f"{folder_path}/{file.name}"
 
+        # Path for local upload
+        local_path = f"{pwsid}/{filetype}/{file.name}"
+
         # Save locally
         # TODO: Joe, might be a good idea to save locally temporarily and delete after 5 days. 
         # safeguard against dropbox not working. 
         # deleting after 5 days or so will help with storage issues if that becomes a problem. 
-        # default_storage.save(dropbox_path, file)
+
+        # if the file does not already exist, save to local storage.
+        if not os.path.exists(default_storage.path(local_path)):
+            default_storage.save(local_path, file)
 
         # Ensure folder exists
         ensure_dropbox_folder(dbx, folder_path)
