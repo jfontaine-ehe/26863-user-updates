@@ -75,7 +75,7 @@
                 <option value="" disabled selected>Select analytical lab</option>
                 <option value="Eurofins">Eurofins</option>
                 <option value="Pace Analytical">Pace Analytical</option>
-                <option value="Enthalpy">Enthalpy</option>
+                <option value="Enthalpy Analytical">Enthalpy Analytical</option>
                 <option value="Babcock">Babcock</option>
                 <option value="Other">Other</option>
               </select>
@@ -106,6 +106,7 @@
           <div class="mb-3">
             <label for="pfasFileUpload" class="form-label">Upload lab report showing this result</label>
             <input type="file" class="form-control" id="pfasFileUpload" name="filename" accept=".pdf, .jpg, .jpeg, .png" required>
+            <small class="text-muted">Supported file types: .pdf, .jpg, .jpeg, .png</small>
             <div class="invalid-feedback" id="file-upload-error"></div>
           </div>
 
@@ -127,11 +128,16 @@
     const analysisDateInput = document.getElementById('pfasAnalysisDateInput');
     const analyteInput = document.getElementById('pfasResultAnalyteInput'); // Added analyte input reference
     const submitButton = document.getElementById('submit-button');
+    const fileInput = document.getElementById('pfasFileUpload');
+    const maxFileSizeBytes = 25 * 1024 * 1024 // Max file size: 25 MB
+
     let currentResult = 0;
 
     form.onsubmit = function (event) {
       let valid = true;
 
+      // When the form is submitted, the analyteInput field should not be disabled so it can
+      // pass the anlayte value to the view. Keeping it disabled will pass an empty string.
       analyteInput.disabled = false;
 
       // Clear previous errors
@@ -178,20 +184,27 @@
         document.getElementById('analysis-date-error').innerHTML = "Analysis date cannot be in the future.";
       }
 
-      // Validate file type
-      const fileInput = document.getElementById('pfasFileUpload');
+      // Validate file type and size
+      
       const allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
       const fileName = fileInput.value;
       const fileExtension = fileName.split('.').pop().toLowerCase();
+      const file = fileInput.files[0];
 
       if (!allowedExtensions.includes(fileExtension)) {
         valid = false;
         fileInput.classList.add('is-invalid');
         document.getElementById('file-upload-error').innerHTML = "Lab report must be a pdf or an image file.";
+      } else if (file && file.size > maxFileSizeBytes) {
+        valid = false;
+        fileInput.classList.add('is-invalid');
+        document.getElementById('file-upload-error').innerHTML = "File size must not exceed 25 MB.";
       }
 
       // Prevent form submission if invalid
       if (!valid) {
+        // switch analyteInput back to true so this field does not become enabled when a user has a failed submission
+        analyteInput.disabled = true
         event.preventDefault();
       }
     };
@@ -202,7 +215,6 @@
       var button = event.relatedTarget;
 
       // Extract data from data-* attributes (these attributes are from the Update button in the source_detail.html page)
-      var rowNames = button.getAttribute('data-row-names') || 0;
       var analyte = button.getAttribute('data-analyte');
       var pfasResultAttribute = button.getAttribute('data-pfas-result');
       var pfasResult = pfasResultAttribute && !isNaN(pfasResultAttribute) ? parseFloat(pfasResultAttribute) : 0;

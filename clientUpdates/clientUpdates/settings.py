@@ -58,7 +58,7 @@ ROOT_URLCONF = 'clientUpdates.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'clientUpdates.context_processors.info_bar_context'
             ],
         },
     },
@@ -88,12 +89,14 @@ DATABASES = {
     }
 }
 
-# DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
-DROPBOX_OAUTH2_TOKEN = os.getenv('DROPBOX_OAUTH2_TOKEN')
-DROPBOX_APP_KEY = os.getenv('DROPBOX_APP_KEY')
-DROPBOX_APP_SECRET = os.getenv('DROPBOX_APP_SECRET')
-DROPBOX_OAUTH2_REFRESH_TOKEN = os.getenv('DROPBOX_OAUTH2_REFRESH_TOKEN')
+DROPBOX = {
+    'app_key': os.getenv('DROPBOX_APP_KEY'), 
+    'app_secret': os.getenv('DROPBOX_APP_SECRET'), 
+    'refresh_token': os.getenv('REFRESH_TOKEN'), 
+    'access_token': '',
+}
 
+# DEFAULT_FILE_STORAGE = 'uploads/'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -130,6 +133,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Needed for local file storage configuration for user uploads
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+MEDIA_URL = '/uploads/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
