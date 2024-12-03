@@ -1,8 +1,19 @@
+# Ignore migrations 
 mirations/
 clientUpdates/migrations/
 clientUpdates/clientUpdates/migrations/
+
+# Ignore uploads
 clientUpdates/temp/
 clientUpdates/uploads/
+uploads/
+
+# ignore logs
+logs/
+*.log
+
+# Ignore static files
+staticfiles/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
