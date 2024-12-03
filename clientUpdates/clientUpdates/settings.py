@@ -15,6 +15,13 @@ from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+if os.name == 'nt':  # Windows
+    LOG_DIR = os.path.join(BASE_DIR, 'logs')  # Local logs folder
+else:  # Linux
+    LOG_DIR = '/var/log/django'  # Production logs folder
+
+os.makedirs(LOG_DIR, exist_ok=True)
+
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
@@ -24,10 +31,13 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
 
 # Application definition
 
@@ -134,6 +144,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+if os.name == 'nt':  # Windows
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Local static folder
+else:  # Linux
+    STATIC_ROOT = '/var/www/yourproject/static/'  # Production path
+
 # Needed for local file storage configuration for user uploads
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 MEDIA_URL = '/uploads/'
@@ -159,32 +174,44 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
-            'level': 'DEBUG',  
+            'level': 'WARNING',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple',
+            'formatter': 'verbose',
         },
         'file': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': 'debug.log', 
-            'formatter': 'simple',
+            'filename': os.path.join(LOG_DIR, 'production.log'),  # Cross-platform path
+            'formatter': 'verbose',
+        },
+        'security_file': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'security.log'),  # Cross-platform path
+            'formatter': 'verbose',
         },
     },
     'formatters': {
-        'simple': {
-            'format': '{levelname}: {message}',
-            'style': '{',  
+        'verbose': {
+            'format': '{asctime} {levelname} {name} {message}',
+            'style': '{',
         },
     },
     'loggers': {
         'django': {
             'handlers': ['console', 'file'],
-            'level': 'ERROR',  
+            'level': 'WARNING',
             'propagate': True,
+        },
+        'django.security': {
+            'handlers': ['security_file'],
+            'level': 'WARNING',
+            'propagate': False,
         },
         'clientUpdates': {  
             'handlers': ['console', 'file'],  
-            'level': 'DEBUG',  
+            'level': 'ERROR',  
         },
     },
 }
+

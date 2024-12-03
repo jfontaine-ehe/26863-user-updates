@@ -52,7 +52,7 @@ def handle_update(request, form_class, extra_fields, calc_func=None, source_vari
 
             try:
                 # TODO: Joe, please ensure this works for PFAS results, max flow rate, and annual production updates.
-                # instance.save()
+                instance.save()
             except Exception as e:
                 logger.error("Error saving instance: %s", e)
                 messages.error(request, "Failed to save updates due to a system error.")
