@@ -67,6 +67,9 @@ def source_detail_view(request, pwsid, source_name):
     pfas_results = add_pfoas_if_missing(max_pfas_results, source.pwsid, source.water_source_id, source.source_name)
     max_other_threshold = get_max_other_threshold(pfas_results)
     
+    impacted = True if not source.all_nds or updated_pfas_results else False
+    print(impacted)
+
     #### Max Flow Rate ####
     columns_flow = ['pwsid', 'water_source_id', 'source_name', 'source_variable', 'year', 'flow_rate', 'unit', 'flow_rate_gpm', 'data_origin']
     claim_max_flow_rate = ClaimFlowRate.objects.filter(pwsid=source.pwsid, source_name=source_name, source_variable='VFR')
@@ -84,6 +87,7 @@ def source_detail_view(request, pwsid, source_name):
     # Prepare context for rendering
     context = {
         'source': source,
+        'impacted': impacted,
         'max_flow_rate': max_flow_rate,
         'annuals': annuals,
         'pfas_results': pfas_results,

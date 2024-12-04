@@ -43,7 +43,7 @@
                 
                 <div>
                     <em><b>Important note</b></em>
-                    {% if not source.all_nds %}
+                    {% if impacted %}
                     <div id="unimpacted-pfas-text">
                         <p>
                             You may only see PFOA and PFOS concentrations above even though you have provided concentrations for other PFAS. This is intentional.
@@ -81,7 +81,7 @@
         </div> 
     </div> 
 
-    {% if not source.all_nds %}
+    {% if impacted %}
     <div class="card">
         <div class="card-body">
             <div id="max-flow-rate-section">
@@ -137,7 +137,7 @@
                                 <td>{{ annual.unit|upper }}</td>
                                 
                                 <td class="actions-col text-center">
-                                    {% if source.all_nds or annual.year == 2023 %}
+                                    {% if not impacted or annual.year == 2023 %}
                                         <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addOrUpdateAnnualModal"
                                                 data-source-name="{{ source.source_name }}" data-year="{{ annual.year }}">
                                             Update

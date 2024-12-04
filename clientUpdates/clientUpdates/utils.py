@@ -12,10 +12,32 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect
-
+from .models import Source
 logger = logging.getLogger('clientUpdates')
 
-def handle_update(request, form_class, extra_fields, calc_func=None, source_variable=None):
+def update_ehe_source_table():
+    """
+    The only changes that should ever me made are to EH&E's tables not claim tables (all prefixed with 'claim_')
+    When the water provider updates PFAS result(s), Max Flow Rate, or Annual Production, the following steps need to be taken:
+        - calculate new PFAS score for the source
+        - calculate new Adjusted Flow Rate (AFR) for the source using the highest max flow rate and three highest years of annual production (not including 2013)
+        - update the EHE source table accordingly. note that if PFAS result has been added for a previously unimpacted source, then all_nds needs to be changed to False
+        - calculate GFE per source
+    
+    In order to do so, the following needs to be done: 
+        - merge data from claim pfas results and claim flow rate tables with the corresponding EH&E tables to have the full data set of PFAS results and flow rates. 
+        - filter ehe tables by data_origin = "EHE Update Portal" and updated_by_water_provider = True
+        - ensure that have a) unique entry per year, per analyte and for max flow rate, and b) the highest value for each of those categories. 
+        PfasResult.get.object(pwsid=pwsid, source_name=source_name, analyte='PFOA').order_by(result_ppt, -1).first()
+        - find the max_other
+
+    """
+    return 
+
+def update_ehe_pws_table():
+    return
+
+def handle_update(request, form_class, extra_fields, impacted=None, calc_func=None, source_variable=None):
     """
     Handles common update logic for PFAS results, max flow rate, and annual production.
     """
@@ -53,23 +75,25 @@ def handle_update(request, form_class, extra_fields, calc_func=None, source_vari
             try:
                 # TODO: Joe, please ensure this works for PFAS results, max flow rate, and annual production updates.
                 instance.save()
+                update_ehe_source_table()
+                update_ehe_pws_table()
+
+                filetype = 'Flow Rate' if source_variable else 'PFAS Results'
+                logger.info(f"{filetype} updated successfully for {source_name}.")
+                messages.success(request, f"{filetype} updated successfully.")
+
+                # Upload file to Dropbox
+                # TODO: Joe, pleae ensure that this works.
+                file = request.FILES.get('filename')
+                
+                if file:
+                    upload_to_dropbox(file, filetype, pwsid)
+
+                return redirect('source-detail', pwsid=pwsid, source_name=source_name)
             except Exception as e:
                 logger.error("Error saving instance: %s", e)
                 messages.error(request, "Failed to save updates due to a system error.")
                 return redirect('source-detail', pwsid=pwsid, source_name=source_name)
-            
-            filetype = 'Flow Rate' if source_variable else 'PFAS Results'
-            logger.info(f"{filetype} updated successfully for {source_name}.")
-            messages.success(request, f"{filetype} updated successfully.")
-
-            # Upload file to Dropbox
-            # TODO: Joe, pleae ensure that this works.
-            file = request.FILES.get('filename')
-            
-            if file:
-                upload_to_dropbox(file, filetype, pwsid)
-
-            return redirect('source-detail', pwsid=pwsid, source_name=source_name)
 
         else:
             logger.error("Form validation failed with errors: %s", form.errors)
