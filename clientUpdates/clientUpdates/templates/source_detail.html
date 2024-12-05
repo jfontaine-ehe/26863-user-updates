@@ -137,7 +137,7 @@
                                 <td>{{ annual.unit|upper }}</td>
                                 
                                 <td class="actions-col text-center">
-                                    {% if not impacted or annual.year == 2023 %}
+                                    {% if source.all_nds or annual.year == 2023 %}
                                         <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addOrUpdateAnnualModal"
                                                 data-source-name="{{ source.source_name }}" data-year="{{ annual.year }}">
                                             Update
