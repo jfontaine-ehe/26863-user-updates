@@ -341,7 +341,7 @@ class PfasResult(models.Model):
     rl = models.FloatField(blank=True, null=True)
     filename = models.FileField(upload_to='uploads/', blank=True, null=True)
     analysis_date = models.DateField(blank=True, null=True)
-    comments = models.BooleanField(blank=True, null=True)
+    comments = models.TextField(blank=True, null=True)
     dms_initials = models.TextField(blank=True, null=True)
     all_nds = models.BooleanField(blank=True, null=True)
     source_name = models.TextField(blank=True, null=True)

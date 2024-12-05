@@ -111,7 +111,8 @@ def update_pfas_result_view(request):
             'analysis_date': 'analysis_date',
             'lab': 'lab',
             'analysis_method': 'analysis_method',
-            'lab_sample_id': 'lab_sample_id',
+            'lab_sample_id': 'lab_sample_id', 
+            'comments': 'comments'
         },
         calc_func=calc_pfas_fields,
         source_variable=None
@@ -127,7 +128,9 @@ def update_max_flow_rate_view(request):
     return handle_update(
         request,
         form_class=MaxFlowRateUpdateForm,
-        extra_fields={},
+        extra_fields={
+            'comments': 'comments'
+        },
         calc_func=calc_max_flow_rate_fields,
         source_variable='VFR'
     )
@@ -143,7 +146,9 @@ def update_annual_production_view(request):
     return handle_update(
         request,
         form_class=AnnualProductionForm,
-        extra_fields={},
+        extra_fields={
+            'comments': 'comments'
+        },
         calc_func=calc_annual_production_fields,
         source_variable='AFR'
     )

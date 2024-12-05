@@ -11,7 +11,8 @@ class MaxFlowRateUpdateForm(forms.ModelForm):
         fields = [
             'flow_rate', 
             'unit', 
-            'filename'
+            'filename',
+            'comments'
         ]
         
     def clean_filename(self):
@@ -30,7 +31,8 @@ class AnnualProductionForm(forms.ModelForm):
             'year',
             'flow_rate',
             'unit',
-            'filename'
+            'filename',
+            'comments'
         ]
     
     def clean_flow_rate(self):
@@ -62,7 +64,8 @@ class PfasResultUpdateForm(forms.ModelForm):
             'lab',
             'analysis_method',
             'lab_sample_id', 
-            'filename'
+            'filename',
+            'comments'
         ]
 
         widgets = {
