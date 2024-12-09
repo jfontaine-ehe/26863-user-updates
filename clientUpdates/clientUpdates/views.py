@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+from django.http import JsonResponse
 from .models import Pws, PfasResult, FlowRate, ClaimPws, ClaimSource, ClaimFlowRate, ClaimPfasResult
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm
 import logging
@@ -155,28 +156,38 @@ def update_annual_production_view(request):
         source_variable='AFR'
     )
 
+@login_required
 def contact_view(request):
     pwsid = request.user.username
-    recipients = ['asinghal@eheinc.com', 'jfrederick@eheinc.com', 'ltravis@eheinc.com', 'acrs@eheinc.com']
+    recipients = settings.EMAIL_RECIPIENTS
+    
     if request.method == 'POST':
         form = ContactForm(request.POST)
+        
         if form.is_valid():
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
-            
+            full_message = f"From: {name}\n\n{message}"
 
-            full_message = f"From: {pwsid}\n\n{message}"
-            send_mail(
-                f"{subject} (from {name})", 
-                full_message,
-                email, 
-                recipient_list=recipients,
-                fail_silently=False,
+            email_message = EmailMessage(
+                subject=f"{subject} (from {pwsid})",
+                body=full_message,
+                from_email=settings.EMAIL_HOST_USER,  
+                to=recipients,
+                reply_to=[email], 
             )
+            email_message.send(fail_silently=False)
 
-            return render(request, 'contact_success.html')
+            # Return a JSON response for AJAX
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'message': 'Email sent successfully.'})
+
+            return render(request, 'dashboard.html')
+        
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'Invalid form submission'}, status=400)
         
     else:
         form = ContactForm()
