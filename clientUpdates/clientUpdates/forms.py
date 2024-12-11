@@ -31,9 +31,14 @@ class AnnualProductionForm(forms.ModelForm):
             'year',
             'flow_rate',
             'unit',
+            'flow_rate_reduced',
             'filename',
             'comments'
         ]
+        widgets = {
+            'flow_rate_reduced': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        
     
     def clean_flow_rate(self):
         flow_rate = self.cleaned_data.get('flow_rate')

@@ -19,6 +19,11 @@ class CustomLoginView(LoginView):
     template_name = 'login.html'
     success_url = reverse_lazy('dashboard')
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('dashboard')  # Redirect to the dashboard if the user is already logged in
+        return super().dispatch(request, *args, **kwargs)
+
 def root_redirect(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
@@ -145,11 +150,12 @@ def update_annual_production_view(request):
         instance.unit = cleaned_data['unit']
         instance.flow_rate_gpm = calc_gpm_flow_rate(instance.flow_rate, instance.unit)
         instance.year = cleaned_data['year']
-
+        
     return handle_update(
         request,
         form_class=AnnualProductionForm,
         extra_fields={
+            'flow_rate_reduced': 'flow_rate_reduced',
             'comments': 'comments'
         },
         calc_func=calc_annual_production_fields,

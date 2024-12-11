@@ -27,6 +27,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django.middleware.cache.UpdateCacheMiddleware', 
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -96,4 +98,11 @@ DATABASES = {
         'HOST': os.getenv('DATABASE_HOST'),
         'PORT': os.getenv('DATABASE_PORT', '5432'),
     }
+}
+
+DROPBOX = {
+    'app_key': os.getenv('DROPBOX_APP_KEY'),
+    'app_secret': os.getenv('DROPBOX_APP_SECRET'),
+    'refresh_token': os.getenv('REFRESH_TOKEN'),
+    'access_token': '',
 }

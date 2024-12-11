@@ -42,20 +42,18 @@
                 </table>
                 
                 <div>
-                    <em><b>Important note</b></em>
+                    <b>Important note</b>
                     {% if impacted %}
                     <div id="unimpacted-pfas-text">
                         <p>
                             You may only see PFOA and PFOS concentrations above even though you have provided concentrations for other PFAS. This is intentional.
                         </p>
                         <p>
-                            Concentration of another PFAS is only necessary for <em>{{ source.source_name }}</em> if the concentration of that PFAS 
-                            exceeds {{ max_other_threshold }} ppt. Otherwise, concentrations for other PFAS are not necessary because of the way the Settlements formulae
-                            are set up for calculating recovery. 
+                            The settlement allocations only utilize other PFAS analytes if the calculated value of one analyte far exceeds the combined value of PFOA ns PFOS. Results for other PFAS analytes are only necessary for <em>{{ source.source_name }}</em> if the concentration of an individual PFAS 
+                            exceeds {{ max_other_threshold }} ppt.  
                         </p>
                         <p>
-                            If you have a lab report that shows that the concentration for <b>PFAS other than PFOA and PFOS is greater than {{ max_other_threshold }} ppt,</b>
-                            then please use the button below to provide results. 
+                            If you have a lab report that shows that the concentration for <em>PFAS other than PFOA and PFOS is greater than {{ max_other_threshold }} ppt</em>, then please use the button below to provide results. 
                         </p>
                     </div>
                     {% else %}
@@ -65,8 +63,7 @@
                             and hence is unimpacted. 
                         </p>
                         <p>
-                            If you have had PFOA or PFOS detections since please update them above. If you have had detections 
-                            for other PFAS, please do so using the button below. 
+                            If you have had PFOA or PFOS detections since please update them above. If you have had detections for other PFAS, please add them using the button below. These detections can be from any time and at any measurable concentration.
                         </p>
                     </div>
                     {% endif %}
@@ -86,6 +83,12 @@
         <div class="card-body">
             <div id="max-flow-rate-section">
                 <h4>Maximum Flow Rate</h4>
+                <p>
+                    It is unlikely that the maximum flow rate for {{ source.source_name }} needs to be updated, but you may update it if you have records that demonstrate a <em>higher</em> maximum flow rate than the one listed below. As a reminder, maximum flow rate can be the design capacity from well drillers logs, design specification sheets, annual reports filed with the state, e.g., ASRs, pump tests for the well or surface water intake, etc. These are likely to be the highest values. If you do not have these available, flow meter readings or permitted capacities may work but these are likely to be lower than the design specifications. 
+                </p>
+                <p>
+                    If you have any questions, please feel free to <a href="{% url 'contact' %}">contact</a> EH&E.
+                </p>
                 <table class="table">
                     <thead>
                         <tr>
@@ -117,8 +120,11 @@
             <div id="annual-production-section">
                 <h4>Annual Production</h4>
                 <p>
-                    Only the three highest years of annual production are needed. If the annual production for this source for 2023 is higher
-                    than other years, please provide the annual production for 2023. Otherwise, it is not needed but you may update it if you want to. 
+                    Only the <em>three highest years</em> of annual production from 2014 to 2023 are needed. If the annual production for this source for 2023 is higher
+                    than other years listed below, please provide the annual production for 2023. Otherwise, it is not needed, but you may update it if you wish to. 
+                </p>
+                <p>
+                    If providing 2023 production: Please ensure that it is in the same period (calendar year vs fiscal year) as the other years for consistency. If {{ source.source_name }} was inactive 2023 or was reduced or taken offline specifically due to PFAS contamination in 2023, please indicate this in the form. 
                 </p>
                 <table class="table">
                     <thead>
@@ -160,10 +166,11 @@
     <div class="card">
         <div class="card-body">
             <h4>Maximum Flow Rates and Annual Production</h4>
-            <p>Since PFAS have not been detected at this source, annual production and maximum flow rates are not needed.</p>
             <p>
-                If PFAS have been detected, please update the PFAS results above. Doing so will allow you to enter the annual production 
-                and maximum flow rates. 
+                Since PFAS have not been detected at this source, annual production and maximum flow rates are not needed.
+            </p>
+            <p>
+                If PFAS have been detected, please update the PFAS results above. You will then need to add annual production and a maximum flow rate for this source.
             </p>
         </div>
     </div>
