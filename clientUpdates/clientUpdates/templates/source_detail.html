@@ -83,12 +83,27 @@
         <div class="card-body">
             <div id="max-flow-rate-section">
                 <h4>Maximum Flow Rate</h4>
+
+                {% if not source.all_nds %}
                 <p>
                     It is unlikely that the maximum flow rate for {{ source.source_name }} needs to be updated, but you may update it if you have records that demonstrate a <em>higher</em> maximum flow rate than the one listed below. As a reminder, maximum flow rate can be the design capacity from well drillers logs, design specification sheets, annual reports filed with the state, e.g., ASRs, pump tests for the well or surface water intake, etc. These are likely to be the highest values. If you do not have these available, flow meter readings or permitted capacities may work but these are likely to be lower than the design specifications. 
                 </p>
                 <p>
                     If you have any questions, please feel free to <a href="{% url 'contact' %}">contact</a> EH&E.
                 </p>
+
+
+                {% elif source.all_nds %}
+                <p>
+                    Please enter the <em>highest</em> documented flow rate or capacity for {{ source.source_name }}. This could be from design specifications; a report of a pump test for the well or surface water intake; or from a system-wide file you maintain or annual report that lists the capacity of each source. Please upload the document where this value is recorded.
+                </p>
+                <p>
+                    Remember, we are looking for the highest maximum flow rate that has been documented, even if that is higher than your usual use of the source. If you do not have any of the above, please <a href="{% url 'contact' %}">contact</a> EH&E and we will assist you in determining the best way to calculate flow rate based on historical production. 
+                </p>
+
+
+                {% endif %}
+                
                 <table class="table">
                     <thead>
                         <tr>
@@ -119,13 +134,27 @@
         <div class="card-body">
             <div id="annual-production-section">
                 <h4>Annual Production</h4>
+
+                {% if not source.all_nds %}
                 <p>
                     Only the <em>three highest years</em> of annual production from 2014 to 2023 are needed. If the annual production for this source for 2023 is higher
                     than other years listed below, please provide the annual production for 2023. Otherwise, it is not needed, but you may update it if you wish to. 
                 </p>
                 <p>
-                    If providing 2023 production: Please ensure that it is in the same period (calendar year vs fiscal year) as the other years for consistency. If {{ source.source_name }} was inactive 2023 or was reduced or taken offline specifically due to PFAS contamination in 2023, please indicate this in the form. 
+                    If providing 2023 production: Please ensure that it is in the same period (calendar year vs fiscal year) as the other years for consistency. If {{ source.source_name }} was inactive 2023 or was reduced or taken offline <em>specifically due to PFAS contamination</em> in 2023, please indicate this in the form. 
                 </p>
+
+                {% elif source.all_nds %}
+                <p>
+                    Please provide the <em>actual</em> annual production for {{ source.source_name }}. Only the three highest years of annual production from 2014-2023 are required, but please provide all years if available. Production may be provided in fiscal or calendar year. Please upload documentation for each year you provide, which may be the same document for all years if kept together.
+                </p>
+                <p>
+                    In a given year, if {{ source.source_name }} was inactive but did exist or did not exist yet, please enter zero and provide a note to that effect. If in any year {{ source.source_name }} was reduced or taken offline <em>specifically due to PFAS contamination</em>, please mark that in the form.
+                </p>
+
+                {% endif %}
+
+
                 <table class="table">
                     <thead>
                         <tr>
@@ -162,7 +191,7 @@
         </div>
     </div>
 
-    {% else %}
+    {% elif not impacted and source.all_nds %}
     <div class="card">
         <div class="card-body">
             <h4>Maximum Flow Rates and Annual Production</h4>
@@ -174,6 +203,8 @@
             </p>
         </div>
     </div>
+
+    
     {% endif %}
 </div>
 
