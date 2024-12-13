@@ -3,14 +3,14 @@
 
 {% block content %}
 <div class="container">
-    <h3>{{ source.source_name }}</h3>
+    <h3>{{ claim_source.source_name }}</h3>
 
     <div class="card">
         <div class="card-body">
             <div id="pfas-results-section">
                 <h4>PFAS Results</h4>
                 <p>
-                    The following PFAS results were provided to the Office of the Claims Administrator for {{ source.source_name }} for the Phase 1 3M and DuPont claim. Please update the result(s) if you have a higher result than shown below. 
+                    The following PFAS results were provided to the Office of the Claims Administrator for {{ claim_source.source_name }} for the Phase 1 3M and DuPont claim. Please update the result(s) if you have a higher result than shown below. 
                 </p>
                 <table class="table">
                     <thead>
@@ -49,7 +49,7 @@
                             You may only see PFOA and PFOS concentrations above even though you have provided concentrations for other PFAS. This is intentional.
                         </p>
                         <p>
-                            The settlement allocations only utilize other PFAS analytes if the calculated value of one analyte far exceeds the combined value of PFOA ns PFOS. Results for other PFAS analytes are only necessary for <em>{{ source.source_name }}</em> if the concentration of an individual PFAS 
+                            The settlement allocations only utilize other PFAS analytes if the calculated value of one analyte far exceeds the combined value of PFOA ns PFOS. Results for other PFAS analytes are only necessary for <em>{{ claim_source.source_name }}</em> if the concentration of an individual PFAS 
                             exceeds {{ max_other_threshold }} ppt.  
                         </p>
                         <p>
@@ -84,18 +84,18 @@
             <div id="max-flow-rate-section">
                 <h4>Maximum Flow Rate</h4>
 
-                {% if not source.all_nds %}
+                {% if not claim_source.all_nds %}
                 <p>
-                    It is unlikely that the maximum flow rate for {{ source.source_name }} needs to be updated, but you may update it if you have records that demonstrate a <em>higher</em> maximum flow rate than the one listed below. As a reminder, maximum flow rate can be the design capacity from well drillers logs, design specification sheets, annual reports filed with the state, e.g., ASRs, pump tests for the well or surface water intake, etc. These are likely to be the highest values. If you do not have these available, flow meter readings or permitted capacities may work but these are likely to be lower than the design specifications. 
+                    It is unlikely that the maximum flow rate for {{ claim_source.source_name }} needs to be updated, but you may update it if you have records that demonstrate a <em>higher</em> maximum flow rate than the one listed below. As a reminder, maximum flow rate can be the design capacity from well drillers logs, design specification sheets, annual reports filed with the state, e.g., ASRs, pump tests for the well or surface water intake, etc. These are likely to be the highest values. If you do not have these available, flow meter readings or permitted capacities may work but these are likely to be lower than the design specifications. 
                 </p>
                 <p>
                     If you have any questions, please feel free to <a href="{% url 'contact' %}">contact</a> EH&E.
                 </p>
 
 
-                {% elif source.all_nds %}
+                {% elif claim_source.all_nds %}
                 <p>
-                    Please enter the <em>highest</em> documented flow rate or capacity for {{ source.source_name }}. This could be from design specifications; a report of a pump test for the well or surface water intake; or from a system-wide file you maintain or annual report that lists the capacity of each source. Please upload the document where this value is recorded.
+                    Please enter the <em>highest</em> documented flow rate or capacity for {{ claim_source.source_name }}. This could be from design specifications; a report of a pump test for the well or surface water intake; or from a system-wide file you maintain or annual report that lists the capacity of each source. Please upload the document where this value is recorded.
                 </p>
                 <p>
                     Remember, we are looking for the highest maximum flow rate that has been documented, even if that is higher than your usual use of the source. If you do not have any of the above, please <a href="{% url 'contact' %}">contact</a> EH&E and we will assist you in determining the best way to calculate flow rate based on historical production. 
@@ -135,21 +135,21 @@
             <div id="annual-production-section">
                 <h4>Annual Production</h4>
 
-                {% if not source.all_nds %}
+                {% if not claim_source.all_nds %}
                 <p>
                     Only the <em>three highest years</em> of annual production from 2014 to 2023 are needed. If the annual production for this source for 2023 is higher
                     than other years listed below, please provide the annual production for 2023. Otherwise, it is not needed, but you may update it if you wish to. 
                 </p>
                 <p>
-                    If providing 2023 production: Please ensure that it is in the same period (calendar year vs fiscal year) as the other years for consistency. If {{ source.source_name }} was inactive 2023 or was reduced or taken offline <em>specifically due to PFAS contamination</em> in 2023, please indicate this in the form. 
+                    If providing 2023 production: Please ensure that it is in the same period (calendar year vs fiscal year) as the other years for consistency. If {{ claim_source.source_name }} was inactive 2023 or was reduced or taken offline <em>specifically due to PFAS contamination</em> in 2023, please indicate this in the form. 
                 </p>
 
-                {% elif source.all_nds %}
+                {% elif claim_source.all_nds %}
                 <p>
-                    Please provide the <em>actual</em> annual production for {{ source.source_name }}. Only the three highest years of annual production from 2014-2023 are required, but please provide all years if available. Production may be provided in fiscal or calendar year. Please upload documentation for each year you provide, which may be the same document for all years if kept together.
+                    Please provide the <em>actual</em> annual production for {{ claim_source.source_name }}. Only the three highest years of annual production from 2014-2023 are required, but please provide all years if available. Production may be provided in fiscal or calendar year. Please upload documentation for each year you provide, which may be the same document for all years if kept together.
                 </p>
                 <p>
-                    In a given year, if {{ source.source_name }} was inactive but did exist or did not exist yet, please enter zero and provide a note to that effect. If in any year {{ source.source_name }} was reduced or taken offline <em>specifically due to PFAS contamination</em>, please mark that in the form.
+                    In a given year, if {{ claim_source.source_name }} was inactive but did exist or did not exist yet, please enter zero and provide a note to that effect. If in any year {{ claim_source.source_name }} was reduced or taken offline <em>specifically due to PFAS contamination</em>, please mark that in the form.
                 </p>
 
                 {% endif %}
@@ -172,9 +172,9 @@
                                 <td>{{ annual.unit|upper }}</td>
                                 
                                 <td class="actions-col text-center">
-                                    {% if source.all_nds or annual.year == 2023 %}
+                                    {% if claim_source.all_nds or annual.year == 2023 %}
                                         <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addOrUpdateAnnualModal"
-                                                data-source-name="{{ source.source_name }}" data-year="{{ annual.year }}">
+                                                data-source-name="{{ claim_source.source_name }}" data-year="{{ annual.year }}">
                                             Update
                                         </button>
                                     {% else %}
@@ -191,7 +191,7 @@
         </div>
     </div>
 
-    {% elif not impacted and source.all_nds %}
+    {% elif not impacted and claim_source.all_nds %}
     <div class="card">
         <div class="card-body">
             <h4>Maximum Flow Rates and Annual Production</h4>

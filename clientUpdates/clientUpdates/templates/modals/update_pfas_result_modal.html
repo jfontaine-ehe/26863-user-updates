@@ -1,5 +1,6 @@
-<div class="modal fade" id="updatePfasResultModal" tabindex="-1" aria-labelledby="updatePfasResultModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-lg"> 
+<div class="modal fade" id="updatePfasResultModal" tabindex="-1" aria-labelledby="updatePfasResultModalLabel"
+  aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="updatePfasResultModalLabel">Update PFAS Result</h5>
@@ -8,13 +9,19 @@
       <div class="modal-body">
         <form id="updatePfasResultForm" method="post" action="" enctype="multipart/form-data">
           {% csrf_token %}
-          <input type="hidden" name="pwsid" value="{{ source.pwsid }}">
 
-          <!-- Source Name -->
-          <div class="mb-3">
-            <label for="pfasResultSource" class="form-label">Source Name</label>
-            <input class="form-control" id="pfasResultSource" name="source_name" value="{{ source.source_name }}" readonly required>
+          <!-- PWSID and Source Name -->
+          <div class="row">
+            <div class="col-md-3 mb-3" id="info-field">
+              <label for="pwsid" class="form-label">PWSID</label>
+              <input class="form-control" id="pwsid" name="pwsid" value="{{ claim_source.pwsid }}" readonly required>
+            </div>
+            <div class="col-md-9 mb-3">
+              <label for="pfasResultSource" class="form-label">Source Name</label>
+              <input class="form-control" id="pfasResultSource" name="source_name" value="{{ claim_source.source_name }}" readonly required>
+            </div>
           </div>
+
 
           <!-- Analyte Dropdown -->
           <div class="mb-3">
@@ -53,7 +60,8 @@
           <div class="row">
             <div class="col-md-6 mb-3" id="result-field">
               <label for="pfasResultInput" class="form-label">Result</label>
-              <input type="number" class="form-control" id="pfasResultInput" name="result" min="0" step="0.01" value="{{ form.result.value }}" required>
+              <input type="number" class="form-control" id="pfasResultInput" name="result" min="0" step="0.01"
+                value="{{ form.result.value }}" required>
               <div class="invalid-feedback" id="result-error"></div>
             </div>
             <div class="col-md-6 mb-3">
@@ -124,12 +132,13 @@
               <div class="invalid-feedback" id="lab-sample-id-error"></div>
             </div>
           </div>
-          
+
 
           <!-- File Upload -->
           <div class="mb-3">
             <label for="pfasFileUpload" class="form-label">Upload lab report showing this result</label>
-            <input type="file" class="form-control" id="pfasFileUpload" name="filename" accept=".pdf, .jpg, .jpeg, .png" required>
+            <input type="file" class="form-control" id="pfasFileUpload" name="filename" accept=".pdf, .jpg, .jpeg, .png"
+              required>
             <small class="text-muted">Supported file types: .pdf, .jpg, .jpeg, .png</small>
             <div class="invalid-feedback" id="file-upload-error"></div>
           </div>
@@ -137,9 +146,10 @@
           <!-- Comment -->
           <div class="mb-3">
             <label for="comments" class="form-label">Comment</label>
-            <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Enter your comments here"></textarea>
+            <textarea class="form-control" id="comments" name="comments" rows="4"
+              placeholder="Enter your comments here"></textarea>
           </div>
-          
+
           <button type="submit" class="btn btn-outline-success" id="submit-button">Save changes</button>
           <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
         </form>
@@ -215,7 +225,7 @@
       }
 
       // Validate file type and size
-      
+
       const allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
       const fileName = fileInput.value;
       const fileExtension = fileName.split('.').pop().toLowerCase();
