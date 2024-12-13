@@ -2,7 +2,7 @@ from .calculations import calc_pfas_score_and_method, calc_afr_and_note, calc_gf
 from .tables_utils import get_latest_entries, get_combined_results, get_max_results_by_analyte, get_max_annuals_by_year, get_max_entry
 from clientUpdates.models import Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimPfasResult, ClaimFlowRate
 from django.db.models import Sum
-
+from django.utils import timezone
 
 def update_pfas_metrics(pwsid, source_name):
     """
@@ -59,6 +59,7 @@ def update_pfas_metrics(pwsid, source_name):
 
     # Update the Source model with the calculated metrics
     Source.objects.filter(pwsid=pwsid, source_name=source_name).update(
+        submit_date=timezone.now(),
         all_nds=all_nds,
         reg_bump=reg_bump,
         pfas_score=pfas_score,
@@ -98,6 +99,7 @@ def update_flow_rate_metrics(pwsid, source_name):
     afr, ehe_afr_note = calc_afr_and_note(max_annuals, max_vfr)
 
     Source.objects.filter(pwsid=pwsid, source_name=source_name).update(
+        submit_date=timezone.now(),
         afr=afr,
         ehe_afr_note=ehe_afr_note
     )
@@ -194,6 +196,7 @@ def update_ehe_pws_table(pwsid):
     # Update the Pws table with the aggregated values
     try:
         Pws.objects.filter(pwsid=pwsid).update(
+            submit_date=timezone.now(),
             gfe_tyco=total_gfe_tyco,
             gfe_basf=total_gfe_basf,
             gfe_total_basf_tyco=total_gfe_basf_tyco
