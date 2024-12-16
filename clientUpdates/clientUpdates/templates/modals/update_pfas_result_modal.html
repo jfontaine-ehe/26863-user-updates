@@ -7,7 +7,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="updatePfasResultForm" method="post" action="" enctype="multipart/form-data">
+        <form id="updatePfasResultForm" method="post" action="/update-pfas-result/" enctype="multipart/form-data">
           {% csrf_token %}
 
           <!-- PWSID and Source Name -->
@@ -271,6 +271,8 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener('submit', function (event) {
         clearValidationErrors();
 
+        analyteInput.disabled = false; 
+
         const isResultValid = validateResult();
         const areDatesValid = validateDates();
         const isFileValid = validateFile();
@@ -297,7 +299,7 @@ document.addEventListener("DOMContentLoaded", function () {
         analyteInput.disabled = !!analyte; // Disable analyte input if prefilled
         // resultInput.value = pfasResult || '';
         // unitInput.value = unit || '';
-        lowerBoundHint.textContent = `Result must be higher than ${lowerBound} ng/L.`;
+        lowerBoundHint.textContent = `Value must be higher than ${lowerBound} ng/L.`;
     });
 
     updatePfasResultModal.addEventListener('hide.bs.modal', function () {

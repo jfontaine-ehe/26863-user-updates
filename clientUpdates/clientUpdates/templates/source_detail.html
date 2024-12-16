@@ -150,6 +150,9 @@
                 <p>
                     If providing 2023 production: Please ensure that it is in the same period (calendar year vs fiscal year) as the other years for consistency. If {{ claim_source.source_name }} was inactive 2023 or was reduced or taken offline <em>specifically due to PFAS contamination</em> in 2023, please indicate this in the form. 
                 </p>
+                <p>
+                    If production for 2013 was one of the three highest years below, then please provide production for another year to ensure a minimum of three highest years of production. The annual production window for Tyco and BASF settlements is 2014 to 2023 and hence 2013 annual production cannot be used. 
+                </p>
 
                 {% elif claim_source.all_nds %}
                 <p>
@@ -173,13 +176,13 @@
                     </thead>
                     <tbody>
                         {% for annual in annuals %}
-                            <tr>
+                            <tr class="{% if annual.year == 2013 %}text-muted text-decoration-line-through{% endif %}">
                                 <td>{{ annual.year|stringformat:'d' }}</td>
                                 <td>{{ annual.flow_rate|floatformat:0|intcomma }}</td>
                                 <td>{{ annual.unit|upper }}</td>
                                 
                                 <td class="actions-col text-center">
-                                    {% if claim_source.all_nds or annual.year == 2023 %}
+                                    {% if annual.year != 2013 and annual.year == 2023 or annual.year != 2013 and annual.lower_bound == 0 %}
                                         <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addOrUpdateAnnualModal"
                                                 data-source-name="{{ claim_source.source_name }}" 
                                                 data-year="{{ annual.year }}">

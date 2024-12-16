@@ -30,6 +30,5 @@ urlpatterns = [
     path('update-max-flow-rate/', views.update_max_flow_rate_view, name='update-max-flow-rate'),
     path('update-annual-production/', views.update_annual_production_view, name='update-annual-production'),
     path('contact/', views.contact_view, name='contact'),
-    #path('<str:pwsid>/source/<source_name>/add-annual-production', views.add_annual_production_view, name='add-annual-production'),
-    # path('flow_rates/<int:pk>/edit/', views.update_flow_rate, name='update_flow_rate')
+    path('activity/', views.activity_view, name='activity'),
 ]

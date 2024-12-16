@@ -58,6 +58,10 @@ body {
     opacity: 0.8; /* Slight transparency to give a more subdued look */
 }
 
+#activityTable {
+    font-size: 0.9rem;
+}
+
 .container {
     margin-top: 20px;
     margin-bottom: 20px;

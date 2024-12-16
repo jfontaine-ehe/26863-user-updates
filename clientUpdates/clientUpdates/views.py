@@ -4,8 +4,7 @@ from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdate
 
 # Custom functions
 from .utils.handler import handle_update
-from .utils.tables_utils import get_combined_results, get_max_results_by_analyte, add_pfoas_if_missing, \
-      get_max_other_threshold, get_filtered_annuals, get_max_annuals_by_year, get_max_entry, get_latest_entries
+from .utils.tables_utils import add_pfoas_if_missing, get_max_other_threshold, get_latest_entries
 from .utils.calculations import calc_ppt_result, calc_gpm_flow_rate
 
 # Django functions
@@ -71,7 +70,7 @@ def source_detail_view(request, pwsid, source_name):
     claim_source = get_object_or_404(ClaimSource, pwsid=pwsid, source_name=source_name)
 
     #### PFAS Results ####
-    columns = ['pwsid', 'water_source_id', 'source_name', 'analyte', 'result_ppt', 'sampling_date', 'analysis_date', 'lab_sample_id', 'data_origin']
+    # columns = ['pwsid', 'water_source_id', 'source_name', 'analyte', 'result_ppt', 'sampling_date', 'analysis_date', 'lab_sample_id', 'data_origin']
     claim_pfas_results = ClaimPfasResult.objects.filter(pwsid=claim_source.pwsid, source_name=source_name).exclude(analyte__isnull=True)
     updated_pfas_results = PfasResult.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, updated_by_water_provider=True)
     latest_pfas_results = get_latest_entries(updated_pfas_results)
@@ -104,13 +103,13 @@ def source_detail_view(request, pwsid, source_name):
     impacted = True if not claim_source.all_nds or updated_pfas_results else False
 
     #### Max Flow Rate ####
-    columns_flow = ['pwsid', 'water_source_id', 'source_name', 'source_variable', 'year', 'flow_rate', 'unit', 'flow_rate_gpm', 'data_origin']
+     #columns_flow = ['pwsid', 'water_source_id', 'source_name', 'source_variable', 'year', 'flow_rate', 'unit', 'flow_rate_gpm', 'data_origin']
     claim_flow_rates = ClaimFlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name)
     updated_flow_rates = FlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, updated_by_water_provider=True)
     latest_max_flow = get_latest_entries(updated_flow_rates, source_variable='VFR')
     latest_annuals = get_latest_entries(updated_flow_rates, source_variable='AFR')
     latest_flow_rates = list(chain(latest_max_flow, latest_annuals))
-    
+
     combined_flow_rates = []
     for claim_flow_rate in claim_flow_rates:
         year = claim_flow_rate.year
@@ -131,20 +130,26 @@ def source_detail_view(request, pwsid, source_name):
         }
         combined_flow_rates.append(flow_rate)
     
-    max_flow_rate = next((fr for fr in combined_flow_rates if fr['year'] is None), None)
-    annuals = [fr for fr in combined_flow_rates if fr['year'] is not None]  
-    # claim_max_flow_rate = ClaimFlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, source_variable='VFR')
-    # updated_max_flow_rate = FlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, source_variable='VFR', updated_by_water_provider=True)
-    # latest_max_flow_rate = get_latest_entries(updated_max_flow_rate)
-    # combined_max_flow_rate = get_combined_results(claim_max_flow_rate, updated_max_flow_rate, columns_flow)
-    # max_flow_rate = get_max_entry(combined_max_flow_rate, 'flow_rate_gpm')
+    # Add 2023 if it doesn't exist
+    # Ensure 2023 and 2024 exist
+    existing_years = {entry['year'] for entry in combined_flow_rates}
 
-    # #### Annual Production ####
-    # claim_annuals = ClaimFlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, source_variable='AFR')
-    # updated_annuals = FlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, source_variable='AFR', updated_by_water_provider=True)
-    # combined_annuals = get_combined_results(claim_annuals, updated_annuals, columns_flow)
-    # filtered_annuals = get_filtered_annuals(combined_annuals, claim_source.all_nds)
-    # annuals = get_max_annuals_by_year(filtered_annuals)
+    for year in [2023]: # add more years if necessary
+        if year not in existing_years:
+            combined_flow_rates.append({
+                'pwsid': claim_source.pwsid,
+                'water_source_id': None,
+                'source_name': source_name,
+                'year': year,
+                'source_variable': 'AFR',  # Assuming AFR for annual flow rate as a default
+                'flow_rate': 0,
+                'unit': 'GPY',  # Default unit
+                'flow_rate_gpm': 0,
+                'lower_bound': 0,
+                'data_origin': 'Placeholder',
+            })
+    max_flow_rate = next((fr for fr in combined_flow_rates if fr['year'] is None), None)
+    annuals = [fr for fr in combined_flow_rates if fr['year'] is not None]
 
     # Prepare context for rendering
     context = {
@@ -254,3 +259,47 @@ def contact_view(request):
         form = ContactForm()
     
     return render(request, 'contact.html', {'form': form})
+
+
+
+@login_required
+def activity_view(request):
+    pwsid = request.user.username
+
+    pfas_results = PfasResult.objects.filter(pwsid=pwsid).values(
+        'submit_date', 'source_name', 'analyte', 'result_ppt'
+    )
+
+    # Format PFAS log entries
+    pfas_logs = [
+        {
+            'date': result['submit_date'].strftime('%Y-%m-%d'),
+            'source_name': result['source_name'],
+            'table_name': 'PFAS Result',
+            'change': f"{result['analyte']} value changed to {result['result_ppt']} ng/L",
+        }
+        for result in pfas_results
+    ]
+
+    # Retrieve flow rate changes
+    flow_rates = FlowRate.objects.filter(pwsid=pwsid).values(
+        'submit_date', 'source_name', 'source_variable', 'flow_rate', 'unit'
+    )
+
+    # Format flow rate log entries
+    flow_logs = [
+    {
+        'date': flow['submit_date'].strftime('%Y-%m-%d'),
+        'source_name': flow['source_name'],
+        'table_name': 'Flow Rate',
+        'source_variable': flow['source_variable'],  # Keep the original value for logic
+        'change': f"{'Annual Production' if flow['source_variable'] == 'AFR' else 'Max Flow Rate'} changed to {flow['flow_rate']} {flow['unit']}",
+    }
+        for flow in flow_rates
+    ]
+
+    # Combine and sort logs
+    activity_logs = sorted(chain(pfas_logs, flow_logs), key=lambda x: x['date'], reverse=True)
+
+    # Pass logs to template
+    return render(request, 'activity.html', {'activity_logs': activity_logs})

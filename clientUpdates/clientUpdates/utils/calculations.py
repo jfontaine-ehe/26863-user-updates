@@ -75,7 +75,7 @@ def calc_afr_and_note(annuals, vfr):
         reverse=True
     )
     annual_flow_rates = (annual_flow_rates + [0, 0, 0])[:3]  # Ensure 3 values
-    print(annual_flow_rates)
+    
     if not annuals:
         note_parts.append("no annual production data provided")
     elif len(annuals) < 3:
@@ -83,15 +83,15 @@ def calc_afr_and_note(annuals, vfr):
 
     # Calculate AAFR (average of top 3 flow rates)
     aafr = sum(annual_flow_rates) / 3
-    print(aafr)
+    
     # Handle missing VFR
     if not isinstance(vfr, (int, float)):
         vfr = 0
         note_parts.append("vfr missing or invalid")
-    print(vfr)
+    
     # Calculate AFR (average of AAFR and VFR)
     afr = (aafr + vfr) / 2
-    print(afr)
+    
     # Combine notes
     afr_note = " and ".join(note_parts) if note_parts else None
 

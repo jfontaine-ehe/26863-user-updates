@@ -85,60 +85,6 @@ def get_latest_entries(queryset, source_variable=None):
 
 
 
-def get_filtered_annuals(combined_annuals, all_nds):
-    """
-    Filters annual production records based on source.all_nds value.
-    - If `all_nds` is True, include all years from 2013 to 2022.
-    - If `all_nds` is False, include non-zero years from 2013 to 2022.
-    - Always include year 2023 for adding or updating.
-    - If impacted sources have less than 3 non-zero years, add the highest year(s) with zero production to ensure 3 years are shown.
-    """
-    filtered_annuals = []
-    non_zero_years = []
-    zero_years = []
-
-    for record in combined_annuals:
-        year = record['year']
-        flow_rate = record['flow_rate']
-
-        if year == 2023:
-            # Always include 2023 for adding or updating
-            filtered_annuals.append(record)
-        elif all_nds:
-            # For unimpacted sources, include all years from 2013 to 2022
-            if 2013 <= year <= 2022:
-                filtered_annuals.append(record)
-        elif not all_nds:
-            # For impacted sources, separate non-zero and zero flow rate years
-            if 2013 <= year <= 2022:
-                if flow_rate > 0:
-                    non_zero_years.append(record)
-                else:
-                    zero_years.append(record)
-
-    # For impacted sources, ensure at least 3 years are shown
-    if not all_nds:
-        filtered_annuals.extend(non_zero_years)
-        if len(non_zero_years) < 3:
-            zero_years_sorted = sorted(zero_years, key=lambda x: x['year'], reverse=True)
-            filtered_annuals.extend(zero_years_sorted[:3 - len(non_zero_years)])
-
-    # Check if 2023 entry exists; if not, create a placeholder for 2023
-    if not any(record['year'] == 2023 for record in filtered_annuals):
-        filtered_annuals.append({
-            'year': 2023,
-            'flow_rate': 0,
-            'unit': 'GPY',
-            'data_origin': 'EHE portal',  
-            'updated_by_water_provider': True  
-        })
-
-    # Sort filtered annuals by year in increasing order
-    filtered_annuals = sorted(filtered_annuals, key=lambda x: x['year'])
-
-    return filtered_annuals
-
-
 
 def get_max_annuals_by_year(combined_annuals):
     """ Finds the maximum annual production by year from a combined list of records. """
