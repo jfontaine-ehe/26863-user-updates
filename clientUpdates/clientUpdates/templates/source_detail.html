@@ -31,7 +31,10 @@
                                 <td>{% if pfas_result.analysis_date %}{{ pfas_result.analysis_date }} {% else %} -- {% endif %}</td>
                                 <td class="actions-col text-center">
                                     <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#updatePfasResultModal"
-                                            data-row-names="{{ pfas_result.row_names }}" data-analyte="{{ pfas_result.analyte }}" data-pfas-result="{{ pfas_result.result_ppt }}" 
+                                            data-row-names="{{ pfas_result.row_names }}" 
+                                            data-analyte="{{ pfas_result.analyte }}" 
+                                            data-pfas-result="{{ pfas_result.result_ppt }}" 
+                                            data-lower-bound="{{ pfas_result.lower_bound }}"
                                             data-source-name="{{ pfas_result.source_name }}">
                                             Update
                                     </button>
@@ -118,7 +121,11 @@
                             <td>{{ max_flow_rate.unit|upper }}</td>
                             <td class="actions-col text-center">
                                 <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#updateMaxFlowRateModal" 
-                                        data-row-names="{{ max_flow_rate.row_names }}" data-flow-rate="{{ max_flow_rate.flow_rate }}" data-unit="{{ max_flow_rate.unit }}" data-source-name="{{ max_flow_rate.source_name }}">
+                                        data-row-names="{{ max_flow_rate.row_names }}" 
+                                        data-flow-rate="{{ max_flow_rate.flow_rate }}" 
+                                        data-unit="{{ max_flow_rate.unit }}" 
+                                        data-lower-bound = "{{ max_flow_rate.lower_bound }}"
+                                        data-source-name="{{ max_flow_rate.source_name }}">
                                     Update
                                 </button>
                             </td>
@@ -174,7 +181,8 @@
                                 <td class="actions-col text-center">
                                     {% if claim_source.all_nds or annual.year == 2023 %}
                                         <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addOrUpdateAnnualModal"
-                                                data-source-name="{{ claim_source.source_name }}" data-year="{{ annual.year }}">
+                                                data-source-name="{{ claim_source.source_name }}" 
+                                                data-year="{{ annual.year }}">
                                             Update
                                         </button>
                                     {% else %}

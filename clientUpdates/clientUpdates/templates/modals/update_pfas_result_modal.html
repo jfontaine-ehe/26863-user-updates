@@ -18,7 +18,8 @@
             </div>
             <div class="col-md-9 mb-3">
               <label for="pfasResultSource" class="form-label">Source Name</label>
-              <input class="form-control" id="pfasResultSource" name="source_name" value="{{ claim_source.source_name }}" readonly required>
+              <input class="form-control" id="pfasResultSource" name="source_name"
+                value="{{ claim_source.source_name }}" readonly required>
             </div>
           </div>
 
@@ -61,7 +62,8 @@
             <div class="col-md-6 mb-3" id="result-field">
               <label for="pfasResultInput" class="form-label">Result</label>
               <input type="number" class="form-control" id="pfasResultInput" name="result" min="0" step="0.01"
-                value="{{ form.result.value }}" required>
+                aria-describedby="lowerBoundHint" required>
+                <small class="text-muted" id="lowerBoundHint"></small>
               <div class="invalid-feedback" id="result-error"></div>
             </div>
             <div class="col-md-6 mb-3">
@@ -75,6 +77,7 @@
               <div class="invalid-feedback" id="unit-error"></div>
             </div>
           </div>
+          
 
           <!-- Sample Date and Analysis Date (one row) -->
           <div class="row">
@@ -160,134 +163,149 @@
 
 <script>
 
-  document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById('updatePfasResultForm');
     const resultInput = document.getElementById('pfasResultInput');
     const unitInput = document.getElementById('pfasUnitInput');
+    const lowerBoundHint = document.getElementById('lowerBoundHint');
     const samplingDateInput = document.getElementById('pfasSamplingDateInput');
     const analysisDateInput = document.getElementById('pfasAnalysisDateInput');
-    const analyteInput = document.getElementById('pfasResultAnalyteInput'); // Added analyte input reference
-    const submitButton = document.getElementById('submit-button');
+    const analyteInput = document.getElementById('pfasResultAnalyteInput');
     const fileInput = document.getElementById('pfasFileUpload');
-    const maxFileSizeBytes = 25 * 1024 * 1024 // Max file size: 25 MB
+    const maxFileSizeBytes = 25 * 1024 * 1024; // Max file size: 25 MB
 
-    let currentResult = 0;
+    let lowerBound = 0;
 
-    form.onsubmit = function (event) {
-      let valid = true;
-
-      // When the form is submitted, the analyteInput field should not be disabled so it can
-      // pass the anlayte value to the view. Keeping it disabled will pass an empty string.
-      analyteInput.disabled = false;
-
-      // Clear previous errors
-      document.querySelectorAll('.invalid-feedback').forEach(el => el.innerHTML = '');
-      document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
-
-      // Validate result
-      const newResult = parseFloat(resultInput.value);
-      const selectedUnit = unitInput.value;
-
-      // Convert newResult to ppt for comparison
-      let newResultInPpt = newResult;
-      if (selectedUnit === 'ppb') {
-        newResultInPpt = newResult * 1000; // Convert ppb to ppt
-      } else if (selectedUnit === 'ppm') {
-        newResultInPpt = newResult * 1000000; // Convert ppm to ppt
-      }
-
-      if (newResultInPpt <= currentResult) {
-        valid = false;
-        resultInput.classList.add('is-invalid');
-        document.getElementById('result-error').innerHTML = `The new result must be higher than ${currentResult} ppt`;
-      }
-
-      // Validate sampling date
-      const samplingDate = new Date(samplingDateInput.value);
-      const today = new Date();
-      if (samplingDate > today) {
-        valid = false;
-        samplingDateInput.classList.add('is-invalid');
-        document.getElementById('sampling-date-error').innerHTML = "Sampling date cannot be in the future.";
-      }
-
-      // Validate analysis date
-      const analysisDate = new Date(analysisDateInput.value);
-      if (analysisDate < samplingDate) {
-        valid = false;
-        analysisDateInput.classList.add('is-invalid');
-        document.getElementById('analysis-date-error').innerHTML = "Analysis date cannot be before the sampling date.";
-      }
-      if (analysisDate > today) {
-        valid = false;
-        analysisDateInput.classList.add('is-invalid');
-        document.getElementById('analysis-date-error').innerHTML = "Analysis date cannot be in the future.";
-      }
-
-      // Validate file type and size
-
-      const allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
-      const fileName = fileInput.value;
-      const fileExtension = fileName.split('.').pop().toLowerCase();
-      const file = fileInput.files[0];
-
-      if (!allowedExtensions.includes(fileExtension)) {
-        valid = false;
-        fileInput.classList.add('is-invalid');
-        document.getElementById('file-upload-error').innerHTML = "Lab report must be a pdf or an image file.";
-      } else if (file && file.size > maxFileSizeBytes) {
-        valid = false;
-        fileInput.classList.add('is-invalid');
-        document.getElementById('file-upload-error').innerHTML = "File size must not exceed 25 MB.";
-      }
-
-      // Prevent form submission if invalid
-      if (!valid) {
-        // switch analyteInput back to true so this field does not become enabled when a user has a failed submission
-        analyteInput.disabled = true
-        event.preventDefault();
-      }
+    // Utility functions
+    const clearValidationErrors = () => {
+        document.querySelectorAll('.invalid-feedback').forEach(el => (el.innerHTML = ''));
+        document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
     };
 
-    var updatePfasResultModal = document.getElementById('updatePfasResultModal');
+    const showValidationError = (inputElement, errorMessage) => {
+        const errorElement = inputElement.nextElementSibling;
+        if (errorElement) {
+            errorElement.innerHTML = errorMessage;
+        }
+        inputElement.classList.add('is-invalid');
+    };
+
+    const validateResult = () => {
+        const newResult = parseFloat(resultInput.value);
+        const selectedUnit = unitInput.value;
+
+        if (!newResult || isNaN(newResult)) {
+            showValidationError(resultInput, "Result is required.");
+            return false;
+        }
+
+        // Convert newResult to ppt for comparison
+        let newResultInPpt = newResult;
+        if (selectedUnit === 'ppb') {
+            newResultInPpt *= 1000; // Convert ppb to ppt
+        } else if (selectedUnit === 'ppm') {
+            newResultInPpt *= 1_000_000; // Convert ppm to ppt
+        }
+
+        if (newResultInPpt <= lowerBound) {
+            showValidationError(resultInput, `Value must be higher than ${lowerBound} ng/L.`);
+            return false;
+        }
+
+        return true;
+    };
+
+    const validateDates = () => {
+        const samplingDate = new Date(samplingDateInput.value);
+        const analysisDate = new Date(analysisDateInput.value);
+        const today = new Date();
+
+        if (isNaN(samplingDate.getTime())) {
+            showValidationError(samplingDateInput, "Sampling date is required.");
+            return false;
+        }
+
+        if (samplingDate > today) {
+            showValidationError(samplingDateInput, "Sampling date cannot be in the future.");
+            return false;
+        }
+
+        if (isNaN(analysisDate.getTime())) {
+            showValidationError(analysisDateInput, "Analysis date is required.");
+            return false;
+        }
+
+        if (analysisDate < samplingDate) {
+            showValidationError(analysisDateInput, "Analysis date cannot be before the sampling date.");
+            return false;
+        }
+
+        if (analysisDate > today) {
+            showValidationError(analysisDateInput, "Analysis date cannot be in the future.");
+            return false;
+        }
+
+        return true;
+    };
+
+    const validateFile = () => {
+        const allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
+        const fileName = fileInput.value;
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+        const file = fileInput.files[0];
+
+        if (!allowedExtensions.includes(fileExtension)) {
+            showValidationError(fileInput, "Lab report must be a pdf or an image file.");
+            return false;
+        }
+
+        if (file && file.size > maxFileSizeBytes) {
+            showValidationError(fileInput, "File size must not exceed 25 MB.");
+            return false;
+        }
+
+        return true;
+    };
+
+    // Form submission validation
+    form.addEventListener('submit', function (event) {
+        clearValidationErrors();
+
+        const isResultValid = validateResult();
+        const areDatesValid = validateDates();
+        const isFileValid = validateFile();
+
+        // Prevent submission if any validation fails
+        if (!isResultValid || !areDatesValid || !isFileValid) {
+            event.preventDefault();
+        }
+    });
+
+    // Modal show and hide behavior
+    const updatePfasResultModal = document.getElementById('updatePfasResultModal');
     updatePfasResultModal.addEventListener('show.bs.modal', function (event) {
-      // Button that triggered the modal (the Update button in the source_detail.html page)
-      var button = event.relatedTarget;
+        const button = event.relatedTarget;
 
-      // Extract data from data-* attributes (these attributes are from the Update button in the source_detail.html page)
-      var analyte = button.getAttribute('data-analyte');
-      var pfasResultAttribute = button.getAttribute('data-pfas-result');
-      var pfasResult = pfasResultAttribute && !isNaN(pfasResultAttribute) ? parseFloat(pfasResultAttribute) : 0;
-      currentResult = pfasResult;  // Set the current result to the variable used in validation (don't prepopulate the input)
-      var unit = button.getAttribute('data-unit');
+        // Extract data from button attributes
+        const analyte = button.getAttribute('data-analyte');
+        const pfasResult = parseFloat(button.getAttribute('data-pfas-result')) || 0;
+        const unit = button.getAttribute('data-unit');
+        lowerBound = parseFloat(button.getAttribute('data-lower-bound')) || 0;
 
-      // Set the form action dynamically
-      var form = updatePfasResultModal.querySelector('form');
-      var newActionUrl = `/update-pfas-result/`;
-      form.setAttribute('action', newActionUrl);
-
-      // Prefill the analyte if applicable
-      if (analyte) {
-
-        analyteInput.value = analyte;
-        analyteInput.disabled = true;  // Disable the dropdown if an analyte is prefilled
-
-      } else {
-        analyteInput.value = "";
-        analyteInput.disabled = false;  // Enable the dropdown if no analyte is prefilled
-      }
+        // Prefill inputs
+        analyteInput.value = analyte || '';
+        analyteInput.disabled = !!analyte; // Disable analyte input if prefilled
+        // resultInput.value = pfasResult || '';
+        // unitInput.value = unit || '';
+        lowerBoundHint.textContent = `Result must be higher than ${lowerBound} ng/L.`;
     });
 
     updatePfasResultModal.addEventListener('hide.bs.modal', function () {
-      // Clear form fields
-      form.reset();
-
-      // Clear any validation errors
-      document.querySelectorAll('.invalid-feedback').forEach(el => el.innerHTML = '');
-      document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
-
-      // Re-enable the analyte dropdown
-      analyteInput.disabled = false;
+        form.reset();
+        clearValidationErrors();
+        analyteInput.disabled = false; // Re-enable the analyte dropdown
     });
-  });
+});
+
 </script>
+

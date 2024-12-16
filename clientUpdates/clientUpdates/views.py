@@ -5,7 +5,7 @@ from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdate
 # Custom functions
 from .utils.handler import handle_update
 from .utils.tables_utils import get_combined_results, get_max_results_by_analyte, add_pfoas_if_missing, \
-      get_max_other_threshold, get_filtered_annuals, get_max_annuals_by_year, get_max_entry
+      get_max_other_threshold, get_filtered_annuals, get_max_annuals_by_year, get_max_entry, get_latest_entries
 from .utils.calculations import calc_ppt_result, calc_gpm_flow_rate
 
 # Django functions
@@ -18,6 +18,7 @@ from django.contrib.auth.views import LoginView
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
+from itertools import chain
 
 
 class CustomLoginView(LoginView):
@@ -73,26 +74,77 @@ def source_detail_view(request, pwsid, source_name):
     columns = ['pwsid', 'water_source_id', 'source_name', 'analyte', 'result_ppt', 'sampling_date', 'analysis_date', 'lab_sample_id', 'data_origin']
     claim_pfas_results = ClaimPfasResult.objects.filter(pwsid=claim_source.pwsid, source_name=source_name).exclude(analyte__isnull=True)
     updated_pfas_results = PfasResult.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, updated_by_water_provider=True)
-    combined_pfas_results = get_combined_results(claim_pfas_results, updated_pfas_results, columns)
-    max_pfas_results = get_max_results_by_analyte(combined_pfas_results)
-    pfas_results = add_pfoas_if_missing(max_pfas_results, claim_source.pwsid, claim_source.water_source_id, claim_source.source_name)
+    latest_pfas_results = get_latest_entries(updated_pfas_results)
+    # combined_pfas_results = get_combined_results(claim_pfas_results, latest_pfas_results, columns)
+    
+    combined_pfas_results = []
+    for claim_result in claim_pfas_results:
+        analyte = claim_result.analyte
+        latest_result = next((res for res in latest_pfas_results if res.analyte == analyte), None)
+
+        result = {
+            'pwsid': claim_result.pwsid,
+            'water_source_id': claim_result.water_source_id,
+            'source_name': claim_result.source_name,
+            'analyte': analyte,
+            'lower_bound': claim_result.result_ppt,
+            'result_ppt': latest_result.result_ppt if latest_result else claim_result.result_ppt,
+            # 'result_ppt': max(claim_result.result_ppt, latest_result.result_ppt if latest_result else 0),
+            'sampling_date': latest_result.sampling_date if latest_result else claim_result.sampling_date,
+            'analysis_date': latest_result.analysis_date if latest_result else claim_result.analysis_date,
+            'lab_sample_id': latest_result.lab_sample_id if latest_result else claim_result.lab_sample_id,
+            'data_origin': latest_result.data_origin if latest_result else claim_result.data_origin,
+        }
+        combined_pfas_results.append(result)
+       
+    # max_pfas_results = get_max_results_by_analyte(combined_pfas_results)
+    pfas_results = add_pfoas_if_missing(combined_pfas_results, claim_source.pwsid, claim_source.water_source_id, claim_source.source_name)
     max_other_threshold = get_max_other_threshold(pfas_results)
     
     impacted = True if not claim_source.all_nds or updated_pfas_results else False
 
     #### Max Flow Rate ####
     columns_flow = ['pwsid', 'water_source_id', 'source_name', 'source_variable', 'year', 'flow_rate', 'unit', 'flow_rate_gpm', 'data_origin']
-    claim_max_flow_rate = ClaimFlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, source_variable='VFR')
-    updated_max_flow_rate = FlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, source_variable='VFR', updated_by_water_provider=True)
-    combined_max_flow_rate = get_combined_results(claim_max_flow_rate, updated_max_flow_rate, columns_flow)
-    max_flow_rate = get_max_entry(combined_max_flow_rate, 'flow_rate_gpm')
+    claim_flow_rates = ClaimFlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name)
+    updated_flow_rates = FlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, updated_by_water_provider=True)
+    latest_max_flow = get_latest_entries(updated_flow_rates, source_variable='VFR')
+    latest_annuals = get_latest_entries(updated_flow_rates, source_variable='AFR')
+    latest_flow_rates = list(chain(latest_max_flow, latest_annuals))
+    
+    combined_flow_rates = []
+    for claim_flow_rate in claim_flow_rates:
+        year = claim_flow_rate.year
+        source_variable = claim_flow_rate.source_variable
+        latest_flow_rate = next((fr for fr in latest_flow_rates if fr.year == year and fr.source_variable == source_variable), None)
+        
+        flow_rate = {
+            'pwsid': claim_flow_rate.pwsid, 
+            'water_source_id': claim_flow_rate.water_source_id, 
+            'source_name': claim_flow_rate.source_name, 
+            'year': year, 
+            'source_variable': source_variable, 
+            'flow_rate': latest_flow_rate.flow_rate if latest_flow_rate else claim_flow_rate.flow_rate, 
+            'unit': latest_flow_rate.unit if latest_flow_rate else claim_flow_rate.unit, 
+            'flow_rate_gpm': latest_flow_rate.flow_rate_gpm if latest_flow_rate else claim_flow_rate.flow_rate_gpm, 
+            'lower_bound': claim_flow_rate.flow_rate_gpm, 
+            'data_origin': latest_flow_rate.data_origin if latest_flow_rate else claim_flow_rate.data_origin
+        }
+        combined_flow_rates.append(flow_rate)
+    
+    max_flow_rate = next((fr for fr in combined_flow_rates if fr['year'] is None), None)
+    annuals = [fr for fr in combined_flow_rates if fr['year'] is not None]  
+    # claim_max_flow_rate = ClaimFlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, source_variable='VFR')
+    # updated_max_flow_rate = FlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, source_variable='VFR', updated_by_water_provider=True)
+    # latest_max_flow_rate = get_latest_entries(updated_max_flow_rate)
+    # combined_max_flow_rate = get_combined_results(claim_max_flow_rate, updated_max_flow_rate, columns_flow)
+    # max_flow_rate = get_max_entry(combined_max_flow_rate, 'flow_rate_gpm')
 
-    #### Annual Production ####
-    claim_annuals = ClaimFlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, source_variable='AFR')
-    updated_annuals = FlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, source_variable='AFR', updated_by_water_provider=True)
-    combined_annuals = get_combined_results(claim_annuals, updated_annuals, columns_flow)
-    filtered_annuals = get_filtered_annuals(combined_annuals, claim_source.all_nds)
-    annuals = get_max_annuals_by_year(filtered_annuals)
+    # #### Annual Production ####
+    # claim_annuals = ClaimFlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, source_variable='AFR')
+    # updated_annuals = FlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, source_variable='AFR', updated_by_water_provider=True)
+    # combined_annuals = get_combined_results(claim_annuals, updated_annuals, columns_flow)
+    # filtered_annuals = get_filtered_annuals(combined_annuals, claim_source.all_nds)
+    # annuals = get_max_annuals_by_year(filtered_annuals)
 
     # Prepare context for rendering
     context = {

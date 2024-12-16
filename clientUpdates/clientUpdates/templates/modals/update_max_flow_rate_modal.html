@@ -7,33 +7,30 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="updateMaxFlowRateForm" method="post" action="/update-max-flow-rate/"
-                    enctype="multipart/form-data">
+                <form id="updateMaxFlowRateForm" method="post" action="/update-max-flow-rate/" enctype="multipart/form-data">
                     {% csrf_token %}
-
 
                     <!-- PWSID and Source Name -->
                     <div class="row">
-                        <div class="col-md-3 mb-3" id="info-field">
-                            <label for="pwsid" class="form-label">PWSID</label>
-                            <input class="form-control" id="pwsid" name="pwsid" value="{{ claim_source.pwsid }}"
-                                readonly required>
+                        <div class="col-md-3 mb-3">
+                            <label for="pwsidInput" class="form-label">PWSID</label>
+                            <input type="text" class="form-control" id="pwsidInput" name="pwsid" value="{{ claim_source.pwsid }}" readonly required>
                         </div>
                         <div class="col-md-9 mb-3">
-                            <label for="pfasResultSource" class="form-label">Source Name</label>
-                            <input class="form-control" id="pfasResultSource" name="source_name" value="{{ claim_source.source_name }}" readonly required>
+                            <label for="sourceNameInput" class="form-label">Source Name</label>
+                            <input type="text" class="form-control" id="sourceNameInput" name="source_name" value="{{ claim_source.source_name }}" readonly required>
                         </div>
                     </div>
 
-                    <!-- Flow Rate and Unit (one row) -->
+                    <!-- Flow Rate and Unit -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="flowRateInput" class="form-label">Flow Rate</label>
-                            <input type="number" class="form-control" id="flowRateInput" name="flow_rate" min="0"
-                                step="0.01" required>
+                            <input type="number" class="form-control" id="flowRateInput" name="flow_rate" min="0" step="0.01"
+                                aria-describedby="maxFlowLowerBoundHint" required>
+                            <small class="text-muted" id="maxFlowLowerBoundHint"></small>
                             <div class="invalid-feedback" id="flow-rate-error"></div>
                         </div>
-
                         <div class="col-md-6 mb-3">
                             <label for="unitInput" class="form-label">Unit</label>
                             <select class="form-control" id="unitInput" name="unit" required>
@@ -50,18 +47,17 @@
 
                     <!-- File Upload -->
                     <div class="mb-3">
-                        <label for="maxFlowRateFileUpload" class="form-label">Upload Max Flow Rate File</label>
-                        <input type="file" class="form-control" id="maxFlowRateFileUpload" name="filename"
+                        <label for="fileUploadInput" class="form-label">Upload Max Flow Rate File</label>
+                        <input type="file" class="form-control" id="fileUploadInput" name="filename"
                             accept=".xls, .xlsx, .xlsm, .pdf, .jpg, .jpeg, .png" required>
-                        <small class="text-muted">Supported file types: .xls, .xlsx, .xlsm, .pdf, .jpg, .jpeg,
-                            .png</small>
+                        <small class="text-muted">Supported file types: .xls, .xlsx, .xlsm, .pdf, .jpg, .jpeg, .png</small>
                         <div class="invalid-feedback" id="file-upload-error"></div>
                     </div>
 
                     <!-- Comment -->
                     <div class="mb-3">
-                        <label for="comments" class="form-label">Comment</label>
-                        <textarea class="form-control" id="comments" name="comments" rows="4"
+                        <label for="commentsInput" class="form-label">Comment</label>
+                        <textarea class="form-control" id="commentsInput" name="comments" rows="4"
                             placeholder="Enter your comments here"></textarea>
                     </div>
 
@@ -77,48 +73,127 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.getElementById('updateMaxFlowRateForm');
-        const allowedExtensions = ['xls', 'xlsx', 'xlsm', 'pdf', 'jpg', 'jpeg', 'png'];
-        const updateMaxFlowRateModal = document.getElementById('updateMaxFlowRateModal');
-        const fileInput = document.getElementById('maxFlowRateFileUpload');
-        const maxFileSizeBytes = 25 * 1024 * 1024 // Max file size: 25 MB
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById('updateMaxFlowRateForm');
+    const allowedExtensions = ['xls', 'xlsx', 'xlsm', 'pdf', 'jpg', 'jpeg', 'png'];
+    const updateMaxFlowRateModal = document.getElementById('updateMaxFlowRateModal');
+    const fileInput = document.getElementById('fileUploadInput');
+    const flowRateInput = document.getElementById('flowRateInput');
+    const unitInput = document.getElementById('unitInput');
+    const maxFlowLowerBoundHint = document.getElementById('maxFlowLowerBoundHint');
+    const maxFileSizeBytes = 25 * 1024 * 1024; // Max file size: 25 MB
 
-        // When the modal is hidden
-        updateMaxFlowRateModal.addEventListener('hide.bs.modal', function () {
-            // Reset the form and clear validation errors
-            form.reset();
-            document.querySelectorAll('.invalid-feedback').forEach(el => el.innerHTML = '');
-            document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
-        });
+    let lowerBound = 0;
 
-        // Form submission validation
-        form.onsubmit = function (event) {
-            let valid = true;
+    // Utility to clear validation errors
+    const clearValidationErrors = () => {
+        document.querySelectorAll('.invalid-feedback').forEach(el => (el.innerHTML = ''));
+        document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
+    };
 
-            // Clear previous errors
-            document.querySelectorAll('.invalid-feedback').forEach(el => el.innerHTML = '');
-            document.querySelectorAll('.form-control').forEach(el => el.classList.remove('is-invalid'));
+    // Utility to show validation errors
+    const showValidationError = (inputElement, errorMessage) => {
+        const errorElement = inputElement.nextElementSibling;
+        if (errorElement) {
+            errorElement.innerHTML = errorMessage;
+        }
+        inputElement.classList.add('is-invalid');
+    };
 
-            // Validate file type
-            const fileName = fileInput.value;
-            const file = fileInput.files[0];
-            const fileExtension = fileName.split('.').pop().toLowerCase();
+    // Flow rate conversion to GPM
+    const convertToGpm = (flowRate, unit) => {
+        switch (unit) {
+            case 'mgd':
+                return flowRate * 1e6 / 1440;
+            case 'gpm':
+                return flowRate;
+            case 'gpy':
+                return flowRate / (365 * 1440);
+            case 'mgy':
+                return flowRate * 1e6 / (365 * 1440);
+            case 'afpy':
+                return flowRate * 325851 / (365 * 1440);
+            default:
+                return NaN;
+        }
+    };
 
-            if (!allowedExtensions.includes(fileExtension)) {
-                valid = false;
-                fileInput.classList.add('is-invalid');
-                document.getElementById('file-upload-error').innerHTML = "Max Flow Rate file must be a spreadsheet, pdf or an image file.";
-            } else if (file && file.size > maxFileSizeBytes) {
-                valid = false;
-                fileInput.classList.add('is-invalid');
-                document.getElementById('file-upload-error').innerHTML = "File size must not exceed 25 MB.";
-            }
+    // Utility to convert GPM to MGD
+    const convertGpmToMgd = (gpm) => {
+        return (gpm * 1440) / 1_000_000;
+    };
 
-            // Prevent form submission if invalid
-            if (!valid) {
-                event.preventDefault();
-            }
-        };
+    // Update lower bound hint when modal is shown
+    updateMaxFlowRateModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        lowerBound = parseFloat(button.getAttribute('data-lower-bound')) || 0;
+
+        // Convert lower bound to MGD
+        const lowerBoundInMgd = convertGpmToMgd(lowerBound);
+
+        // Update the hint with both GPM and MGD
+        maxFlowLowerBoundHint.textContent = `Value must be higher than ${lowerBound.toFixed(0)} GPM (${lowerBoundInMgd.toFixed(0)} MGD).`;
     });
+
+    // Validate flow rate
+    const validateFlowRate = () => {
+        const newFlowRate = parseFloat(flowRateInput.value);
+        const selectedUnit = unitInput.value;
+
+        if (!newFlowRate || isNaN(newFlowRate)) {
+            showValidationError(flowRateInput, "Flow rate is required.");
+            return false;
+        }
+
+        const newFlowRateInGpm = convertToGpm(newFlowRate, selectedUnit);
+        if (isNaN(newFlowRateInGpm)) {
+            showValidationError(unitInput, "Invalid unit selected for flow rate.");
+            return false;
+        }
+
+        if (newFlowRateInGpm <= lowerBound) {
+            showValidationError(flowRateInput, `Flow rate must be higher than ${lowerBound.toFixed(0)} GPM.`);
+            return false;
+        }
+
+        return true;
+    };
+
+    // Validate file input
+    const validateFile = () => {
+        const fileName = fileInput.value;
+        const file = fileInput.files[0];
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+
+        if (!allowedExtensions.includes(fileExtension)) {
+            showValidationError(fileInput, "File must be a spreadsheet, PDF, or image file.");
+            return false;
+        }
+
+        if (file && file.size > maxFileSizeBytes) {
+            showValidationError(fileInput, "File size must not exceed 25 MB.");
+            return false;
+        }
+
+        return true;
+    };
+
+    // Reset form and errors when modal is hidden
+    updateMaxFlowRateModal.addEventListener('hide.bs.modal', function () {
+        form.reset();
+        clearValidationErrors();
+    });
+
+    // Validate form on submission
+    form.addEventListener('submit', function (event) {
+        clearValidationErrors();
+        const isFlowRateValid = validateFlowRate();
+        const isFileValid = validateFile();
+
+        if (!isFlowRateValid || !isFileValid) {
+            event.preventDefault();
+        }
+    });
+});
+
 </script>
