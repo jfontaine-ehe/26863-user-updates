@@ -52,11 +52,11 @@
                             You may only see PFOA and PFOS concentrations above even though you have provided concentrations for other PFAS. This is intentional.
                         </p>
                         <p>
-                            The settlement allocations only utilize other PFAS analytes if the calculated value of one analyte far exceeds the combined value of PFOA ns PFOS. Results for other PFAS analytes are only necessary for <em>{{ claim_source.source_name }}</em> if the concentration of an individual PFAS 
-                            exceeds {{ max_other_threshold }} ppt.  
+                            The settlement allocations only utilize other PFAS analytes if the calculated value of one analyte far exceeds the combined value of PFOA and PFOS. Results for other PFAS analytes are necessary for <em>{{ claim_source.source_name }}</em> only if the concentration of an individual PFAS exceeds {{ max_other_threshold }} ppt.  
+
                         </p>
                         <p>
-                            If you have a lab report that shows that the concentration for <em>PFAS other than PFOA and PFOS is greater than {{ max_other_threshold }} ppt</em>, then please use the button below to provide results. 
+                            If you have a lab report that shows that the concentration for <b>PFAS other than PFOA and PFOS is greater than {{ max_other_threshold }} ppt</b>, then please use the button below to provide results. 
                         </p>
                     </div>
                     {% else %}
