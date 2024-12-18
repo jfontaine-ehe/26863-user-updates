@@ -47,7 +47,6 @@ def handle_update(request, form_class, extra_fields, impacted=None, calc_func=No
                 instance.source_variable = source_variable
 
             try:
-                # TODO: Joe, please ensure this works for PFAS results, max flow rate, and annual production updates.
                 instance.save()
 
                 # Trigger updates of EH&E Source and Pws tables
@@ -59,7 +58,6 @@ def handle_update(request, form_class, extra_fields, impacted=None, calc_func=No
                 messages.success(request, f"{filetype} updated successfully.")
 
                 # Upload file to Dropbox
-                # TODO: Joe, pleae ensure that this works.
                 file = request.FILES.get('filename')
                 
                 if file:

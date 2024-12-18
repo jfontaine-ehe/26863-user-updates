@@ -88,7 +88,6 @@ def source_detail_view(request, pwsid, source_name):
             'analyte': analyte,
             'lower_bound': claim_result.result_ppt,
             'result_ppt': latest_result.result_ppt if latest_result else claim_result.result_ppt,
-            # 'result_ppt': max(claim_result.result_ppt, latest_result.result_ppt if latest_result else 0),
             'sampling_date': latest_result.sampling_date if latest_result else claim_result.sampling_date,
             'analysis_date': latest_result.analysis_date if latest_result else claim_result.analysis_date,
             'lab_sample_id': latest_result.lab_sample_id if latest_result else claim_result.lab_sample_id,
@@ -102,52 +101,42 @@ def source_detail_view(request, pwsid, source_name):
     
     impacted = True if not claim_source.all_nds or updated_pfas_results else False
 
-    #### Max Flow Rate ####
-     #columns_flow = ['pwsid', 'water_source_id', 'source_name', 'source_variable', 'year', 'flow_rate', 'unit', 'flow_rate_gpm', 'data_origin']
+    #### Max Flow Rate and Annuals ####
+    # columns_flow = ['pwsid', 'water_source_id', 'source_name', 'source_variable', 'year', 'flow_rate', 'unit', 'flow_rate_gpm', 'data_origin']
     claim_flow_rates = ClaimFlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name)
     updated_flow_rates = FlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, updated_by_water_provider=True)
     latest_max_flow = get_latest_entries(updated_flow_rates, source_variable='VFR')
     latest_annuals = get_latest_entries(updated_flow_rates, source_variable='AFR')
     latest_flow_rates = list(chain(latest_max_flow, latest_annuals))
 
-    combined_flow_rates = []
-    for claim_flow_rate in claim_flow_rates:
-        year = claim_flow_rate.year
-        source_variable = claim_flow_rate.source_variable
-        latest_flow_rate = next((fr for fr in latest_flow_rates if fr.year == year and fr.source_variable == source_variable), None)
-        
-        flow_rate = {
-            'pwsid': claim_flow_rate.pwsid, 
-            'water_source_id': claim_flow_rate.water_source_id, 
-            'source_name': claim_flow_rate.source_name, 
-            'year': year, 
-            'source_variable': source_variable, 
-            'flow_rate': latest_flow_rate.flow_rate if latest_flow_rate else claim_flow_rate.flow_rate, 
-            'unit': latest_flow_rate.unit if latest_flow_rate else claim_flow_rate.unit, 
-            'flow_rate_gpm': latest_flow_rate.flow_rate_gpm if latest_flow_rate else claim_flow_rate.flow_rate_gpm, 
-            'lower_bound': claim_flow_rate.flow_rate_gpm, 
-            'data_origin': latest_flow_rate.data_origin if latest_flow_rate else claim_flow_rate.data_origin
-        }
-        combined_flow_rates.append(flow_rate)
-    
-    # Add 2023 if it doesn't exist
-    # Ensure 2023 and 2024 exist
-    existing_years = {entry['year'] for entry in combined_flow_rates}
+    years_to_process = list(range(2013, 2024)) + [None] # None for max flow rate 
 
-    for year in [2023]: # add more years if necessary
-        if year not in existing_years:
-            combined_flow_rates.append({
-                'pwsid': claim_source.pwsid,
-                'water_source_id': None,
-                'source_name': source_name,
-                'year': year,
-                'source_variable': 'AFR',  # Assuming AFR for annual flow rate as a default
-                'flow_rate': 0,
-                'unit': 'GPY',  # Default unit
-                'flow_rate_gpm': 0,
-                'lower_bound': 0,
-                'data_origin': 'Placeholder',
-            })
+    combined_flow_rates = []
+    # Process each year once
+    for year in years_to_process:
+        latest_flow_rate = next((fr for fr in latest_flow_rates if fr.year == year), None)
+        claim_flow_rate = next((cf for cf in claim_flow_rates if cf.year == year), None)
+        
+        # Lower bound from ClaimFlowRate
+        lower_bound = claim_flow_rate.flow_rate_gpm if claim_flow_rate else 0
+
+        # Append combined entry
+        combined_flow_rates.append({
+            'pwsid': claim_source.pwsid,
+            'water_source_id': latest_flow_rate.water_source_id if latest_flow_rate else (claim_flow_rate.water_source_id if claim_flow_rate else None),
+            'source_name': source_name,
+            'year': year,
+            'source_variable': latest_flow_rate.source_variable if latest_flow_rate else (claim_flow_rate.source_variable if claim_flow_rate else 'AFR'),
+            'flow_rate': latest_flow_rate.flow_rate if latest_flow_rate else (claim_flow_rate.flow_rate if claim_flow_rate else 0),
+            'unit': latest_flow_rate.unit if latest_flow_rate else (claim_flow_rate.unit if claim_flow_rate else 'GPY'),
+            'flow_rate_gpm': latest_flow_rate.flow_rate_gpm if latest_flow_rate else (claim_flow_rate.flow_rate_gpm if claim_flow_rate else 0),
+            'flow_rate_gpy': ((latest_flow_rate.flow_rate_gpm if latest_flow_rate else (claim_flow_rate.flow_rate_gpm if claim_flow_rate else 0)) * 1440 * 365),
+            'flow_rate_mgd': ((latest_flow_rate.flow_rate_gpm if latest_flow_rate else (claim_flow_rate.flow_rate_gpm if claim_flow_rate else 0)) * 1440 / 1_000_000),
+            'flow_rate_afpy': ((latest_flow_rate.flow_rate_gpm if latest_flow_rate else (claim_flow_rate.flow_rate_gpm if claim_flow_rate else 0)) * 1440 * 365 / 325851),
+            'lower_bound': lower_bound,  # Always from ClaimFlowRate
+            'data_origin': latest_flow_rate.data_origin if latest_flow_rate else ('Placeholder' if not claim_flow_rate else claim_flow_rate.data_origin),
+        })
+    
     max_flow_rate = next((fr for fr in combined_flow_rates if fr['year'] is None), None)
     annuals = [fr for fr in combined_flow_rates if fr['year'] is not None]
 
@@ -210,7 +199,7 @@ def update_annual_production_view(request):
         instance.unit = cleaned_data['unit']
         instance.flow_rate_gpm = calc_gpm_flow_rate(instance.flow_rate, instance.unit)
         instance.year = cleaned_data['year']
-        
+        print(instance)
     return handle_update(
         request,
         form_class=AnnualProductionForm,

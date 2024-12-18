@@ -12,10 +12,10 @@
                 <p>
                     The following PFAS results were provided to the Office of the Claims Administrator for {{ claim_source.source_name }} for the Phase 1 3M and DuPont claim. Please update the result(s) if you have a higher result than shown below. 
                 </p>
-                <table class="table">
+                <table class="table text-center">
                     <thead>
                         <tr>
-                            <th>Analyte</th>
+                            <th class="text-start">Analyte</th>
                             <th>Result</th>
                             <th>Sample Date</th>
                             <th>Analysis Date</th>
@@ -25,7 +25,7 @@
                     <tbody>
                         {% for pfas_result in pfas_results %}
                             <tr>
-                                <td>{{ pfas_result.analyte }}</td>
+                                <td class="text-start">{{ pfas_result.analyte }}</td>
                                 <td>{% if pfas_result.result_ppt %} {{ pfas_result.result_ppt }} ng/L (ppt) {% else %} -- {% endif %}</td>
                                 <td>{% if pfas_result.sampling_date %}{{ pfas_result.sampling_date }} {% else %} -- {% endif %}</td>
                                 <td>{% if pfas_result.analysis_date %}{{ pfas_result.analysis_date }} {% else %} -- {% endif %}</td>
@@ -107,18 +107,24 @@
 
                 {% endif %}
                 
-                <table class="table">
+                <table class="table text-center">
                     <thead>
                         <tr>
-                            <th>Flow Rate</th>
-                            <th>Unit</th>
+                            <th class="text-start"></th>
+                            <th>Flow Rate (GPM)</th>
+                            <th>Flow Rate (MGD)</th>
+                            <th>Flow Rate (GPY)</th>
+                            <!-- <th>Unit</th> -->
                             <th class="actions-col text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ max_flow_rate.flow_rate|floatformat:0|intcomma }}</td>
-                            <td>{{ max_flow_rate.unit|upper }}</td>
+                            <td class="text-start">Maximum</td>
+                            <td>{{ max_flow_rate.flow_rate_gpm|floatformat:0|intcomma }}</td>
+                            <td>{{ max_flow_rate.flow_rate_mgd|floatformat:0|intcomma }}</td>
+                            <td>{{ max_flow_rate.flow_rate_gpy|floatformat:0|intcomma }}</td>
+                            <!-- <td>{{ max_flow_rate.unit|upper }}</td> -->
                             <td class="actions-col text-center">
                                 <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#updateMaxFlowRateModal" 
                                         data-row-names="{{ max_flow_rate.row_names }}" 
@@ -165,21 +171,23 @@
                 {% endif %}
 
 
-                <table class="table">
+                <table class="table text-center">
                     <thead>
                         <tr>
-                            <th>Year</th>
-                            <th>Flow Rate</th>
-                            <th>Unit</th>
+                            <th class="text-start">Year</th>
+                            <th>Total Flow (Gallons)</th>
+                            <th>Total Flow (Acre-Feet)</th>
+                            <!-- <th>Unit</th> -->
                             <th class="actions-col text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for annual in annuals %}
                             <tr class="{% if annual.year == 2013 %}text-muted text-decoration-line-through{% endif %}">
-                                <td>{{ annual.year|stringformat:'d' }}</td>
-                                <td>{{ annual.flow_rate|floatformat:0|intcomma }}</td>
-                                <td>{{ annual.unit|upper }}</td>
+                                <td class="text-start">{{ annual.year|stringformat:'d' }}</td>
+                                <td>{{ annual.flow_rate_gpy|floatformat:0|intcomma }}</td>
+                                <td>{{ annual.flow_rate_afpy|floatformat:0|intcomma }}</td>
+                                <!-- <td>{{ annual.unit|upper }}</td> -->
                                 
                                 <td class="actions-col text-center">
                                     {% if annual.year != 2013 and annual.year == 2023 or annual.year != 2013 and annual.lower_bound == 0 %}
