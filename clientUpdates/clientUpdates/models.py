@@ -187,6 +187,7 @@ class Pws(models.Model):
     production_qc = models.BooleanField(blank=True, null=True)
     baseline_qc = models.BooleanField(blank=True, null=True)
     date_reviewed = models.DateField(blank=True, null=True)
+    data_origin = models.TextField(blank=True, null=True)
     #pfas_files_associated = models.FloatField(blank=True, null=True)
     #n_x = models.IntegerField(db_column='n.x', blank=True, null=True)  # Field renamed to remove unsuitable characters.
     #pct_pfas_associated = models.FloatField(blank=True, null=True)
