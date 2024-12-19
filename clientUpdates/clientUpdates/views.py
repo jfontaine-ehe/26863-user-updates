@@ -76,26 +76,34 @@ def source_detail_view(request, pwsid, source_name):
     latest_pfas_results = get_latest_entries(updated_pfas_results)
     # combined_pfas_results = get_combined_results(claim_pfas_results, latest_pfas_results, columns)
     
+    claim_analytes = {entry.analyte for entry in claim_pfas_results}
+    ehe_analytes = {entry.analyte for entry in latest_pfas_results}
+    all_analytes = claim_analytes.union(ehe_analytes)
+    
     combined_pfas_results = []
-    for claim_result in claim_pfas_results:
-        analyte = claim_result.analyte
-        latest_result = next((res for res in latest_pfas_results if res.analyte == analyte), None)
+    
+    for analyte in all_analytes:
+        # Get the latest entry for this analyte from PfasResult
+        latest_pfas_result = next((entry for entry in latest_pfas_results if entry.analyte == analyte), None)
 
-        result = {
-            'pwsid': claim_result.pwsid,
-            'water_source_id': claim_result.water_source_id,
-            'source_name': claim_result.source_name,
+        # Get the entry for this analyte from ClaimPfasResult
+        claim_pfas_result = next((entry for entry in claim_pfas_results if entry.analyte == analyte), None)
+        
+        # Lower bound always comes from ClaimPfasResult if it exists
+        lower_bound = claim_pfas_result.result_ppt if claim_pfas_result else 0
+        combined_pfas_results.append({
+            'pwsid': claim_source.pwsid,
+            'water_source_id': latest_pfas_result.water_source_id if latest_pfas_result else (claim_pfas_result.water_source_id if claim_pfas_result else None),
+            'source_name': source_name,
             'analyte': analyte,
-            'lower_bound': claim_result.result_ppt,
-            'result_ppt': latest_result.result_ppt if latest_result else claim_result.result_ppt,
-            'sampling_date': latest_result.sampling_date if latest_result else claim_result.sampling_date,
-            'analysis_date': latest_result.analysis_date if latest_result else claim_result.analysis_date,
-            'lab_sample_id': latest_result.lab_sample_id if latest_result else claim_result.lab_sample_id,
-            'data_origin': latest_result.data_origin if latest_result else claim_result.data_origin,
-        }
-        combined_pfas_results.append(result)
-       
-    # max_pfas_results = get_max_results_by_analyte(combined_pfas_results)
+            'lower_bound': lower_bound,
+            'result_ppt': latest_pfas_result.result_ppt if latest_pfas_result else (claim_pfas_result.result_ppt if claim_pfas_result else 0),
+            'sampling_date': latest_pfas_result.sampling_date if latest_pfas_result else (claim_pfas_result.sampling_date if claim_pfas_result else None),
+            'analysis_date': latest_pfas_result.analysis_date if latest_pfas_result else (claim_pfas_result.analysis_date if claim_pfas_result else None),
+            'lab_sample_id': latest_pfas_result.lab_sample_id if latest_pfas_result else (claim_pfas_result.lab_sample_id if claim_pfas_result else None),
+            'data_origin': latest_pfas_result.data_origin if latest_pfas_result else ('Placeholder' if not claim_pfas_result else claim_pfas_result.data_origin),
+        })
+
     pfas_results = add_pfoas_if_missing(combined_pfas_results, claim_source.pwsid, claim_source.water_source_id, claim_source.source_name)
     max_other_threshold = get_max_other_threshold(pfas_results)
     
