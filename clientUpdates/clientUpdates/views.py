@@ -270,7 +270,7 @@ def activity_view(request):
     # Format PFAS log entries
     pfas_logs = [
         {
-            'date': result['submit_date'].strftime('%Y-%m-%d'),
+            'time': result['submit_date'],
             'source_name': result['source_name'],
             'table_name': 'PFAS Result',
             'change': f"{result['analyte']} value changed to {result['result_ppt']} ng/L",
@@ -286,7 +286,7 @@ def activity_view(request):
     # Format flow rate log entries
     flow_logs = [
     {
-        'date': flow['submit_date'].strftime('%Y-%m-%d'),
+        'time': flow['submit_date'],
         'source_name': flow['source_name'],
         'table_name': 'Flow Rate',
         'source_variable': flow['source_variable'],  # Keep the original value for logic
@@ -296,7 +296,7 @@ def activity_view(request):
     ]
 
     # Combine and sort logs
-    activity_logs = sorted(chain(pfas_logs, flow_logs), key=lambda x: x['date'], reverse=True)
+    activity_logs = sorted(chain(pfas_logs, flow_logs), key=lambda x: x['time'], reverse=True)
 
     # Pass logs to template
     return render(request, 'activity.html', {'activity_logs': activity_logs})
