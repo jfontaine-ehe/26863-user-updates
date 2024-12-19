@@ -93,7 +93,7 @@ def source_detail_view(request, pwsid, source_name):
         lower_bound = claim_pfas_result.result_ppt if claim_pfas_result else 0
         combined_pfas_results.append({
             'pwsid': claim_source.pwsid,
-            'water_source_id': latest_pfas_result.water_source_id if latest_pfas_result else (claim_pfas_result.water_source_id if claim_pfas_result else None),
+            # 'water_source_id': latest_pfas_result.water_source_id if latest_pfas_result else (claim_pfas_result.water_source_id if claim_pfas_result else None),
             'source_name': source_name,
             'analyte': analyte,
             'lower_bound': lower_bound,
@@ -131,7 +131,7 @@ def source_detail_view(request, pwsid, source_name):
         # Append combined entry
         combined_flow_rates.append({
             'pwsid': claim_source.pwsid,
-            'water_source_id': latest_flow_rate.water_source_id if latest_flow_rate else (claim_flow_rate.water_source_id if claim_flow_rate else None),
+            # 'water_source_id': latest_flow_rate.water_source_id if latest_flow_rate else (claim_flow_rate.water_source_id if claim_flow_rate else None),
             'source_name': source_name,
             'year': year,
             'source_variable': latest_flow_rate.source_variable if latest_flow_rate else (claim_flow_rate.source_variable if claim_flow_rate else 'AFR'),

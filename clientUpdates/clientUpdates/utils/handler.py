@@ -17,6 +17,7 @@ def handle_update(request, form_class, extra_fields, impacted=None, calc_func=No
     """
     if request.method == 'POST':
         pwsid = request.POST.get('pwsid')
+        water_source_id = request.POST.get('water_source_id')
         source_name = request.POST.get('source_name')
         form = form_class(request.POST, request.FILES)
 
@@ -28,6 +29,7 @@ def handle_update(request, form_class, extra_fields, impacted=None, calc_func=No
 
             # Add shared fields
             instance.pwsid = pwsid
+            instance.water_source_id = water_source_id
             instance.source_name = source_name
             instance.submit_date = timezone.now()
             instance.filename = form.cleaned_data.get('filename').name

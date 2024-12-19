@@ -11,18 +11,24 @@
                     enctype="multipart/form-data">
                     {% csrf_token %}
 
+                    <!-- PWSID -->
+                    <div class="mb-3">
+                        <label for="pwsid" class="form-label">PWSID</label>
+                        <input class="form-control" id="pwsid" name="pwsid" value="{{ claim_source.pwsid }}"
+                            readonly required>
+                    </div>
 
-
-                    <!-- PWSID and Source Name -->
+                    <!-- Source ID and Source Name -->
                     <div class="row">
                         <div class="col-md-3 mb-3" id="info-field">
-                            <label for="pwsid" class="form-label">PWSID</label>
-                            <input class="form-control" id="pwsid" name="pwsid" value="{{ claim_source.pwsid }}"
-                                readonly required>
+                            <label for="waterSourceId" class="form-label">Source ID</label>
+                            <input class="form-control" id="waterSourceId" name="water_source_id"
+                                value="{{ claim_source.water_source_id|floatformat:0 }}" readonly required>
                         </div>
                         <div class="col-md-9 mb-3">
                             <label for="pfasResultSource" class="form-label">Source Name</label>
-                            <input class="form-control" id="pfasResultSource" name="source_name" value="{{ claim_source.source_name }}" readonly required>
+                            <input class="form-control" id="pfasResultSource" name="source_name"
+                                value="{{ claim_source.source_name }}" readonly required>
                         </div>
                     </div>
 
