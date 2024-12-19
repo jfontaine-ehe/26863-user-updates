@@ -63,7 +63,8 @@ def update_pfas_metrics(pwsid, source_name):
         all_nds=all_nds,
         reg_bump=reg_bump,
         pfas_score=pfas_score,
-        pfas_score_method=pfas_score_method
+        pfas_score_method=pfas_score_method, 
+        data_origin = 'EHE Update Portal'
     )
 
 
@@ -101,7 +102,8 @@ def update_flow_rate_metrics(pwsid, source_name):
     Source.objects.filter(pwsid=pwsid, source_name=source_name).update(
         submit_date=timezone.now(),
         afr=afr,
-        ehe_afr_note=ehe_afr_note
+        ehe_afr_note=ehe_afr_note, 
+        data_origin = 'EHE Update Portal'
     )
 
 
@@ -199,7 +201,8 @@ def update_ehe_pws_table(pwsid):
             submit_date=timezone.now(),
             gfe_tyco=total_gfe_tyco,
             gfe_basf=total_gfe_basf,
-            gfe_total_basf_tyco=total_gfe_basf_tyco
+            gfe_total_basf_tyco=total_gfe_basf_tyco, 
+            data_origin = 'EHE Update Portal'
         )
         print(f"GFEs updated successfully in the Pws table")
     except Exception as e:
