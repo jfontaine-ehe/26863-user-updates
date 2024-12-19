@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const lowerBoundInMgd = convertGpmToMgd(lowerBound);
 
         // Update the hint with both GPM and MGD
-        maxFlowLowerBoundHint.textContent = `Value must be higher than ${lowerBound.toFixed(0)} GPM (${lowerBoundInMgd.toFixed(0)} MGD)`;
+        maxFlowLowerBoundHint.textContent = `Value must be higher than ${lowerBound.toFixed(0)} GPM (${lowerBoundInMgd.toFixed(2)} MGD)`;
     });
 
     // Validate flow rate
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return false;
         }
 
-        if (newFlowRateInGpm <= lowerBound) {
+        if (newFlowRateInGpm < lowerBound) {
             showValidationError(flowRateInput, `Flow rate must be higher than ${lowerBound.toFixed(0)} GPM.`);
             return false;
         }

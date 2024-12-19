@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function () {
             newResultInPpt *= 1_000_000; // Convert ppm to ppt
         }
 
-        if (newResultInPpt <= lowerBound) {
+        if (newResultInPpt < lowerBound) {
             showValidationError(resultInput, `Value must be higher than ${lowerBound} ng/L.`);
             return false;
         }
