@@ -186,7 +186,7 @@
                             <tr class="{% if annual.year == 2013 %}text-muted text-decoration-line-through{% endif %}">
                                 <td class="text-start">{{ annual.year|stringformat:'d' }}</td>
                                 <td>{{ annual.flow_rate_gpy|floatformat:0|intcomma }}</td>
-                                <td>{{ annual.flow_rate_afpy|floatformat:0|intcomma }}</td>
+                                <td>{{ annual.flow_rate_afpy|floatformat:1|intcomma }}</td>
                                 <!-- <td>{{ annual.unit|upper }}</td> -->
                                 
                                 <td class="actions-col text-center">
