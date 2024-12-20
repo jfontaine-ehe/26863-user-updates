@@ -14,6 +14,7 @@ logger = logging.getLogger('clientUpdates')
 def handle_update(request, form_class, extra_fields, impacted=None, calc_func=None, source_variable=None):
     """
     Handles common update logic for PFAS results, max flow rate, and annual production.
+    Also updates source and pws tables every time a user updates either production, annual flow rate, or pfas results. 
     """
     if request.method == 'POST':
         pwsid = request.POST.get('pwsid')
