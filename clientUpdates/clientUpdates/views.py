@@ -280,7 +280,7 @@ def activity_view(request):
 
     # Retrieve flow rate changes
     flow_rates = FlowRate.objects.filter(pwsid=pwsid).values(
-        'submit_date', 'source_name', 'source_variable', 'flow_rate', 'unit'
+        'submit_date', 'source_name', 'source_variable', 'year', 'flow_rate', 'unit'
     )
 
     # Format flow rate log entries
@@ -290,7 +290,7 @@ def activity_view(request):
         'source_name': flow['source_name'],
         'table_name': 'Flow Rate',
         'source_variable': flow['source_variable'],  # Keep the original value for logic
-        'change': f"{'Annual Production' if flow['source_variable'] == 'AFR' else 'Max Flow Rate'} changed to {flow['flow_rate']} {flow['unit']}",
+        'change': f"{'Annual Production for ' + str(int(flow['year'])) if flow['source_variable'] == 'AFR' else 'Max Flow Rate'} changed to {flow['flow_rate']} {flow['unit']}",
     }
         for flow in flow_rates
     ]
