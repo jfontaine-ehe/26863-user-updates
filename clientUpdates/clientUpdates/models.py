@@ -275,6 +275,7 @@ class Source(models.Model):
     all_nds = models.BooleanField(blank=True, null=True)
     hi_candidate = models.BooleanField(blank=True, null=True)
     ma6_candidate = models.BooleanField(blank=True, null=True)
+    base_score = models.FloatField(blank=True, null=True)
     gfe_3m = models.FloatField(db_column='gfe_3M', blank=True, null=True)  # Field name made lowercase.
     gfe_dupont = models.FloatField(db_column='gfe_Dupont', blank=True, null=True)  # Field name made lowercase.
     gfe_total = models.FloatField(blank=True, null=True)

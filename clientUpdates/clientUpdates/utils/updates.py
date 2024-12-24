@@ -1,4 +1,4 @@
-from .calculations import calc_pfas_score_and_method, calc_afr_and_note, calc_gfes
+from .calculations import calc_pfas_score_and_method, calc_afr_and_note, calc_gfes, calc_base_score
 from .tables_utils import get_latest_entries, get_combined_results, get_max_results_by_analyte, get_max_annuals_by_year, get_max_entry
 from clientUpdates.models import Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimPfasResult, ClaimFlowRate
 from django.db.models import Sum
@@ -107,6 +107,29 @@ def update_flow_rate_metrics(pwsid, source_name):
     )
 
 
+def update_base_scores(pwsid, source_name):
+    """
+    Update Base Score for a given PWSID and source name. 
+
+    Args:
+        pwsid: The PWSID for the source.
+        source_name: The name of the source.
+
+    Updates the Source model with:
+        - Base Score (base_score)
+    """
+    # Fetch the Source object
+    source = Source.objects.filter(pwsid=pwsid, source_name=source_name).first()
+
+    if source:
+        base_score = calc_base_score(source.pfas_score, source.afr)
+        source.base_score = base_score
+        # Eventually also update adjusted base score, which will take into account regulatory bump, lit bump
+        source.save()
+    else: 
+        print(f"No Source found for pwsid: {pwsid}, source_name: {source_name}")
+        return
+
 
 def update_gfes(pwsid, source_name):
     """
@@ -166,6 +189,12 @@ def update_ehe_source_table(pwsid, source_name):
         print(f"Flow rate metrics updated successfully for PWSID: {pwsid}, Source: {source_name}")
     except Exception as e:
         print(f"Failed to update flow rate metrics for PWSID: {pwsid}, Source: {source_name}. Error: {e}")
+
+    try: 
+        update_base_scores(pwsid, source_name)
+        print(f"Base Score updated successfully for PWSID: {pwsid}, Source: {source_name}")
+    except Exception as e:
+        print(f"Failed to update Base Score in Source table for PWSID: {pwsid}, Source: {source_name}. Error: {e}")
 
     try:
         update_gfes(pwsid, source_name)

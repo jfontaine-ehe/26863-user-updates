@@ -98,6 +98,63 @@ def calc_afr_and_note(annuals, vfr):
     return afr, afr_note
 
 
+def calc_capital_costs(afr):
+    """
+    Calculate the capital costs component of the base score based on procedures defined in the Allocation Procedures.
+
+    Args:
+        afr (float): Adjusted Flow Rate
+
+    Returns:
+        float: The calculated capital costs component
+    """
+    if afr == 0 or afr is None:
+        return 0
+    
+    cost_per_1000_gallons = 7.7245 * (afr ** -0.281)
+    annual_1000_gallon_units = afr * 60 * 24 * 365 / 1000
+    capital_cost = cost_per_1000_gallons * annual_1000_gallon_units
+
+    return capital_cost
+
+
+def calc_om_costs(pfas_score, afr):
+    """
+    Calculate the O&M cost component of the base score based on procedures defined in the Allocation Procedures.
+
+    Args:
+        pfas_score (float): PFAS Score
+        afr (float): Adjusted Flow Rate
+
+    Returns:
+        float: The calculated O&M costs component
+    """
+    if pfas_score == 0 or pfas_score is None:
+        return 0
+    pfas_modifier = 0.005
+    capital_cost = calc_capital_costs(afr)
+    om_cost = (pfas_modifier * pfas_score * capital_cost) + capital_cost
+    return om_cost
+
+
+
+def calc_base_score(pfas_score, afr):
+    """
+    Calculate the base score based on procedures defined in the Allocation Procedures. 
+
+    Args: 
+        pfas_score (float): PFAS Score
+        afr (float): Adjusted Flow Rate
+    
+    Returns:
+        float: The calculated Base Score
+    """
+    capital_cost = calc_capital_costs(afr)
+    om_cost = calc_om_costs(pfas_score, afr)
+    base_score = capital_cost + om_cost
+    return base_score 
+
+
 
 def calc_gfes(pfas_score, afr, defendant):
     """
