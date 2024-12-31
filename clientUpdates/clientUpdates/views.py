@@ -100,7 +100,10 @@ def source_detail_view(request, pwsid, source_name):
             'result_ppt': latest_pfas_result.result_ppt if latest_pfas_result else (claim_pfas_result.result_ppt if claim_pfas_result else 0),
             'sampling_date': latest_pfas_result.sampling_date if latest_pfas_result else (claim_pfas_result.sampling_date if claim_pfas_result else None),
             'analysis_date': latest_pfas_result.analysis_date if latest_pfas_result else (claim_pfas_result.analysis_date if claim_pfas_result else None),
+            'analysis_method': latest_pfas_result.analysis_method if latest_pfas_result else (claim_pfas_result.analysis_method if claim_pfas_result else None),
             'lab_sample_id': latest_pfas_result.lab_sample_id if latest_pfas_result else (claim_pfas_result.lab_sample_id if claim_pfas_result else None),
+            'filename': latest_pfas_result.filename if latest_pfas_result else (claim_pfas_result.filename if claim_pfas_result else None), 
+            'updated': True if latest_pfas_result else False,
             'data_origin': latest_pfas_result.data_origin if latest_pfas_result else ('Placeholder' if not claim_pfas_result else claim_pfas_result.data_origin),
         })
 
@@ -142,6 +145,8 @@ def source_detail_view(request, pwsid, source_name):
             'flow_rate_mgd': ((latest_flow_rate.flow_rate_gpm if latest_flow_rate else (claim_flow_rate.flow_rate_gpm if claim_flow_rate else 0)) * 1440 / 1_000_000),
             'flow_rate_afpy': ((latest_flow_rate.flow_rate_gpm if latest_flow_rate else (claim_flow_rate.flow_rate_gpm if claim_flow_rate else 0)) * 1440 * 365 / 325851),
             'lower_bound': lower_bound,  # Always from ClaimFlowRate
+            'filename': latest_flow_rate.filename if latest_flow_rate else (claim_flow_rate.filename if claim_flow_rate else None), 
+            'updated': True if latest_flow_rate else False,
             'data_origin': latest_flow_rate.data_origin if latest_flow_rate else ('Placeholder' if not claim_flow_rate else claim_flow_rate.data_origin),
         })
     

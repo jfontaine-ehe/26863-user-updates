@@ -174,3 +174,36 @@ table th, table td {
 .modal-header, .modal-footer {
     border: none; /* Remove borders for cleaner look */
 }
+
+/* Tooltip customization */
+.tooltip-inner {
+    min-width: 250px !important;
+    background-color: #f8f8f8 !important; /* Match white card-like background */
+    color: #333 !important; /* Dark gray text color to match general text styling */
+    font-size: 14px; /* Consistent font size */
+    font-family: 'Helvetica', sans-serif !important; /* Match overall font family */
+    border: 1px solid #eaeaea; /* Subtle border for visibility */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Enhanced shadow to make it "jump out" */
+    border-radius: 8px; /* Match rounded corners of cards */
+    padding: 5px; /* Ensure text has enough padding */
+    /* text-align: center; Center the text */
+}
+
+/* Tooltip arrow */
+.tooltip.bs-tooltip-top .tooltip-arrow {
+    border-top-color: #f8f8f8 !important; /* Match tooltip border */
+}
+
+.tooltip.bs-tooltip-bottom .tooltip-arrow {
+    border-bottom-color: #f8f8f8 !important; /* Match tooltip border */
+}
+
+/* Tooltip transition for smooth visibility */
+.tooltip {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out; /* Smooth transition effect */
+}
+
+.tooltip.show {
+    opacity: 1;
+}

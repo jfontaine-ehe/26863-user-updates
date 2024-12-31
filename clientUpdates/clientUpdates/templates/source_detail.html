@@ -18,7 +18,9 @@
                             <th class="text-start">Analyte</th>
                             <th>Result</th>
                             <th>Sample Date</th>
-                            <th>Analysis Date</th>
+                            <th>Analysis Method</th>
+                            <th>Filename</th>
+                            <th>Updated</th>
                             <th class="actions-col text-center">Actions</th>
                         </tr>
                     </thead>
@@ -28,7 +30,19 @@
                                 <td class="text-start">{{ pfas_result.analyte }}</td>
                                 <td>{% if pfas_result.result_ppt %} {{ pfas_result.result_ppt }} ng/L (ppt) {% else %} -- {% endif %}</td>
                                 <td>{% if pfas_result.sampling_date %}{{ pfas_result.sampling_date }} {% else %} -- {% endif %}</td>
-                                <td>{% if pfas_result.analysis_date %}{{ pfas_result.analysis_date }} {% else %} -- {% endif %}</td>
+                                <!-- <td>{% if pfas_result.analysis_date %}{{ pfas_result.analysis_date }} {% else %} -- {% endif %}</td> -->
+                                <td>{% if pfas_result.analysis_method %}{{ pfas_result.analysis_method }} {% else %} -- {% endif %}</td>
+                                <td>
+                                    {% if pfas_result.filename %} 
+                                    <i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ pfas_result.filename }}"></i>
+                                    {% else %}
+                                    --
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if pfas_result.updated %} <i class="bi bi-check h5"></i> {% else %} -- {% endif %}
+                                        
+                                </td>
                                 <td class="actions-col text-center">
                                     <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#updatePfasResultModal"
                                             data-row-names="{{ pfas_result.row_names }}" 
@@ -114,6 +128,8 @@
                             <th>Flow Rate (GPM)</th>
                             <th>Flow Rate (MGD)</th>
                             <th>Flow Rate (GPY)</th>
+                            <th>Filename</th>
+                            <th>Updated</th>
                             <!-- <th>Unit</th> -->
                             <th class="actions-col text-center">Actions</th>
                         </tr>
@@ -124,6 +140,8 @@
                             <td>{{ max_flow_rate.flow_rate_gpm|floatformat:0|intcomma }}</td>
                             <td>{{ max_flow_rate.flow_rate_mgd|floatformat:2|intcomma }}</td>
                             <td>{{ max_flow_rate.flow_rate_gpy|floatformat:0|intcomma }}</td>
+                            <td><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ max_flow_rate.filename }}"></i></td>
+                            <td>{% if max_flow_rate.updated %}<i class="bi bi-check h5"></i></td>{% else %} -- {% endif %}</td>
                             <!-- <td>{{ max_flow_rate.unit|upper }}</td> -->
                             <td class="actions-col text-center">
                                 <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#updateMaxFlowRateModal" 
@@ -177,6 +195,8 @@
                             <th class="text-start">Year</th>
                             <th>Total Flow (Gallons)</th>
                             <th>Total Flow (Acre-Feet)</th>
+                            <th>Filename</th>
+                            <th>Updated</th>
                             <!-- <th>Unit</th> -->
                             <th class="actions-col text-center">Actions</th>
                         </tr>
@@ -187,6 +207,8 @@
                                 <td class="text-start">{{ annual.year|stringformat:'d' }}</td>
                                 <td>{{ annual.flow_rate_gpy|floatformat:0|intcomma }}</td>
                                 <td>{{ annual.flow_rate_afpy|floatformat:2|intcomma }}</td>
+                                <td><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ annual.filename }}"></i></td>
+                                <td>{% if annual.updated %}<i class="bi bi-check h5"></i></td>{% else %} -- {% endif %}</td>
                                 <!-- <td>{{ annual.unit|upper }}</td> -->
                                 
                                 <td class="actions-col text-center">
@@ -226,6 +248,15 @@
     
     {% endif %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+});
+</script>
 
 <style>
     .actions-col {
