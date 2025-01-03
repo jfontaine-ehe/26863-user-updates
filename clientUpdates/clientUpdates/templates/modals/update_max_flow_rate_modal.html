@@ -34,14 +34,14 @@
 
                     <!-- Flow Rate and Unit -->
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-7 mb-3">
                             <label for="flowRateInput" class="form-label">Flow Rate</label>
                             <input type="number" class="form-control" id="flowRateInput" name="flow_rate" min="0"
-                                step="0.01" aria-describedby="maxFlowLowerBoundHint" required>
-                            <small class="text-muted" id="maxFlowLowerBoundHint"></small>
+                                step="0.01" aria-describedby="maxFlowLowerBoundHint" placeholder="" required>
+                            <!-- <small class="text-muted" id="maxFlowLowerBoundHint"></small> -->
                             <div class="invalid-feedback" id="flow-rate-error"></div>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-5 mb-3">
                             <label for="unitInput" class="form-label">Unit</label>
                             <select class="form-control" id="unitInput" name="unit" required>
                                 <option value="" disabled selected>Select the units</option>
@@ -143,6 +143,7 @@
             const lowerBoundInMgd = convertGpmToMgd(lowerBound);
 
             // Update the hint with both GPM and MGD
+            flowRateInput.placeholder = `Enter value higher than ${lowerBound.toFixed(0)} GPM (${lowerBoundInMgd.toFixed(2)} MGD)`;
             maxFlowLowerBoundHint.textContent = `Value must be higher than ${lowerBound.toFixed(0)} GPM (${lowerBoundInMgd.toFixed(2)} MGD)`;
         });
 

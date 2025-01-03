@@ -263,7 +263,7 @@ table th, table td {
 #info-bar {
     background-color: #ffffff; /* White background */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 1200px;
+    max-width: 98%;
     padding: 10px;
     font-size: 14px;
 }

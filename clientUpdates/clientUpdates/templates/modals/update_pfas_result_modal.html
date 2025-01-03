@@ -67,14 +67,14 @@
 
           <!-- Result and Unit (one row) -->
           <div class="row">
-            <div class="col-md-6 mb-3" id="result-field">
+            <div class="col-md-7 mb-3" id="result-field">
               <label for="pfasResultInput" class="form-label">Result</label>
               <input type="number" class="form-control" id="pfasResultInput" name="result" min="0" step="0.01"
-                aria-describedby="lowerBoundHint" required>
-              <small class="text-muted" id="lowerBoundHint"></small>
+                aria-describedby="lowerBoundHint" placeholder="" required>
+              <!-- <small class="text-muted" id="lowerBoundHint"></small> -->
               <div class="invalid-feedback" id="result-error"></div>
             </div>
-            <div class="col-md-6 mb-3">
+            <div class="col-md-5 mb-3">
               <label for="pfasUnitInput" class="form-label">Unit</label>
               <select class="form-control" id="pfasUnitInput" name="unit" required>
                 <option value="" disabled selected>Select the units</option>
@@ -307,6 +307,7 @@
       analyteInput.disabled = !!analyte; // Disable analyte input if prefilled
       // resultInput.value = pfasResult || '';
       // unitInput.value = unit || '';
+      resultInput.placeholder = `Enter a value higher than ${lowerBound} ng/L (ppt).`;
       lowerBoundHint.textContent = `Value must be higher than ${lowerBound} ng/L.`;
     });
 
