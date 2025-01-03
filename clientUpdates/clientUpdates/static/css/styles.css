@@ -48,19 +48,7 @@ body {
     color: #0056b3;; 
 }
 
-/* Behavior for dashboard table */
-.table .impacted-row  {
-    opacity: 1;
-}
 
-.table .unimpacted-row {
-
-    opacity: 0.8; /* Slight transparency to give a more subdued look */
-}
-
-#activityTable {
-    font-size: 0.9rem;
-}
 
 .container {
     margin-top: 20px;
@@ -154,15 +142,78 @@ table {
     border-collapse: collapse;
 }
 
-td.actions th.actions {
-    width: 50px;
-    text-align: center;
+td.actions-col, th.actions-col {
+    text-align: center; /* Align text and button in the center */
+    vertical-align: middle; /* Ensure vertical alignment */
 }
+
+/* Center the button within the column */
+.actions-col button {
+    margin: auto; /* Center horizontally */
+    display: block; /* Treat as block to align with margin auto */
+}
+
 
 table th, table td {
     padding: 10px;
-    /* text-align: center; */
+    vertical-align: middle;
     border-bottom: 1px solid #eaeaea; /* Soft border between rows */
+}
+
+/* Behavior for dashboard table */
+.table .impacted-row  {
+    opacity: 1;
+}
+
+.table .unimpacted-row {
+
+    opacity: 0.8; /* Slight transparency to give a more subdued look */
+}
+
+#activityTable {
+    font-size: 0.9rem;
+}
+
+.table-container {
+    overflow-x: auto; /* Allow horizontal scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+}
+
+@media (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead tr {
+        display: none; /* Hide table headers */
+    }
+
+    tbody tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px; /* Rounded corners for mobile rows */
+        padding: 10px;
+    }
+
+    td {
+        position: relative;
+        padding-left: 50%; /* Leave space for the labels */
+        text-align: right; /* Align text for better readability */
+        border: none; /* Remove unnecessary borders */
+    }
+
+    #sourcesTable td {
+        text-align: center; 
+    }
+
+    td::before {
+        content: attr(data-label); /* Display the column header as a label */
+        position: absolute;
+        left: 10px;
+        font-weight: 400;
+        color: #555;
+        white-space: nowrap;
+    }
 }
 
 /* Modal styling */
@@ -170,6 +221,7 @@ table th, table td {
     border-radius: 8px; /* Rounded corners */
     padding: 15px;
 }
+
 
 .modal-header, .modal-footer {
     border: none; /* Remove borders for cleaner look */
@@ -206,4 +258,16 @@ table th, table td {
 
 .tooltip.show {
     opacity: 1;
+}
+
+#info-bar {
+    background-color: #ffffff; /* White background */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    padding: 10px;
+    font-size: 14px;
+}
+
+#info-bar .row {
+    margin-bottom: 5px; 
 }

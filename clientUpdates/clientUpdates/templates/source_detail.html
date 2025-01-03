@@ -12,38 +12,37 @@
                 <p>
                     The following PFAS results were provided to the Office of the Claims Administrator for {{ claim_source.source_name }} for the Phase 1 3M and DuPont claim. Please update the result(s) if you have a higher result than shown below. 
                 </p>
-                <table class="table text-center">
+                <table class="table table-container text-center">
                     <thead>
                         <tr>
-                            <th class="text-start">Analyte</th>
+                            <th>Analyte</th>
                             <th>Result</th>
                             <th>Sample Date</th>
                             <th>Analysis Method</th>
                             <th>Filename</th>
                             <th>Updated</th>
-                            <th class="actions-col text-center">Actions</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for pfas_result in pfas_results %}
                             <tr>
-                                <td class="text-start">{{ pfas_result.analyte }}</td>
-                                <td>{% if pfas_result.result_ppt %} {{ pfas_result.result_ppt }} ng/L (ppt) {% else %} -- {% endif %}</td>
-                                <td>{% if pfas_result.sampling_date %}{{ pfas_result.sampling_date }} {% else %} -- {% endif %}</td>
-                                <!-- <td>{% if pfas_result.analysis_date %}{{ pfas_result.analysis_date }} {% else %} -- {% endif %}</td> -->
-                                <td>{% if pfas_result.analysis_method %}{{ pfas_result.analysis_method }} {% else %} -- {% endif %}</td>
-                                <td>
+                                <td class="text-center">{{ pfas_result.analyte }}</td>
+                                <td data-label="Result (ppt)">{% if pfas_result.result_ppt %} {{ pfas_result.result_ppt }} ng/L (ppt) {% else %} -- {% endif %}</td>
+                                <td data-label="Sample Date">{% if pfas_result.sampling_date %}{{ pfas_result.sampling_date }} {% else %} -- {% endif %}</td>
+                                <td data-label="Method">{% if pfas_result.analysis_method %}{{ pfas_result.analysis_method }} {% else %} -- {% endif %}</td>
+                                <td data-label="Filename">
                                     {% if pfas_result.filename %} 
                                     <i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ pfas_result.filename }}"></i>
                                     {% else %}
                                     --
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td data-label="Updated">
                                     {% if pfas_result.updated %} <i class="bi bi-check h5"></i> {% else %} -- {% endif %}
                                         
                                 </td>
-                                <td class="actions-col text-center">
+                                <td class="text-center">
                                     <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#updatePfasResultModal"
                                             data-row-names="{{ pfas_result.row_names }}" 
                                             data-analyte="{{ pfas_result.analyte }}" 
@@ -121,29 +120,27 @@
 
                 {% endif %}
                 
-                <table class="table text-center">
+                <table class="table table-container text-center">
                     <thead>
                         <tr>
-                            <th class="text-start"></th>
+                            <th></th>
                             <th>Flow Rate (GPM)</th>
                             <th>Flow Rate (MGD)</th>
                             <th>Flow Rate (GPY)</th>
                             <th>Filename</th>
                             <th>Updated</th>
-                            <!-- <th>Unit</th> -->
-                            <th class="actions-col text-center">Actions</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="text-start">Maximum</td>
-                            <td>{{ max_flow_rate.flow_rate_gpm|floatformat:0|intcomma }}</td>
-                            <td>{{ max_flow_rate.flow_rate_mgd|floatformat:2|intcomma }}</td>
-                            <td>{{ max_flow_rate.flow_rate_gpy|floatformat:0|intcomma }}</td>
-                            <td><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ max_flow_rate.filename }}"></i></td>
-                            <td>{% if max_flow_rate.updated %}<i class="bi bi-check h5"></i></td>{% else %} -- {% endif %}</td>
-                            <!-- <td>{{ max_flow_rate.unit|upper }}</td> -->
-                            <td class="actions-col text-center">
+                            <td class="text-center">Maximum</td>
+                            <td data-label="Flow Rate (GPM)">{{ max_flow_rate.flow_rate_gpm|floatformat:0|intcomma }}</td>
+                            <td data-label="Flow Rate (MGD)">{{ max_flow_rate.flow_rate_mgd|floatformat:2|intcomma }}</td>
+                            <td data-label="Flow Rate (GPY)">{{ max_flow_rate.flow_rate_gpy|floatformat:0|intcomma }}</td>
+                            <td data-label="Filename"><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ max_flow_rate.filename }}"></i></td>
+                            <td data-label="Updated">{% if max_flow_rate.updated %}<i class="bi bi-check h5"></i></td>{% else %} -- {% endif %}</td>
+                            <td class="text-center">
                                 <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#updateMaxFlowRateModal" 
                                         data-row-names="{{ max_flow_rate.row_names }}" 
                                         data-flow-rate="{{ max_flow_rate.flow_rate }}" 
@@ -189,29 +186,26 @@
                 {% endif %}
 
 
-                <table class="table text-center">
+                <table class="table table-container text-center">
                     <thead>
                         <tr>
-                            <th class="text-start">Year</th>
+                            <th>Year</th>
                             <th>Total Flow (Gallons)</th>
                             <th>Total Flow (Acre-Feet)</th>
                             <th>Filename</th>
                             <th>Updated</th>
-                            <!-- <th>Unit</th> -->
-                            <th class="actions-col text-center">Actions</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for annual in annuals %}
                             <tr class="{% if annual.year == 2013 %}text-muted text-decoration-line-through{% endif %}">
-                                <td class="text-start">{{ annual.year|stringformat:'d' }}</td>
-                                <td>{{ annual.flow_rate_gpy|floatformat:0|intcomma }}</td>
-                                <td>{{ annual.flow_rate_afpy|floatformat:2|intcomma }}</td>
-                                <td><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ annual.filename }}"></i></td>
-                                <td>{% if annual.updated %}<i class="bi bi-check h5"></i></td>{% else %} -- {% endif %}</td>
-                                <!-- <td>{{ annual.unit|upper }}</td> -->
-                                
-                                <td class="actions-col text-center">
+                                <td class="text-center">{{ annual.year|stringformat:'d' }}</td>
+                                <td data-label="Gallons">{{ annual.flow_rate_gpy|floatformat:0|intcomma }}</td>
+                                <td data-label="Acre-Feet">{{ annual.flow_rate_afpy|floatformat:2|intcomma }}</td>
+                                <td data-label="Filename"><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ annual.filename }}"></i></td>
+                                <td data-label="Updated">{% if annual.updated %}<i class="bi bi-check h5"></i></td>{% else %} -- {% endif %}</td>
+                                <td class="text-center">
                                     {% if annual.year != 2013 and annual.year == 2023 or annual.year != 2013 and annual.lower_bound == 0 %}
                                         <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addOrUpdateAnnualModal"
                                                 data-source-name="{{ claim_source.source_name }}" 
@@ -221,8 +215,7 @@
                                     {% else %}
                                         <div class='text-center'>--</div>
                                     {% endif %}
-                                </td>
-                                
+                                </td>                              
                             </tr>        
                         {% endfor %}
                     </tbody>
@@ -257,10 +250,4 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 </script>
-
-<style>
-    .actions-col {
-        width:15%;
-    }
-</style>
 {% endblock %}
