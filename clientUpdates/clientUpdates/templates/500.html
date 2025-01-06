@@ -1,12 +1,9 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <title>500 Internal Server Error</title>
-</head>
-<body>
-  <h1>Internal Server Error</h1>
-  <p>The server was unable to complete your request. Please try again later.</p>
-  <p>If this problem persists, please <a href="{% url 'contact' %}">contact EH&E</a>.</p>
-  <p>Server logs contain details of this error with request ID: ABC-123.</p>
-</body>
-</html>
+{% extends "base_generic.html" %}
+
+{% block content %}
+<div style="text-align: center; padding: 50px;">
+    <h1>Oops! Something went wrong.</h1>
+     <p>Please try closing the browser and reloading the page.</p>
+     <p>If the issue persists, please <a href="{% url 'contact' %}">contact</a> EH&E.</p>
+</div>
+{% endblock %}
