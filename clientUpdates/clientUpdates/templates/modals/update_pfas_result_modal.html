@@ -202,7 +202,7 @@
       const newResult = parseFloat(resultInput.value);
       const selectedUnit = unitInput.value;
 
-      if (!newResult || isNaN(newResult)) {
+      if (isNaN(newResult)) {
         showValidationError(resultInput, "Result is required.");
         return false;
       }
@@ -290,7 +290,7 @@
         event.preventDefault();
       }
     });
-
+-1
     // Modal show and hide behavior
     const updatePfasResultModal = document.getElementById('updatePfasResultModal');
     updatePfasResultModal.addEventListener('show.bs.modal', function (event) {
@@ -308,7 +308,7 @@
       // resultInput.value = pfasResult || '';
       // unitInput.value = unit || '';
       resultInput.placeholder = `Enter a value higher than ${lowerBound} ng/L (ppt).`;
-      lowerBoundHint.textContent = `Value must be higher than ${lowerBound} ng/L.`;
+      // lowerBoundHint.textContent = `Value must be higher than ${lowerBound} ng/L.`;
     });
 
     updatePfasResultModal.addEventListener('hide.bs.modal', function () {
