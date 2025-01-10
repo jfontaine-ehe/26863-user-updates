@@ -16,7 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.conf import settings
 from django.core.mail import EmailMessage
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from itertools import chain
 
 
@@ -40,7 +40,7 @@ def dashboard(request):
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     pws_record = Pws.objects.get(form_userid=request.user.username)
     if not pws_record: 
-        return redirect('some-error-page') 
+        raise Http404("Record not found")
     
     # Pull all the sources filed in the claims portal
     sources = Source.objects.filter(pwsid=pws_record.pwsid)
