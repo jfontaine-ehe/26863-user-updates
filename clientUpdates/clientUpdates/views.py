@@ -16,7 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.conf import settings
 from django.core.mail import EmailMessage
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from itertools import chain
 
 
@@ -40,7 +40,7 @@ def dashboard(request):
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     pws_record = Pws.objects.get(form_userid=request.user.username)
     if not pws_record: 
-        return redirect('some-error-page') 
+        raise Http404("Record not found")
     
     # Pull all the sources filed in the claims portal
     sources = Source.objects.filter(pwsid=pws_record.pwsid)
@@ -108,6 +108,7 @@ def source_detail_view(request, pwsid, source_name):
         })
 
     pfas_results = add_pfoas_if_missing(combined_pfas_results, claim_source.pwsid, claim_source.water_source_id, claim_source.source_name)
+    pfas_results = sorted(pfas_results, key=lambda x: x['analyte'], reverse=True)
     max_other_threshold = get_max_other_threshold(pfas_results)
     
     impacted = True if not claim_source.all_nds or updated_pfas_results else False
@@ -212,7 +213,7 @@ def update_annual_production_view(request):
         instance.unit = cleaned_data['unit']
         instance.flow_rate_gpm = calc_gpm_flow_rate(instance.flow_rate, instance.unit)
         instance.year = cleaned_data['year']
-        print(instance)
+        
     return handle_update(
         request,
         form_class=AnnualProductionForm,

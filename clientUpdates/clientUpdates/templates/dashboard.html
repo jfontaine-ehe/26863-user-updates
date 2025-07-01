@@ -1,9 +1,26 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
+
+{% if pws.data_origin == 'EHE Forms Portal' %}
+<div class="container-mt-4">
+    <p>
+        Looks like you are in the wrong EH&E portal. This portal is only intended for systems that have already submitted a Phase 1 3M and DuPont claim with the Office of the Claims Administrator. Our records indicate that <b>{{ pws.pws_name }} ({{ pws.pwsid}})</b> has <em>not</em> yet filed a claim. 
+    </p>
+    <p>
+        Perhaps you are looking for <a href="https://app.form.com/online/81596113/?nav=default&login=">EH&E Forms portal</a>, which is designed to receive information for systems that have yet to file a claim. If that is the case, please head over to <a href="https://app.form.com/online/81596113/?nav=default&login=">EH&E Forms portal</a> and login using the same username and password you used to log into this portal. In the Forms portal, you will be able to provide all the relevant information needed to file a claim with the Office of the Claims Administrator for a new system. 
+    </p>
+
+    <p>
+        We apologize for the confusion. If you have any questions, please <a href="{% url 'contact' %}">contact us</a> and one of us at EH&E will be in touch with you within two business days. 
+    </p>
+</div>
+
+
+{% else %}
 <div class="container mt-4">
     <p>
-        Claims for the following sources were submitted on your behalf in the Office of the Claims Administrator's Claims Portal for the 3M and DuPont claims. Please review the sources and update the data as needed. <b>If you have a source that is not listed here and you would like to either add that source or would like to get advice on whether a new source should be added, please <a href="{% url 'contact' %}">contact</a> EH&E immediately</b>. 
+        Claims for the following sources were submitted on your behalf in the Office of the Claims Administrator's Claims Portal for the 3M and DuPont claims. Please review the sources and update the data as needed. <b>If you have a source that is not listed here and you would like to either add that source or would like to get advice on whether a new source should be added, please <a href="{% url 'contact' %}">contact EH&E immediately</a></b>. 
     </p>
     <p>
         For each source listed below, please review the following information by clicking on the <i class="bi bi-eye-fill"></i> icon: 
@@ -55,7 +72,7 @@
     </div>
     
 </div>    
-
+{% endif %}
 
 <script>
     $(document).ready(function() {

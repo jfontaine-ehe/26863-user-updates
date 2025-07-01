@@ -52,8 +52,8 @@
               <option value="GenX">GenX/HFPO-DA</option>
               <option value="PFDoA">PFDoA</option>
               <option value="11Cl-PF3OUdS">11Cl-PF3OUdS</option>
-              <option value="8:2FTS">8:2FTS</option>
-              <option value="6:2FTS">6:2FTS</option>
+              <option value="8:2 FTS">8:2 FTS</option>
+              <option value="6:2 FTS">6:2 FTS</option>
               <option value="NFDHA">NFDHA</option>
               <option value="PFEESA">PFEESA</option>
               <option value="PFMPA">PFMPA</option>
@@ -131,7 +131,7 @@
                 <option value="537 (Mod)">Method 537 (Modified)</option>
                 <option value="533">Method 533</option>
                 <option value="537.1 + 533">Methods 537.1 + 533</option>
-                <option value="1644">Method 1644</option>
+                <option value="1633">Method 1633</option>
                 <option value="Other">Other</option>
               </select>
               <div class="invalid-feedback" id="analysis-method-error"></div>
@@ -202,7 +202,7 @@
       const newResult = parseFloat(resultInput.value);
       const selectedUnit = unitInput.value;
 
-      if (!newResult || isNaN(newResult)) {
+      if (isNaN(newResult)) {
         showValidationError(resultInput, "Result is required.");
         return false;
       }
@@ -290,7 +290,7 @@
         event.preventDefault();
       }
     });
-
+-1
     // Modal show and hide behavior
     const updatePfasResultModal = document.getElementById('updatePfasResultModal');
     updatePfasResultModal.addEventListener('show.bs.modal', function (event) {
@@ -308,7 +308,7 @@
       // resultInput.value = pfasResult || '';
       // unitInput.value = unit || '';
       resultInput.placeholder = `Enter a value higher than ${lowerBound} ng/L (ppt).`;
-      lowerBoundHint.textContent = `Value must be higher than ${lowerBound} ng/L.`;
+      // lowerBoundHint.textContent = `Value must be higher than ${lowerBound} ng/L.`;
     });
 
     updatePfasResultModal.addEventListener('hide.bs.modal', function () {

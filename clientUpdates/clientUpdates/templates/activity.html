@@ -14,6 +14,7 @@
                 <th>Source Name</th>
                 <th>Table Name</th>
                 <th>Change</th>
+                <th scope="col" class="text-center">View Source</th>
             </tr>
         </thead>
         <tbody>
@@ -23,6 +24,13 @@
                     <td>{{ log.source_name }}</td>
                     <td>{{ log.table_name }}</td>
                     <td>{{ log.change }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'source-detail' pwsid=user.username source_name=log.source_name %}" 
+                            class="text-decoration-none" 
+                            style="color:inherit;">
+                            <i class="bi bi-eye-fill h5"></i>
+                        </a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
