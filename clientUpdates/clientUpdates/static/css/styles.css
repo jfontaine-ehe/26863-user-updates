@@ -48,7 +48,11 @@ body {
     color: #0056b3;; 
 }
 
+.label-center {
 
+    text-align: center;
+
+}
 
 .container {
     margin-top: 20px;
