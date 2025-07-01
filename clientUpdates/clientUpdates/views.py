@@ -19,20 +19,36 @@ from django.core.mail import EmailMessage
 from django.http import JsonResponse, Http404
 from itertools import chain
 
+"""JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
+# class CustomLoginView(LoginView):
+#     template_name = 'login.html'
+#     success_url = reverse_lazy('dashboard')
+#
+#     def dispatch(self, request, *args, **kwargs):
+#         if request.user.is_authenticated:
+#             return redirect('dashboard')  # Redirect to the dashboard if the user is already logged in
+#         return super().dispatch(request, *args, **kwargs)
+
+"""JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
+# def root_redirect(request):
+#     if request.user.is_authenticated:
+#         return redirect('dashboard')
+#     else:
+#         return redirect('login')
 
 class CustomLoginView(LoginView):
     template_name = 'login.html'
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('payment_dashboard')
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('dashboard')  # Redirect to the dashboard if the user is already logged in
+            return redirect('payment_dashboard')  # Redirect to the dashboard if the user is already logged in
         return super().dispatch(request, *args, **kwargs)
 
 def root_redirect(request):
     if request.user.is_authenticated:
-        return redirect('dashboard')
-    else: 
+        return redirect('payment_dashboard')
+    else:
         return redirect('login')
 
 @login_required
@@ -51,6 +67,11 @@ def dashboard(request):
     }
 
     return render(request, 'dashboard.html', context)
+
+
+@login_required
+def payment_dashboard(request):
+    return render(request, 'payment_dashboard.html')
 
 
 # The logic: 
