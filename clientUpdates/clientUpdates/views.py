@@ -38,12 +38,19 @@ from itertools import chain
 
 class CustomLoginView(LoginView):
     template_name = 'login.html'
-    success_url = reverse_lazy('payment_dashboard')
+
+    # Placing this in a function that overrides get_success_url... this was done because
+    # sometimes it was returning an older URL (the old update dashboard)
+    #success_url = reverse_lazy('payment_dashboard')
+    def get_success_url(self):
+        return reverse_lazy('payment_dashboard')
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('payment_dashboard')  # Redirect to the dashboard if the user is already logged in
         return super().dispatch(request, *args, **kwargs)
+
+
 
 def root_redirect(request):
     if request.user.is_authenticated:
@@ -55,12 +62,12 @@ def root_redirect(request):
 def dashboard(request):
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     pws_record = Pws.objects.get(form_userid=request.user.username)
-    if not pws_record: 
+    if not pws_record:
         raise Http404("Record not found")
-    
+
     # Pull all the sources filed in the claims portal
     sources = Source.objects.filter(pwsid=pws_record.pwsid)
-    
+
     context = {
         'pws': pws_record,
         'sources': sources,
@@ -71,7 +78,18 @@ def dashboard(request):
 
 @login_required
 def payment_dashboard(request):
-    return render(request, 'payment_dashboard.html')
+    # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
+    pws_record = Pws.objects.get(form_userid=request.user.username)
+
+    # Pull all the sources filed in the claims portal
+    sources = Source.objects.filter(pwsid=pws_record.pwsid)
+
+    context = {
+        'pws': pws_record,
+        'sources': sources,
+    }
+
+    return render(request, 'payment_dashboard.html', context)
 
 
 # The logic: 
