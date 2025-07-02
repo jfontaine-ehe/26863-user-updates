@@ -188,6 +188,18 @@ class Pws(models.Model):
     baseline_qc = models.BooleanField(blank=True, null=True)
     date_reviewed = models.DateField(blank=True, null=True)
     data_origin = models.TextField(blank=True, null=True)
+
+
+    # JF 07/02/2025: Adding new columns to PWS class
+    abs_3m = models.FloatField(blank=True, null=True)
+    abs_dupont = models.FloatField(blank=True, null=True)
+    gfe_3m_original = models.FloatField(blank=True, null=True)
+    gfe_dupont_original = models.FloatField(blank=True, null=True)
+    allocation_3m = models.FloatField(blank=True, null=True)
+    allocation_dupont = models.FloatField(blank=True, null=True)
+
+
+
     #pfas_files_associated = models.FloatField(blank=True, null=True)
     #n_x = models.IntegerField(db_column='n.x', blank=True, null=True)  # Field renamed to remove unsuitable characters.
     #pct_pfas_associated = models.FloatField(blank=True, null=True)
@@ -283,6 +295,9 @@ class Source(models.Model):
     gfe_tyco = models.FloatField(blank=True, null=True)
     gfe_total_basf_tyco = models.FloatField(blank=True, null=True)
     data_origin = models.TextField(blank=True, null=True)
+    abs_3m = models.FloatField(blank=True, null=True)
+    abs_dupont = models.FloatField(blank=True, null=True)
+
 
     class Meta:
         managed = True
@@ -593,3 +608,6 @@ class ClaimSource(models.Model):
     class Meta:
         managed = True
         db_table = 'claim_source'
+
+
+
