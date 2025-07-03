@@ -1,9 +1,96 @@
 {% extends 'base_generic.html' %}
 
+{% load humanize %}
+
 {% block content %}
 <div>
 
     <h2 class="label-center">System Level Information</h2>
+
+    <div class="card-container">
+        <div class="card" style="width:33%">
+            <div class="card-body">
+                <h5 class="card-title text-center" style="font-size:2rem;">3M/DuPont</h5>
+                <h6 class="card-subtitle mb-2 text-muted text-center" style="font-style: italic">Payment Information Pertaining to the 3M/DuPont Settlement</h6>
+                <table class="table-bordered">
+                    <thead>
+                        <th scope="col">Detail</th>
+                        <th scope="col">Amount</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>3M GFE</td>
+                            <td>${{ pws.gfe_3m|floatformat:2|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>3M Adjusted Base Score</td>
+                            <td>${{ pws.abs_3m|floatformat:2|intcomma}}</td>
+                        </tr>
+                        <tr>
+                            <td>3M Allocation Amount</td>
+                            <td>${{ pws.allocation_3m|floatformat:2|intcomma }}</td>
+                        </tr>
+                         <tr>
+                            <td>DuPont GFE</td>
+                            <td>${{ pws.gfe_dupont|floatformat:2|intcomma}}</td>
+                        </tr>
+                        <tr>
+                            <td>DuPont Adjusted Base Score</td>
+                            <td>${{ pws.abs_dupont|floatformat:2|intcomma}}</td>
+                        </tr>
+                        <tr>
+                            <td>DuPont Allocation Amount</td>
+                            <td>${{ pws.allocation_dupont|floatformat:2|intcomma }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="card-text" style="margin-top:10px;">Text that can be used to explain values above.</p>
+                <a href=" " class="btn btn-primary">Payment Schedule/Wiring Info</a>
+            </div>
+        </div>
+
+        <div class="card" style="width:33%">
+            <div class="card-body">
+                <h5 class="card-title text-center" style="font-size:2rem;">Tyco/BASF</h5>
+                <h6 class="card-subtitle mb-2 text-muted text-center" style="font-style: italic">Payment Information Pertaining to the Tyco/BASF Settlement</h6>
+                <table class="table-bordered">
+                    <thead>
+                        <th scope="col">Detail</th>
+                        <th scope="col">Amount</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tyco GFE</td>
+                            <td>${{ pws.gfe_tyco|floatformat:2|intcomma }}</td>
+                        </tr>
+                        <tr>
+                            <td>Tyco Adjusted Base Score</td>
+                            <td>${{ pws.abs_tyco|floatformat:2|intcomma}}</td>
+                        </tr>
+                        <tr>
+                            <td>Tyco Allocation Amount</td>
+                            <td>${{ pws.allocation_tyco|floatformat:2|intcomma }}</td>
+                        </tr>
+                         <tr>
+                            <td>BASF GFE</td>
+                            <td>${{ pws.gfe_basf|floatformat:2|intcomma}}</td>
+                        </tr>
+                        <tr>
+                            <td>BASF Adjusted Base Score</td>
+                            <td>${{ pws.abs_basf|floatformat:2|intcomma}}</td>
+                        </tr>
+                        <tr>
+                            <td>BASF Allocation Amount</td>
+                            <td>${{ pws.allocation_basf|floatformat:2|intcomma }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="card-text" style="margin-top:10px;">Text that can be used to explain values above.</p>
+                <a href=" " class="btn btn-primary">Payment Schedule/Wiring Info</a>
+            </div>
+        </div>
+
+    </div>
 
     <h2 class="label-center">Source Level Information</h2>
 

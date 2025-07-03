@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-
 ## DJANGO user ##
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
