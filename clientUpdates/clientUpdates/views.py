@@ -92,6 +92,11 @@ def payment_dashboard(request):
     return render(request, 'payment_dashboard.html', context)
 
 
+@login_required
+def payment_details(request):
+    return render(request, 'payment_details.html')
+
+
 # The logic: 
     ## 1. Get relevant rows from the Claims table and any rows from the EHE table that have been updated by the user. See point 4 below. 
     ## 2. Combine the two tables, sort in decreasing order by result per analyte per source and keep only the max result per analyte per source. 

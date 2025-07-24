@@ -1,0 +1,183 @@
+{% extends 'base_generic.html' %}
+
+{% load humanize %}
+
+{% block content %}
+
+<div>
+    <h2 style="text-align:center">Payment Distribution Details for Claim #(Insert Claim Portal Number)</h2>
+    <div id="allocation_div" class="card-container" style="flex-wrap:wrap">
+        <div class="card" style="width:33%; margin:5px; margin-bottom:20px;">
+            <h4 class="card-title text-center" style="border-bottom:none">3M Allocation Amount Total:<br><span style="color:green; font-weight:bold;">$Insert Amount Here</span></h4>
+        </div>
+        <div class="card" style="width:33%; margin:5px; margin-bottom:20px;">
+            <h4 class="card-title text-center" style="border-bottom:none">Tyco Allocation Amount Total:<br><span style="color:green; font-weight:bold;">$Insert Amount Here</span></h4>
+        </div>
+        <div class="card" style="width:33%; margin:5px; margin-bottom:20px;">
+            <h4 class="card-title text-center" style="border-bottom:none">DuPont Allocation Amount Total:<br><span style="color:green; font-weight:bold;">$Insert Amount Here</span></h4>
+        </div>
+        <div class="card" style="width:33%; margin:5px; margin-bottom:20px;">
+            <h4 class="card-title text-center" style="border-bottom:none">BASF Allocation Amount Total:<br><span style="color:green; font-weight:bold;">$Insert Amount Here</span></h4>
+        </div>
+    </div>
+
+    <div id="client_verification_div" class="card">
+        <h2 class="card-title text-center" style="border-bottom:none; width:100%">Payee Information</h2>
+        <div class="card-container">
+            <div class="card" style="width:33%; box-shadow: 5px 5px #f0f0f0;">
+                <div class="card-body">
+                    <h5 class="card-title text-center" style="font-size:2rem;">Verification Details</h5>
+                    <table class="table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Verification Name</td>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <td>Verification Email</td>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <td>Verification Phone Number</td>
+                                <td> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card" style="width:33%; box-shadow: 5px 5px #f0f0f0;">
+                <div class="card-body">
+                    <h5 class="card-title text-center" style="font-size:2rem;">Client Details</h5>
+                    <table class="table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Client State</td>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <td>Client City</td>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <td>Client Address</td>
+                                <td> </td>
+                            </tr>
+                            <tr>
+                                <td>Client Zip Code</td>
+                                <td> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="payment_details_div" class="card">
+<!--        change this condition with variable based on whether the system elected to get a check or wire-->
+        {% if False %}
+            <h2 class="card-title text-center" style="border-bottom:none; width:100%">Payment Details</h2>
+            <div class="card-container">
+                <div class="card" style="width:33%; box-shadow: 5px 5px #f0f0f0;">
+                    <div class="card-body">
+                        <h5 class="card-title text-center" style="font-size:2rem;">General Bank Information</h5>
+                        <table class="table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>Bank Name</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>Bank State</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>Bank City</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>Bank Address</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>Bank Zip Code</td>
+                                    <td> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card" style="width:33%; box-shadow: 5px 5px #f0f0f0;">
+                    <div class="card-body">
+                        <h5 class="card-title text-center" style="font-size:2rem;">Bank Account Details</h5>
+                        <table class="table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>Account Name</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>Account Number</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>Routing Number</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>For Further Credit To</td>
+                                    <td> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        {% else %}
+
+            <h2 class="card-title text-center" style="border-bottom:none; width:100%">Payment Details</h2>
+            <div class="card-container">
+                <div class="card" style="width:75%; box-shadow: 5px 5px #f0f0f0;">
+                    <div class="card-body">
+                        <h5 class="card-title text-center" style="font-size:2rem;">Check Information</h5>
+                        <table class="table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>Bank Name</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>Bank State</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>Bank City</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>Bank Address</td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>Bank Zip Code</td>
+                                    <td> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+
+
+
+
+
+
+
+{% endblock %}
