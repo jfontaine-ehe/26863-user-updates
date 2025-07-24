@@ -125,17 +125,17 @@
                     <td>{{ source.source_name }}</td>
                     <td>{{ source.source_type }}</td>
                     <!-- <td>{% if source.all_nds %} Unimpacted {% else %} PFAS detected {% endif %}</td> -->
-                    <td>{{ source.pfas_score }}</td>
+                    <td>{{ source.pfas_score|floatformat:2|intcomma }}</td>
                     <td>{{ source.reg_bump}}</td>
-                    <td>{{ source.base_score }}</td>
-                    <td>{{ source.gfe_3m }}</td>
-                    <td>{{ source.gfe_dupont }}</td>
-                    <td>{{ source.gfe_total }}</td>
-                    <td>{{ source.gfe_tyco}}</td>
-                    <td>{{ source.gfe_basf }}</td>
-                    <td>{{ source.gfe_total_basf_tyco }}</td>
-                    <td>{{ source.abs_3m }}</td>
-                    <td>{{ source.abs_dupont }}</td>
+                    <td>{{ source.base_score|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_3m|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_dupont|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_total|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_tyco|floatformat:2|intcomma}}</td>
+                    <td>{{ source.gfe_basf|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_total_basf_tyco|floatformat:2|intcomma }}</td>
+                    <td>{{ source.abs_3m|floatformat:2|intcomma }}</td>
+                    <td>{{ source.abs_dupont|floatformat:2|intcomma }}</td>
                     <td class="text-center">
                         <a href="{% url 'source-detail' pwsid=source.pwsid source_name=source.source_name %}"
                             class="text-decoration-none"
