@@ -1,5 +1,5 @@
 # Custom models and forms
-from .models import Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate, ClaimPfasResult, paymentInfo
+from .models import Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate, ClaimPfasResult, paymentInfo, paymentDistributions
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm
 
 # Custom functions
@@ -99,6 +99,8 @@ def payment_details(request):
     pws_record = Pws.objects.get(form_userid=request.user.username)
 
     payment_info = paymentInfo.objects.get(pwsid=pws_record.pwsid)
+
+    #dist_info = paymentDistributions.objects.get(pwsid=)
 
     context = {
         'pws': pws_record,

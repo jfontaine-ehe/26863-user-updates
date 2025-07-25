@@ -177,6 +177,75 @@
         {% endif %}
     </div>
 
+
+
+    <div class="container">
+        <!--<h4>Sources</h4>--->
+
+        <table id="distributionTable" class="cell-border">
+            <thead>
+                <tr>
+                    <!-- <th scope="col" style="width:5%;">#</th> -->
+                    <th scope="col">Distribution ID</th>
+                    <th scope="col">Distribution Date</th>
+                    <th scope="col">Distribution Amount</th>
+                    <th scope="col">PWS ID</th>
+                    <th scope="col">PWS Name</th>
+                    <th scope="col">Claim Number</th>
+                    <th scope="col">Claim Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dist in distributions %}
+                <tr class="{% if source.all_nds %}unimpacted-row{% else %}impacted-row{% endif %}">
+                    <!-- <th scope="row">{{ forloop.counter }}</th> -->
+                    <td>{{ source.source_name }}</td>
+                    <td>{{ source.source_type }}</td>
+                    <!-- <td>{% if source.all_nds %} Unimpacted {% else %} PFAS detected {% endif %}</td> -->
+                    <td>{{ source.pfas_score|floatformat:2|intcomma }}</td>
+                    <td>{{ source.reg_bump}}</td>
+                    <td>{{ source.base_score|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_3m|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_dupont|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_total|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_tyco|floatformat:2|intcomma}}</td>
+                    <td>{{ source.gfe_basf|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_total_basf_tyco|floatformat:2|intcomma }}</td>
+                    <td>{{ source.abs_3m|floatformat:2|intcomma }}</td>
+                    <td>{{ source.abs_dupont|floatformat:2|intcomma }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'source-detail' pwsid=source.pwsid source_name=source.source_name %}"
+                            class="text-decoration-none"
+                            style="color:inherit;">
+                            <i class="bi bi-eye-fill h5"></i>
+                        </a>
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+<script>
+    $(document).ready(function() {
+        $('#distributionTable').DataTable({
+            pageLength: 10,
+            responsive: true,
+            scrollX: true,
+            columnDefs: [
+                {orderable: false, targets: 3}
+            ],
+            order: [
+                [2, 'asc'],
+                [0, 'asc']
+            ],
+        });
+    });
+</script>
+
+
+
 </div>
 
 

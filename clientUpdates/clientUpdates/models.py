@@ -642,3 +642,17 @@ class paymentInfo(models.Model):
     class Meta:
         managed = True
         db_table = 'payment_information'
+
+class paymentDistributions(models.Model):
+
+    distribution_id = models.TextField(blank=False, null=False, primary_key=True)
+    distribution_date = models.DateField(blank=True, null=True)
+    distribution_amount = models.FloatField(blank=False, null=False)
+    pwsid = models.TextField(blank=False, null=False)
+    pws_name = models.TextField(blank=True, null=True)
+    claim_number = models.IntegerField(blank=True, null=True)
+    claim_name = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'payment_distributions'
