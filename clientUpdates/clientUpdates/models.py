@@ -578,7 +578,7 @@ class ClaimPws(models.Model):
 
 
 class ClaimSource(models.Model):
-    row_names = models.BigAutoField(primary_key=True)  
+    row_names = models.BigAutoField(primary_key=True)
     claim_number = models.FloatField(blank=True, null=True)
     pwsid = models.TextField(blank=True, null=True)
     pws_name = models.TextField(blank=True, null=True)
@@ -609,4 +609,36 @@ class ClaimSource(models.Model):
         db_table = 'claim_source'
 
 
+class paymentInfo(models.Model):
+    #row_names = models.BigAutoField(primary_key=True)
+    pwsid = models.TextField(null=False, primary_key=True)
+    pws_name = models.TextField(blank=True, null=True)
+    entity_name = models.TextField(blank=True, null=True)
+    claim_number = models.IntegerField(blank=True, null=True)
+    payment_method = models.TextField(blank=True, null=True)
+    verification_name = models.TextField(blank=True, null=True)
+    verification_email = models.TextField(blank=True, null=True)
+    verification_number = models.TextField(blank=True, null=True)
+    wire_account_name = models.TextField(blank=True, null=True)
+    wire_account_number = models.TextField(blank=True, null=True)
+    wire_routing_number = models.TextField(blank=True, null=True)
+    wire_further_credit = models.TextField(blank=True, null=True)
+    wire_client_address = models.TextField(blank=True, null=True)
+    wire_client_city = models.TextField(blank=True, null=True)
+    wire_client_state = models.TextField(blank=True, null=True)
+    wire_client_zip = models.TextField(blank=True, null=True)
+    wire_bank_name = models.TextField(blank=True, null=True)
+    wire_bank_address = models.TextField(blank=True, null=True)
+    wire_bank_city = models.TextField(blank=True, null=True)
+    wire_bank_state = models.TextField(blank=True, null=True)
+    wire_bank_zip = models.TextField(blank=True, null=True)
+    check_payee_name = models.TextField(blank=True, null=True)
+    check_addressed_to = models.TextField(blank=True, null=True)
+    check_street_address = models.TextField(blank=True, null=True)
+    check_city = models.TextField(blank=True, null=True)
+    check_state = models.TextField(blank=True, null=True)
+    check_zip = models.TextField(blank=True, null=True)
 
+    class Meta:
+        managed = True
+        db_table = 'payment_information'

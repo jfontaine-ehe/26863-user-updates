@@ -1,5 +1,5 @@
 # Custom models and forms
-from .models import Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate, ClaimPfasResult
+from .models import Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate, ClaimPfasResult, paymentInfo
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm
 
 # Custom functions
@@ -94,7 +94,18 @@ def payment_dashboard(request):
 
 @login_required
 def payment_details(request):
-    return render(request, 'payment_details.html')
+
+    # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
+    pws_record = Pws.objects.get(form_userid=request.user.username)
+
+    payment_info = paymentInfo.objects.get(pwsid=pws_record.pwsid)
+
+    context = {
+        'pws': pws_record,
+        'paymentInfo': payment_info
+    }
+
+    return render(request, 'payment_details.html', context)
 
 
 # The logic: 
