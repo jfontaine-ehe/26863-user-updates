@@ -92,6 +92,7 @@ h4 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Light shadow for depth */
     margin-bottom: 20px; /* Add spacing between cards */
     padding: 5px;
+    text-align:center;
 }
 
 .card-body {

@@ -25,9 +25,9 @@ urlpatterns = [
     path('login/', views.CustomLoginView.as_view(), name='login'), 
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    # JF added 07/01/2025
     path('payment_dashboard/', views.payment_dashboard, name='payment_dashboard'),
     path('payment_details/', views.payment_details, name = 'payment_details'),
+    path('landing_page/', views.landing_page, name = 'landing_page'),
     path('<str:pwsid>/source/<path:source_name>/', views.source_detail_view, name='source-detail'),
     path('update-pfas-result/', views.update_pfas_result_view, name='update-pfas-result'),
     path('update-max-flow-rate/', views.update_max_flow_rate_view, name='update-max-flow-rate'),

@@ -43,18 +43,17 @@ class CustomLoginView(LoginView):
     # sometimes it was returning an older URL (the old update dashboard)
     #success_url = reverse_lazy('payment_dashboard')
     def get_success_url(self):
-        return reverse_lazy('payment_dashboard')
+        return reverse_lazy('landing_page')
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('payment_dashboard')  # Redirect to the dashboard if the user is already logged in
+            return redirect('landing_page')  # Redirect to the dashboard if the user is already logged in
         return super().dispatch(request, *args, **kwargs)
-
 
 
 def root_redirect(request):
     if request.user.is_authenticated:
-        return redirect('payment_dashboard')
+        return redirect('landing_page')
     else:
         return redirect('login')
 
@@ -109,6 +108,17 @@ def payment_details(request):
 
     return render(request, 'payment_details.html', context)
 
+
+@login_required
+def landing_page(request):
+    # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
+    pws_record = Pws.objects.get(form_userid=request.user.username)
+
+    context = {
+        'pws': pws_record,
+    }
+
+    return render(request, 'landing_page.html', context)
 
 # The logic: 
     ## 1. Get relevant rows from the Claims table and any rows from the EHE table that have been updated by the user. See point 4 below. 
