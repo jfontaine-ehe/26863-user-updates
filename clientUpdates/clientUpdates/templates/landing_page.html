@@ -1,0 +1,75 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+<div class = "card" style="display: flex; width:100%; margin:auto; text-align:center">
+
+    <h1>{{pws.pwsid}}: {{pws.pws_name|title}}</h1>
+
+</div>
+
+<div class = "card-container" style= "flex-wrap:wrap; align-items:stretch">
+    <div class = "card" style = "width:40%; flex-direction:column">
+
+        <h2>PFAS Data</h2>
+        <div class = "card-body">
+
+            <p>You are able to view the various different information that was submitted for <b>{{pws.pws_name|title}}</b>
+                for both the 3M/DuPont Phase I Action Fund Claim and the Tyco/BASF Action Fund Claim. For each source
+                that was part of the aforementioned claims, you are able to view the PFAS analytical data, maximum flow rate data,
+                and annual production data that was submitted.
+            </p>
+        </div>
+        <br>
+        <br>
+        <a href="" class="btn btn-primary" style="width:100%;margin-top:auto;">View PFAS Data</a>
+
+    </div>
+
+    <div class = "card" style = "width:40%; flex-direction:column">
+
+        <h2>Payment Information</h2>
+        <div class = "card-body">
+
+            <p>The payment information relative to <b>{{pws.pws_name|title}}</b> can be viewed by clicking
+                the button below. The information includes system-level and source-level payment distribution details
+                that <b>{{pws.pws_name|title}}</b> is anticipated to receive, in addition to payment transfer (e.g., bank wiring info)
+                information.
+            </p>
+            <br>
+            <br>
+        </div>
+
+        <a href="" class="btn btn-primary" style="width:100%;margin-top:auto;">View Payment Information</a>
+
+    </div>
+
+    <div class = "card" style = "width:40%">
+
+        <h2>Phase I Supplemental Fund</h2>
+        <div class = "card-body">
+
+            <p> The 3M/DuPont Phase I Supplemental Fund is intended for water sources that were submitted under
+                the 3M/DuPont Phase I Action Fund Claim as "unimpacted" (i.e., there was no measureable concentration
+                of PFAS detected in the water source) but have since exhibited measureable concentrations of PFAS analytes.
+
+                Click the button below to be directed to a portion of the website that will allow <b>{{pws.pws_name|title}}</b>
+                to update the PFAS information associated with the "unimpacted" sources submitted under the 3M/DuPont
+                Phase I Action Fund Claim.
+            </p>
+            <br>
+            <br>
+        </div>
+        <a href="" class="btn btn-primary" style="width:100%;margin-top:auto;">Edit Source Information</a>
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+{% endblock %}
