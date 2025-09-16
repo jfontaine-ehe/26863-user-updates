@@ -6,11 +6,11 @@
 <div class="accordion" id="accordionExample">
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingOne">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                 PFAS Data
             </button>
         </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
             <div class="accordion-body">
                 <table id="pfas_data_3MD_table" class="cell-border table_format">
                     <thead>
@@ -48,11 +48,11 @@
 
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingTwo">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
             Annual Flow Rate Data
           </button>
         </h2>
-        <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo">
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
           <div class="accordion-body">
             <table id="afr_data_3MD_table" class="cell-border table_format">
                 <thead>
@@ -79,11 +79,11 @@
     </div>
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingThree">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
             Max Flow Rate Data
           </button>
         </h2>
-        <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree">
+        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree">
           <div class="accordion-body">
             <table id="vfr_data_3MD_table" class="cell-border table_format">
                 <thead>
@@ -110,19 +110,16 @@
     </div>
 </div>
 
-
-
-
 <h3 style="text-align:center;">Tyco/BASF Action Fund Data</h3>
 
 <div class="accordion">
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingOne_TB">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_TB" aria-expanded="true" aria-controls="collapseOne_TB">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_TB" aria-expanded="true" aria-controls="collapseOne_TB">
                 PFAS Data
             </button>
         </h2>
-        <div id="collapseOne_TB" class="accordion-collapse collapse show" aria-labelledby="headingOne_TB">
+        <div id="collapseOne_TB" class="accordion-collapse collapse" aria-labelledby="headingOne_TB">
             <div class="accordion-body">
                 <table id="pfas_data_TB_table" class="cell-border table_format">
                     <thead>
@@ -139,7 +136,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for result in pfas_data_3MD %}
+                        {% for result in pfas_data_TB %}
                         <tr>
                             <!-- <th scope="row">{{ forloop.counter }}</th> -->
                             <td>{{ result.source_name }}</td>
@@ -160,11 +157,11 @@
 
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingTwo_TB">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo_TB" aria-expanded="false" aria-controls="collapseTwo_TB">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo_TB" aria-expanded="false" aria-controls="collapseTwo_TB">
             Annual Flow Rate Data
           </button>
         </h2>
-        <div id="collapseTwo_TB" class="accordion-collapse collapse show" aria-labelledby="headingTwo_TB">
+        <div id="collapseTwo_TB" class="accordion-collapse collapse" aria-labelledby="headingTwo_TB">
           <div class="accordion-body">
             <table id="afr_data_TB_table" class="cell-border table_format">
                 <thead>
@@ -176,7 +173,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for afr in afr_data_3MD %}
+                    {% for afr in afr_data_TB %}
                     <tr>
                         <td>{{ afr.source_name }}</td>
                         <td>{{ afr.year }}</td>
@@ -191,11 +188,11 @@
     </div>
     <div class="accordion-item">
         <h2 class="accordion-header" id="headingThree_TB">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree_TB" aria-expanded="false" aria-controls="collapseThree_TB">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree_TB" aria-expanded="false" aria-controls="collapseThree_TB">
             Max Flow Rate Data
           </button>
         </h2>
-        <div id="collapseThree_TB" class="accordion-collapse collapse show" aria-labelledby="headingThree_TB">
+        <div id="collapseThree_TB" class="accordion-collapse collapse" aria-labelledby="headingThree_TB">
           <div class="accordion-body">
             <table id="vfr_data_TB_table" class="cell-border table_format">
                 <thead>
@@ -207,7 +204,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for vfr in vfr_data_3MD %}
+                    {% for vfr in vfr_data_TB %}
                     <tr>
                         <td>{{ vfr.source_name }}</td>
                         <td>{{ vfr.year }}</td>
@@ -221,36 +218,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <script>
@@ -267,28 +234,7 @@
         });
     });
 
-
-
-
-
-
 </script>
-
-<!--    $(document).ready(function () {
-    // Collapse all accordion items on load
-    $('.accordion-collapse').removeClass('show');
-    });-->
-
-
-
-
-<!--            columnDefs:[
-                {className: "dt-center", targets: [0, 1, 2, 3]}
-
-            ],-->
-
-
-
 
 
 
