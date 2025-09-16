@@ -110,7 +110,7 @@ def payment_details(request):
 
 
 @login_required
-def landing_page(request):
+def landing_page (request):
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     pws_record = Pws.objects.get(form_userid=request.user.username)
 
@@ -119,6 +119,32 @@ def landing_page(request):
     }
 
     return render(request, 'landing_page.html', context)
+
+@login_required
+def data_display(request):
+    # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
+    pws_record = Pws.objects.get(form_userid=request.user.username)
+
+    pfas_data_3MD = (ClaimPfasResult.objects.
+                     filter(pwsid=request.user.username).
+                     only("source_name", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
+
+    afr_data_3MD = (ClaimFlowRate.objects.
+                    filter(source_variable = "AFR").
+                    only("pwsid", "source_name", "year", "flow_rate_gpm", "filename"))
+
+    vfr_data_3MD = (ClaimFlowRate.objects.
+                    filter(source_variable = "VFR").
+                    only("pwsid", "source_name", "year", "flow_rate_gpm", "filename"))
+
+    context = {
+        'pws': pws_record,
+        'pfas_data_3MD': pfas_data_3MD,
+        'afr_data_3MD': afr_data_3MD,
+        'vfr_data_3MD': vfr_data_3MD
+    }
+
+    return render(request, 'data_display.html', context)
 
 # The logic: 
     ## 1. Get relevant rows from the Claims table and any rows from the EHE table that have been updated by the user. See point 4 below. 

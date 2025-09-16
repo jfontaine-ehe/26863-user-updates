@@ -28,6 +28,7 @@ urlpatterns = [
     path('payment_dashboard/', views.payment_dashboard, name='payment_dashboard'),
     path('payment_details/', views.payment_details, name = 'payment_details'),
     path('landing_page/', views.landing_page, name = 'landing_page'),
+    path('data_display', views.data_display, name = 'data_display'),
     path('<str:pwsid>/source/<path:source_name>/', views.source_detail_view, name='source-detail'),
     path('update-pfas-result/', views.update_pfas_result_view, name='update-pfas-result'),
     path('update-max-flow-rate/', views.update_max_flow_rate_view, name='update-max-flow-rate'),
