@@ -125,14 +125,17 @@ def data_display(request):
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     pws_record = Pws.objects.get(form_userid=request.user.username)
 
+    # pfas data
     pfas_data_3MD = (ClaimPfasResult.objects.
                      filter(pwsid=request.user.username).
                      only("source_name", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
 
+    # afr data
     afr_data_3MD = (ClaimFlowRate.objects.
                     filter(source_variable = "AFR").
                     only("pwsid", "source_name", "year", "flow_rate_gpm", "filename"))
 
+    # vfr data
     vfr_data_3MD = (ClaimFlowRate.objects.
                     filter(source_variable = "VFR").
                     only("pwsid", "source_name", "year", "flow_rate_gpm", "filename"))
