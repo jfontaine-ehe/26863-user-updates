@@ -292,3 +292,9 @@ table th, table td {
 #info-bar .row {
     margin-bottom: 5px; 
 }
+
+.accordion-item {
+
+    border-top: 0px;
+
+}

@@ -128,23 +128,50 @@ def data_display(request):
     # pfas data
     pfas_data_3MD = (ClaimPfasResult.objects.
                      filter(pwsid=request.user.username).
-                     only("source_name", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
+                     only("source_name", "all_nds", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
 
     # afr data
     afr_data_3MD = (ClaimFlowRate.objects.
+                    filter(pwsid=request.user.username).
                     filter(source_variable = "AFR").
-                    only("pwsid", "source_name", "year", "flow_rate_gpm", "filename"))
+                    only("source_name", "year", "flow_rate_gpm", "filename"))
 
     # vfr data
     vfr_data_3MD = (ClaimFlowRate.objects.
+                    filter(pwsid=request.user.username).
                     filter(source_variable = "VFR").
-                    only("pwsid", "source_name", "year", "flow_rate_gpm", "filename"))
+                    only("source_name", "year", "flow_rate_gpm", "filename"))
+
+
+# Uncomment this section when data for TB is available
+
+    # pfas data
+    # pfas_data_TB = (ClaimPfasResult.objects.
+    #                  filter(pwsid=request.user.username).
+    #                  only("source_name", "all_nds", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
+    #
+    # # afr data
+    # afr_data_TB = (ClaimFlowRate.objects.
+    #                 filter(pwsid=request.user.username).
+    #                 filter(source_variable = "AFR").
+    #                 only("source_name", "year", "flow_rate_gpm", "filename"))
+    #
+    # # vfr data
+    # vfr_data_TB = (ClaimFlowRate.objects.
+    #                 filter(pwsid=request.user.username).
+    #                 filter(source_variable = "VFR").
+    #                 only("source_name", "year", "flow_rate_gpm", "filename"))
+
 
     context = {
         'pws': pws_record,
         'pfas_data_3MD': pfas_data_3MD,
         'afr_data_3MD': afr_data_3MD,
         'vfr_data_3MD': vfr_data_3MD
+
+        # 'pfas_data_TB': pfas_data_TB,
+        # 'afr_data_TB': afr_data_TB,
+        # 'vfr_data_TB': vfr_data_TB
     }
 
     return render(request, 'data_display.html', context)
