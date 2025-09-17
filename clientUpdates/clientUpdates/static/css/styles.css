@@ -48,7 +48,11 @@ body {
     color: #0056b3;; 
 }
 
+.label-center {
 
+    text-align: center;
+
+}
 
 .container {
     margin-top: 20px;
@@ -88,6 +92,7 @@ h4 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); /* Light shadow for depth */
     margin-bottom: 20px; /* Add spacing between cards */
     padding: 5px;
+    text-align:center;
 }
 
 .card-body {
@@ -222,6 +227,22 @@ table th, table td {
     padding: 15px;
 }
 
+.card-container {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 20px;
+
+}
+
+.text-center {
+
+    text-align: center;
+
+}
+
 
 .modal-header, .modal-footer {
     border: none; /* Remove borders for cleaner look */
@@ -270,4 +291,10 @@ table th, table td {
 
 #info-bar .row {
     margin-bottom: 5px; 
+}
+
+.accordion-item {
+
+    border-top: 0px;
+
 }

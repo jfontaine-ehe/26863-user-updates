@@ -1,5 +1,6 @@
 # Custom models and forms
-from .models import Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate, ClaimPfasResult
+from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
+                     ClaimPfasResult, paymentInfo, paymentDistributions, TB_ClaimPfasResult, TB_ClaimFlowRate)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm
 
 # Custom functions
@@ -19,32 +20,57 @@ from django.core.mail import EmailMessage
 from django.http import JsonResponse, Http404
 from itertools import chain
 
+"""JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
+# class CustomLoginView(LoginView):
+#     template_name = 'login.html'
+#     success_url = reverse_lazy('dashboard')
+#
+#     def dispatch(self, request, *args, **kwargs):
+#         if request.user.is_authenticated:
+#             return redirect('dashboard')  # Redirect to the dashboard if the user is already logged in
+#         return super().dispatch(request, *args, **kwargs)
+
+"""JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
+# def root_redirect(request):
+#     if request.user.is_authenticated:
+#         return redirect('dashboard')
+#     else:
+#         return redirect('login')
 
 class CustomLoginView(LoginView):
     template_name = 'login.html'
-    success_url = reverse_lazy('dashboard')
+
+    # Placing this in a function that overrides get_success_url... this was done because
+    # sometimes it was returning an older URL (the old update dashboard)
+    #success_url = reverse_lazy('payment_dashboard')
+    def get_success_url(self):
+        return reverse_lazy('landing_page')
 
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect('dashboard')  # Redirect to the dashboard if the user is already logged in
+            return redirect('landing_page')  # Redirect to the dashboard if the user is already logged in
         return super().dispatch(request, *args, **kwargs)
+
 
 def root_redirect(request):
     if request.user.is_authenticated:
-        return redirect('dashboard')
-    else: 
+        return redirect('landing_page')
+    else:
         return redirect('login')
 
 @login_required
 def dashboard(request):
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     pws_record = Pws.objects.get(form_userid=request.user.username)
-    if not pws_record: 
+    if not pws_record:
         raise Http404("Record not found")
-    
-    # Pull all the sources filed in the claims portal
-    sources = Source.objects.filter(pwsid=pws_record.pwsid)
-    
+
+    # Pull all the sources filed in the claims portal. Only select
+    # those that are unimpacted (where all_nds = True)
+    sources = (Source.objects.
+               filter(pwsid=pws_record.pwsid).
+               filter(all_nds=True))
+
     context = {
         'pws': pws_record,
         'sources': sources,
@@ -52,6 +78,110 @@ def dashboard(request):
 
     return render(request, 'dashboard.html', context)
 
+
+@login_required
+def payment_dashboard(request):
+    # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
+    pws_record = Pws.objects.get(form_userid=request.user.username)
+
+    # Pull all the sources filed in the claims portal
+    sources = Source.objects.filter(pwsid=pws_record.pwsid)
+
+    context = {
+        'pws': pws_record,
+        'sources': sources,
+    }
+
+    return render(request, 'payment_dashboard.html', context)
+
+
+@login_required
+def payment_details(request):
+
+    # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
+    pws_record = Pws.objects.get(form_userid=request.user.username)
+
+    payment_info = paymentInfo.objects.get(pwsid=pws_record.pwsid)
+
+    #dist_info = paymentDistributions.objects.get(pwsid=)
+
+    context = {
+        'pws': pws_record,
+        'paymentInfo': payment_info
+    }
+
+    return render(request, 'payment_details.html', context)
+
+
+@login_required
+def landing_page (request):
+    # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
+    pws_record = Pws.objects.get(form_userid=request.user.username)
+
+    context = {
+        'pws': pws_record,
+    }
+
+    return render(request, 'landing_page.html', context)
+
+@login_required
+def data_display(request):
+
+# 3M/DuPont Data
+
+    # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
+    pws_record = Pws.objects.get(form_userid=request.user.username)
+
+    # pfas data
+    pfas_data_3MD = (ClaimPfasResult.objects.
+                     filter(pwsid=request.user.username).
+                     only("source_name", "all_nds", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
+
+    # afr data
+    afr_data_3MD = (ClaimFlowRate.objects.
+                    filter(pwsid=request.user.username).
+                    filter(source_variable = "AFR").
+                    only("source_name", "year", "flow_rate_gpm", "filename"))
+
+    # vfr data
+    vfr_data_3MD = (ClaimFlowRate.objects.
+                    filter(pwsid=request.user.username).
+                    filter(source_variable = "VFR").
+                    only("source_name", "year", "flow_rate_gpm", "filename"))
+
+
+# Tyco/BASF Data
+
+    # pfas data
+    pfas_data_TB = (TB_ClaimPfasResult.objects.
+                     filter(pwsid=request.user.username).
+                     only("source_name", "all_nds", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
+
+    # afr data
+    afr_data_TB = (TB_ClaimFlowRate.objects.
+                    filter(pwsid=request.user.username).
+                    filter(source_variable = "AFR").
+                    only("source_name", "year", "flow_rate_gpm", "filename"))
+
+    # vfr data
+    vfr_data_TB = (TB_ClaimFlowRate.objects.
+                    filter(pwsid=request.user.username).
+                    filter(source_variable = "VFR").
+                    only("source_name", "year", "flow_rate_gpm", "filename"))
+
+
+    context = {
+        'pws': pws_record,
+        'pfas_data_3MD': pfas_data_3MD,
+        'afr_data_3MD': afr_data_3MD,
+        'vfr_data_3MD': vfr_data_3MD,
+
+        'pfas_data_TB': pfas_data_TB,
+        'afr_data_TB': afr_data_TB,
+        'vfr_data_TB': vfr_data_TB
+    }
+
+    return render(request, 'data_display.html', context)
 
 # The logic: 
     ## 1. Get relevant rows from the Claims table and any rows from the EHE table that have been updated by the user. See point 4 below. 

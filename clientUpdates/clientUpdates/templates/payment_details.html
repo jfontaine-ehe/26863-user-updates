@@ -1,0 +1,257 @@
+{% extends 'base_generic.html' %}
+
+{% load humanize %}
+
+{% block content %}
+
+<div>
+    <h2 style="text-align:center">Payment Distribution Details for Claim #{{ paymentInfo.claim_number }}</h2>
+    <div id="allocation_div" class="card-container" style="flex-wrap:wrap">
+        <div class="card" style="width:33%; margin:5px; margin-bottom:20px;">
+            <h4 class="card-title text-center" style="border-bottom:none">3M Allocation Amount Total:<br><span style="color:green; font-weight:bold;">${{ pws.allocation_3m|floatformat:2|intcomma }}</span></h4>
+        </div>
+        <div class="card" style="width:33%; margin:5px; margin-bottom:20px;">
+            <h4 class="card-title text-center" style="border-bottom:none">Tyco Allocation Amount Total:<br><span style="color:green; font-weight:bold;">${{ pws.allocation_tyco|floatformat:2|intcomma }}</span></h4>
+        </div>
+        <div class="card" style="width:33%; margin:5px; margin-bottom:20px;">
+            <h4 class="card-title text-center" style="border-bottom:none">DuPont Allocation Amount Total:<br><span style="color:green; font-weight:bold;">${{ pws.allocation_dupont|floatformat:2|intcomma }}</span></h4>
+        </div>
+        <div class="card" style="width:33%; margin:5px; margin-bottom:20px;">
+            <h4 class="card-title text-center" style="border-bottom:none">BASF Allocation Amount Total:<br><span style="color:green; font-weight:bold;">${{ pws.allocation_basf|floatformat:2|intcomma }}</span></h4>
+        </div>
+    </div>
+
+
+    <div id="client_verification_div" class="card" style="width:75%; margin:auto; margin-top:10px; margin-bottom:10px;">
+        <h3 class="card-title text-center" style="padding-bottom:10px; width:100%; border-bottom: none; font-weight:bold;">Verification Details</h3>
+        <div class="card-container" style="margin-top:0px">
+            <div class="card" style="width:50%; box-shadow: 0 0 10px 10px #f0f0f0;">
+                <div class="card-body" style="padding-top:0px">
+                    <!--<h5 class="card-title text-center" style="font-size:2rem;">Verification Details</h5>-->
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight:bold; font-style: italic;">Verification Name:</td>
+                                <td>{{ paymentInfo.verification_name }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold; font-style: italic;">Verification Email:</td>
+                                <td>{{ paymentInfo.verification_email }}</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:bold; font-style: italic;">Verification Phone Number:</td>
+                                <td>{{ paymentInfo.verification_number }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+<!--            <div class="card" style="width:33%; box-shadow: 5px 5px #f0f0f0;">
+                <div class="card-body">
+                    <h5 class="card-title text-center" style="font-size:2rem;">Client Details</h5>
+                    <table class="table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Client State</td>
+                                <td>{{ paymentInfo.client_state }}</td>
+                            </tr>
+                            <tr>
+                                <td>Client City</td>
+                                <td>{{ paymentInfo.client_city }}</td>
+                            </tr>
+                            <tr>
+                                <td>Client Address</td>
+                                <td>{{ paymentInfo.client_state }}</td>
+                            </tr>
+                            <tr>
+                                <td>Client Zip Code</td>
+                                <td> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>-->
+        </div>
+    </div>
+
+
+    <div id="payment_details_div" class="card" style="width:75%; margin:auto; margin-top:20px; margin-bottom:10px;">
+<!--        change this condition with variable based on whether the system elected to get a check or wire-->
+        {% if paymentInfo.payment_method|lower == "wire" %}
+            <h3 class="card-title text-center" style="border-bottom:none; width:100%; font-weight:bold;">Payment Details</h3>
+            <div class="card-container">
+                <div class="card" style="width:33%; box-shadow: 0 0 10px 10px #f0f0f0;">
+                    <div class="card-body">
+                        <h3 class="card-title text-center" style="border-bottom: none">General Bank Information</h3>
+                        <table class="table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="bold-italic-text">Bank Name:</td>
+                                    <td>{{ paymentInfo.wire_bank_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-italic-text">Bank State:</td>
+                                    <td>{{ paymentInfo.wire_bank_state }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-italic-text">Bank City:</td>
+                                    <td>{{ paymentInfo.wire_bank_city }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-italic-text">Bank Street Address:</td>
+                                    <td>{{ paymentInfo.wire_bank_address }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-italic-text">Bank Zip Code:</td>
+                                    <td>{{ paymentInfo.wire_bank_zip }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card" style="width:33%; box-shadow: 0 0 10px 10px #f0f0f0;">
+                    <div class="card-body">
+                        <h3 class="card-title text-center" style="border-bottom: none">Bank Account Details</h3>
+                        <table class="table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="bold-italic-text">Account Name:</td>
+                                    <td>{{ paymentInfo.wire_account_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-italic-text">Account Number:</td>
+                                    <td>{{ paymentInfo.wire_account_number }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-italic-text">Routing Number:</td>
+                                    <td>{{ paymentInfo.wire_routing_number }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-italic-text">For Further Credit To:</td>
+                                    <td>{{ paymentInfo.wire_further_credit}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        {% else %}
+
+            <h2 class="card-title text-center" style="border-bottom:none; width:100%">Payment Details</h2>
+            <div class="card-container">
+                <div class="card" style="width:75%; box-shadow: 0 0 10px 10px #f0f0f0;">
+                    <div class="card-body">
+                        <h3 class="card-title text-center" style="border-bottom: none">Check Information</h3>
+                        <table class="table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td class="bold-italic-text">Payee Name:</td>
+                                    <td>{{ paymentInfo.check_payee_name }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-italic-text">Addressed To:</td>
+                                    <td>{{ paymentInfo.check_addressed_to }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-italic-text">Street Address:</td>
+                                    <td>{{ paymentInfo.check_street_address }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-italic-text">City:</td>
+                                    <td>{{ paymentInfo.check_city }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-italic-text">State:</td>
+                                    <td>{{ paymentInfo.check_state }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bold-italic-text">Zip Code:</td>
+                                    <td>{{ paymentInfo.check_zip }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+
+
+    <div class="container">
+        <!--<h4>Sources</h4>--->
+
+        <table id="distributionTable" class="cell-border">
+            <thead>
+                <tr>
+                    <!-- <th scope="col" style="width:5%;">#</th> -->
+                    <th scope="col">Distribution ID</th>
+                    <th scope="col">Distribution Date</th>
+                    <th scope="col">Distribution Amount</th>
+                    <th scope="col">PWS ID</th>
+                    <th scope="col">PWS Name</th>
+                    <th scope="col">Claim Number</th>
+                    <th scope="col">Claim Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dist in distributions %}
+                <tr class="{% if source.all_nds %}unimpacted-row{% else %}impacted-row{% endif %}">
+                    <!-- <th scope="row">{{ forloop.counter }}</th> -->
+                    <td>{{ source.source_name }}</td>
+                    <td>{{ source.source_type }}</td>
+                    <!-- <td>{% if source.all_nds %} Unimpacted {% else %} PFAS detected {% endif %}</td> -->
+                    <td>{{ source.pfas_score|floatformat:2|intcomma }}</td>
+                    <td>{{ source.reg_bump}}</td>
+                    <td>{{ source.base_score|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_3m|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_dupont|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_total|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_tyco|floatformat:2|intcomma}}</td>
+                    <td>{{ source.gfe_basf|floatformat:2|intcomma }}</td>
+                    <td>{{ source.gfe_total_basf_tyco|floatformat:2|intcomma }}</td>
+                    <td>{{ source.abs_3m|floatformat:2|intcomma }}</td>
+                    <td>{{ source.abs_dupont|floatformat:2|intcomma }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'source-detail' pwsid=source.pwsid source_name=source.source_name %}"
+                            class="text-decoration-none"
+                            style="color:inherit;">
+                            <i class="bi bi-eye-fill h5"></i>
+                        </a>
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+<script>
+    $(document).ready(function() {
+        $('#distributionTable').DataTable({
+            pageLength: 10,
+            responsive: true,
+            scrollX: true,
+            columnDefs: [
+                {orderable: false, targets: 3}
+            ],
+            order: [
+                [2, 'asc'],
+                [0, 'asc']
+            ],
+        });
+    });
+</script>
+
+
+
+</div>
+
+
+
+
+
+
+
+{% endblock %}

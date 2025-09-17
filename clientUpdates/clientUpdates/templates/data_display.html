@@ -1,0 +1,241 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<h3 style="text-align:center;">3M/DuPont Action Fund Data</h3>
+
+<div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                PFAS Data
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne">
+            <div class="accordion-body">
+                <table id="pfas_data_3MD_table" class="cell-border table_format">
+                    <thead>
+                        <tr>
+                            <!-- <th scope="col" style="width:5%;">#</th> -->
+                            <th scope="col">Source Name</th>
+                            <th scope="col">Unimpacted by PFAS?</th>
+                            <th scope="col">Analyte</th>
+                            <th scope="col">Result (ppt)</th>
+                            <th scope="col">Sampling Date</th>
+                            <th scope="col">Analysis Method</th>
+                            <th scope="col">Lab</th>
+                            <th scope="col">Filename</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in pfas_data_3MD %}
+                        <tr>
+                            <!-- <th scope="row">{{ forloop.counter }}</th> -->
+                            <td>{{ result.source_name }}</td>
+                            <td>{{ result.all_nds }}</td>
+                            <td>{{ result.analyte }}</td>
+                            <td>{{ result.result_ppt }}</td>
+                            <td>{{ result.sampling_date}}</td>
+                            <td>{{ result.analysis_method }}</td>
+                            <td>{{ result.lab }}</td>
+                            <td>{{ result.filename }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            Annual Flow Rate Data
+          </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+          <div class="accordion-body">
+            <table id="afr_data_3MD_table" class="cell-border table_format">
+                <thead>
+                    <tr>
+                        <th scope="col">Source Name</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">Flow Rate (GPM)</th>
+                        <th scope="col">Filename</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for afr in afr_data_3MD %}
+                    <tr>
+                        <td>{{ afr.source_name }}</td>
+                        <td>{{ afr.year }}</td>
+                        <td>{{ afr.flow_rate_gpm }}</td>
+                        <td>{{ afr.filename }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingThree">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            Max Flow Rate Data
+          </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree">
+          <div class="accordion-body">
+            <table id="vfr_data_3MD_table" class="cell-border table_format">
+                <thead>
+                    <tr>
+                        <th scope="col">Source Name</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">Flow Rate (GPM)</th>
+                        <th scope="col">Filename</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vfr in vfr_data_3MD %}
+                    <tr>
+                        <td>{{ vfr.source_name }}</td>
+                        <td>{{ vfr.year }}</td>
+                        <td>{{ vfr.flow_rate_gpm }}</td>
+                        <td>{{ vfr.filename }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+</div>
+
+<h3 style="text-align:center;">Tyco/BASF Action Fund Data</h3>
+
+<div class="accordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne_TB">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne_TB" aria-expanded="true" aria-controls="collapseOne_TB">
+                PFAS Data
+            </button>
+        </h2>
+        <div id="collapseOne_TB" class="accordion-collapse collapse" aria-labelledby="headingOne_TB">
+            <div class="accordion-body">
+                <table id="pfas_data_TB_table" class="cell-border table_format">
+                    <thead>
+                        <tr>
+                            <!-- <th scope="col" style="width:5%;">#</th> -->
+                            <th scope="col">Source Name</th>
+                            <th scope="col">Unimpacted by PFAS?</th>
+                            <th scope="col">Analyte</th>
+                            <th scope="col">Result (ppt)</th>
+                            <th scope="col">Sampling Date</th>
+                            <th scope="col">Analysis Method</th>
+                            <th scope="col">Lab</th>
+                            <th scope="col">Filename</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for result in pfas_data_TB %}
+                        <tr>
+                            <!-- <th scope="row">{{ forloop.counter }}</th> -->
+                            <td>{{ result.source_name }}</td>
+                            <td>{{ result.all_nds }}</td>
+                            <td>{{ result.analyte }}</td>
+                            <td>{{ result.result_ppt }}</td>
+                            <td>{{ result.sampling_date}}</td>
+                            <td>{{ result.analysis_method }}</td>
+                            <td>{{ result.lab }}</td>
+                            <td>{{ result.filename }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo_TB">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo_TB" aria-expanded="false" aria-controls="collapseTwo_TB">
+            Annual Flow Rate Data
+          </button>
+        </h2>
+        <div id="collapseTwo_TB" class="accordion-collapse collapse" aria-labelledby="headingTwo_TB">
+          <div class="accordion-body">
+            <table id="afr_data_TB_table" class="cell-border table_format">
+                <thead>
+                    <tr>
+                        <th scope="col">Source Name</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">Flow Rate (GPM)</th>
+                        <th scope="col">Filename</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for afr in afr_data_TB %}
+                    <tr>
+                        <td>{{ afr.source_name }}</td>
+                        <td>{{ afr.year }}</td>
+                        <td>{{ afr.flow_rate_gpm }}</td>
+                        <td>{{ afr.filename }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingThree_TB">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree_TB" aria-expanded="false" aria-controls="collapseThree_TB">
+            Max Flow Rate Data
+          </button>
+        </h2>
+        <div id="collapseThree_TB" class="accordion-collapse collapse" aria-labelledby="headingThree_TB">
+          <div class="accordion-body">
+            <table id="vfr_data_TB_table" class="cell-border table_format">
+                <thead>
+                    <tr>
+                        <th scope="col">Source Name</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">Flow Rate (GPM)</th>
+                        <th scope="col">Filename</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vfr in vfr_data_TB %}
+                    <tr>
+                        <td>{{ vfr.source_name }}</td>
+                        <td>{{ vfr.year }}</td>
+                        <td>{{ vfr.flow_rate_gpm }}</td>
+                        <td>{{ vfr.filename }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        $('.table_format').DataTable({
+            paging: true,
+            pageLength: 10,
+            responsive: true,
+            scrollX: false,
+            order: [
+                [2, 'asc'],
+                [0, 'asc']
+            ],
+        });
+    });
+
+</script>
+
+
+
+{% endblock %}
