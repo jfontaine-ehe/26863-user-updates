@@ -65,8 +65,11 @@ def dashboard(request):
     if not pws_record:
         raise Http404("Record not found")
 
-    # Pull all the sources filed in the claims portal
-    sources = Source.objects.filter(pwsid=pws_record.pwsid)
+    # Pull all the sources filed in the claims portal. Only select
+    # those that are unimpacted (where all_nds = True)
+    sources = (Source.objects.
+               filter(pwsid=pws_record.pwsid).
+               filter(all_nds=True))
 
     context = {
         'pws': pws_record,
