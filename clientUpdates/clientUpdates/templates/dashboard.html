@@ -53,9 +53,12 @@
             <thead class="table-light">
                 <tr>
                     <th scope="col">Source Name</th>
-                    <th scope="col" style="width:20%;">Source Type</th>
-                    <th scope="col" style="width:18%;">Source Status</th>
-                    <th scope="col" class="text-center" style="width:12%;">View Details</th>
+                    <!--<th scope="col" style="width:20%;">Source Type</th>-->
+                    <th scope="col" style="width:18%;">Source Status from 3M/DuPont Phase I Claim</th>
+                    <th scope="col" class="text-center" style="width:12%;">View/Edit Source Info</th>
+                    <th scope="col" class="text-center">Submit Notification to Proceed</th>
+                    <th scope="col" class="text-center">Notification Sent</th>
+                    <th scope="col" class="text-center">Phase I Supplemental Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,14 +66,23 @@
                 <tr class="{% if source.all_nds %}unimpacted-row{% else %}impacted-row{% endif %}">
                     <!-- <th scope="row">{{ forloop.counter }}</th> -->
                     <td>{{ source.source_name }}</td>
-                    <td>{{ source.source_type }}</td>
-                    <td>{% if source.all_nds %} Unimpacted {% else %} PFAS detected {% endif %}</td>
+<!--                    <td>{{ source.source_type }}</td>-->
+                    <td>{% if source.all_nds %} Unimpacted {% else %} PFAS detected below regulatory bump thresholds {% endif %}</td>
                     <td class="text-center">
                         <a href="{% url 'source-detail' pwsid=source.pwsid source_name=source.source_name %}" 
                             class="text-decoration-none" 
                             style="color:inherit;">
                             <i class="bi bi-eye-fill h5"></i>
                         </a>
+                    </td>
+                    <td class="text-center">
+                        <button>Submit Notification</button>
+                    </td>
+                    <td class="text-center">
+                        {% if source.phase1_sup_notification_sent %} Yes {% else %} No {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {{source.phase1_sup_status}}
                     </td>
                 </tr>
                     

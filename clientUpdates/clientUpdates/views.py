@@ -20,6 +20,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.http import JsonResponse, Http404
 from itertools import chain
+from django.db.models import Q
 
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
 # class CustomLoginView(LoginView):
@@ -68,9 +69,16 @@ def dashboard(request):
 
     # Pull all the sources filed in the claims portal. Only select
     # those that are unimpacted (where all_nds = True)
-    sources = (Source.objects.
-               filter(pwsid=pws_record.pwsid).
-               filter(all_nds=True))
+    # sources = (Source.objects.
+    #            filter(pwsid=pws_record.pwsid).
+    #            filter(all_nds=True))
+
+    sources = (Source.objects.filter(
+
+        Q(pwsid=pws_record.pwsid),
+        Q(all_nds=True) | Q(reg_bump=False)
+
+    ))
 
     context = {
         'pws': pws_record,

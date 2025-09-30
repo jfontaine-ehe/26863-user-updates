@@ -295,6 +295,8 @@ class Source(models.Model):
     data_origin = models.TextField(blank=True, null=True)
     abs_3m = models.FloatField(blank=True, null=True)
     abs_dupont = models.FloatField(blank=True, null=True)
+    phase1_sup_notification_sent = models.BooleanField(blank=False, null=False)
+    phase1_sup_status = models.TextField(blank=False, null=False)
 
     class Meta:
         managed = True
