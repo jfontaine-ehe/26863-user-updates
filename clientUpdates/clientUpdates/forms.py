@@ -1,13 +1,16 @@
 from django import forms
 from django.utils import timezone
-from .models import FlowRate, PfasResult
+from .models import FlowRate, PfasResult, Phase1FlowUpdates, Phase1PFASUpdates
 
 class MaxFlowRateUpdateForm(forms.ModelForm):
     """
     Form for updating Max Flow Rate. 
     """
     class Meta:
-        model = FlowRate
+        #model = FlowRate
+
+        # change to phase1_flow_updates model
+        model = Phase1FlowUpdates
         fields = [
             'flow_rate', 
             'unit', 
@@ -26,7 +29,10 @@ class AnnualProductionForm(forms.ModelForm):
     Form for updating Annual production. 
     """
     class Meta:
-        model = FlowRate
+        # model = FlowRate
+
+        # change to phase1_flow_updates model
+        model = Phase1FlowUpdates
         fields = [
             'year',
             'flow_rate',
@@ -59,7 +65,10 @@ class PfasResultUpdateForm(forms.ModelForm):
     Includes all relevant fields for PFAS data entry and editing.
     """
     class Meta:
-        model = PfasResult
+        # model = FlowRate
+
+        # change to phase1_pfas_updates model
+        model = Phase1PFASUpdates
         fields = [
             'analyte',
             'result',

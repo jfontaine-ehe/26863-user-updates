@@ -32,6 +32,7 @@ def update_pfas_metrics(pwsid, source_name):
     claim_pfas_results = ClaimPfasResult.objects.filter(
         pwsid=pwsid, source_name=source_name
     ).exclude(analyte__isnull=True)
+
     updated_pfas_results = PfasResult.objects.filter(
         pwsid=pwsid, source_name=source_name, updated_by_water_provider=True
     )

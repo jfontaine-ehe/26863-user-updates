@@ -1,6 +1,7 @@
 # Custom models and forms
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
-                     ClaimPfasResult, paymentInfo, paymentDistributions, TB_ClaimPfasResult, TB_ClaimFlowRate)
+                     ClaimPfasResult, paymentInfo, paymentDistributions,
+                     TB_ClaimPfasResult, TB_ClaimFlowRate, Phase1PFASUpdates, Phase1FlowUpdates)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm
 
 # Custom functions
@@ -202,7 +203,11 @@ def source_detail_view(request, pwsid, source_name):
     #### PFAS Results ####
     # columns = ['pwsid', 'water_source_id', 'source_name', 'analyte', 'result_ppt', 'sampling_date', 'analysis_date', 'lab_sample_id', 'data_origin']
     claim_pfas_results = ClaimPfasResult.objects.filter(pwsid=claim_source.pwsid, source_name=source_name).exclude(analyte__isnull=True)
-    updated_pfas_results = PfasResult.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, updated_by_water_provider=True)
+
+    # JF - change from PfasResult class to Phase1PFASUpdates
+    test = Phase1PFASUpdates.objects.all()
+
+    updated_pfas_results = Phase1PFASUpdates.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, updated_by_water_provider=True)
     latest_pfas_results = get_latest_entries(updated_pfas_results)
     # combined_pfas_results = get_combined_results(claim_pfas_results, latest_pfas_results, columns)
     
@@ -246,7 +251,9 @@ def source_detail_view(request, pwsid, source_name):
     #### Max Flow Rate and Annuals ####
     # columns_flow = ['pwsid', 'water_source_id', 'source_name', 'source_variable', 'year', 'flow_rate', 'unit', 'flow_rate_gpm', 'data_origin']
     claim_flow_rates = ClaimFlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name)
-    updated_flow_rates = FlowRate.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, updated_by_water_provider=True)
+
+    # JF - change from FlowRate class to Phase1FlowUpdates
+    updated_flow_rates = Phase1FlowUpdates.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, updated_by_water_provider=True)
     latest_max_flow = get_latest_entries(updated_flow_rates, source_variable='VFR')
     latest_annuals = get_latest_entries(updated_flow_rates, source_variable='AFR')
     latest_flow_rates = list(chain(latest_max_flow, latest_annuals))

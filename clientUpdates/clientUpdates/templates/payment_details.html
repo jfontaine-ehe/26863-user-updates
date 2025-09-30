@@ -22,7 +22,7 @@
     </div>
 
 
-    <div id="client_verification_div" class="card" style="width:75%; margin:auto; margin-top:10px; margin-bottom:10px;">
+    <div id="client_verification_div" class="card" style="width:75%; margin:auto; margin-top:10px; margin-bottom:10px;background:none; box-shadow:none">
         <h3 class="card-title text-center" style="padding-bottom:10px; width:100%; border-bottom: none; font-weight:bold;">Verification Details</h3>
         <div class="card-container" style="margin-top:0px">
             <div class="card" style="width:50%; box-shadow: 0 0 10px 10px #f0f0f0;">
@@ -75,7 +75,7 @@
     </div>
 
 
-    <div id="payment_details_div" class="card" style="width:75%; margin:auto; margin-top:20px; margin-bottom:10px;">
+    <div id="payment_details_div" class="card" style="width:75%; margin:auto; margin-top:20px; margin-bottom:10px; background:none; box-shadow:none">
 <!--        change this condition with variable based on whether the system elected to get a check or wire-->
         {% if paymentInfo.payment_method|lower == "wire" %}
             <h3 class="card-title text-center" style="border-bottom:none; width:100%; font-weight:bold;">Payment Details</h3>
