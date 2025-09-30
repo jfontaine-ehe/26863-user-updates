@@ -258,7 +258,7 @@ def source_detail_view(request, pwsid, source_name):
     latest_annuals = get_latest_entries(updated_flow_rates, source_variable='AFR')
     latest_flow_rates = list(chain(latest_max_flow, latest_annuals))
 
-    years_to_process = list(range(2013, 2024)) + [None] # None for max flow rate 
+    years_to_process = list(range(2013, 2023)) + [None] # None for max flow rate
 
     combined_flow_rates = []
     # Process each year once

@@ -199,13 +199,14 @@
                     </thead>
                     <tbody>
                         {% for annual in annuals %}
-                            <tr class="{% if annual.year == 2013 %}text-muted text-decoration-line-through{% endif %}">
+                            <!--<tr class="{% if annual.year == 2013 %}text-muted text-decoration-line-through{% endif %}">-->
+                            <tr>
                                 <td class="text-center">{{ annual.year|stringformat:'d' }}</td>
                                 <td data-label="Gallons">{{ annual.flow_rate_gpy|floatformat:0|intcomma }}</td>
                                 <td data-label="Acre-Feet">{{ annual.flow_rate_afpy|floatformat:2|intcomma }}</td>
                                 <td data-label="Filename"><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ annual.filename }}"></i></td>
                                 <td data-label="Updated">{% if annual.updated %}<i class="bi bi-check h5"></i></td>{% else %} -- {% endif %}</td>
-                                <td class="text-center">
+<!--                                <td class="text-center">
                                     {% if annual.year != 2013 and annual.year == 2023 or annual.year != 2013 and annual.lower_bound == 0 %}
                                         <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addOrUpdateAnnualModal"
                                                 data-source-name="{{ claim_source.source_name }}" 
@@ -213,9 +214,16 @@
                                             Update
                                         </button>
                                     {% else %}
-                                        <div class='text-center'>--</div>
+                                        <div class='text-center'>&#45;&#45;</div>
                                     {% endif %}
-                                </td>                              
+                                </td>-->
+                                <td class="text-center">
+                                        <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addOrUpdateAnnualModal"
+                                                data-source-name="{{ claim_source.source_name }}"
+                                                data-year="{{ annual.year }}">
+                                            Update
+                                        </button>
+                                </td>
                             </tr>        
                         {% endfor %}
                     </tbody>
