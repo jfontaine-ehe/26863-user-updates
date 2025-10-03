@@ -34,5 +34,6 @@ urlpatterns = [
     path('update-max-flow-rate/', views.update_max_flow_rate_view, name='update-max-flow-rate'),
     path('update-annual-production/', views.update_annual_production_view, name='update-annual-production'),
     path('contact/', views.contact_view, name='contact'),
-    path('activity/', views.activity_view, name='activity'),
+    path('activity/', views.activity_view, name='activity')
+    #path('phase1_sup_email', views.phase1_sup_email, name='phase1_sup_email')
 ]

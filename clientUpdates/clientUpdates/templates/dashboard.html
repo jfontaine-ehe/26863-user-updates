@@ -76,7 +76,9 @@
                         </a>
                     </td>
                     <td class="text-center">
-                        <button>Submit Notification</button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#phase1SubmitModal">
+                            Submit Notification
+                        </button>
                     </td>
                     <td class="text-center">
                         {% if source.phase1_sup_notification_sent %} Yes {% else %} No {% endif %}
@@ -85,11 +87,11 @@
                         {{source.phase1_sup_status}}
                     </td>
                 </tr>
-                    
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
     
 </div>    
 {% endif %}

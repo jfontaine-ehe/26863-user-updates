@@ -409,7 +409,6 @@ def contact_view(request):
     return render(request, 'contact.html', {'form': form})
 
 
-
 @login_required
 def activity_view(request):
     pwsid = request.user.username
