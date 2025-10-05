@@ -73,12 +73,7 @@ def dashboard(request):
     #            filter(pwsid=pws_record.pwsid).
     #            filter(all_nds=True))
 
-    sources = (Source.objects.filter(
-
-        Q(pwsid=pws_record.pwsid),
-        Q(all_nds=True) | Q(reg_bump=False)
-
-    ))
+    sources = Source.objects.filter(pwsid=pws_record.pwsid)
 
     context = {
         'pws': pws_record,
@@ -192,14 +187,14 @@ def data_display(request):
 
     return render(request, 'data_display.html', context)
 
-# The logic: 
-    ## 1. Get relevant rows from the Claims table and any rows from the EHE table that have been updated by the user. See point 4 below. 
-    ## 2. Combine the two tables, sort in decreasing order by result per analyte per source and keep only the max result per analyte per source. 
-    ## 3a. For PFAS results show PFOA, PFOS, and max other analyte. 
+# The logic:
+    ## 1. Get relevant rows from the Claims table and any rows from the EHE table that have been updated by the user. See point 4 below.
+    ## 2. Combine the two tables, sort in decreasing order by result per analyte per source and keep only the max result per analyte per source.
+    ## 3a. For PFAS results show PFOA, PFOS, and max other analyte.
     ## 3b. Max Flow Rate
     ## 3c. Annual Production
-    ## 4. If the user updates any value, this is pushed to EHE tables where the updated_by_water_provider column is updated to True. 
-    ## 5. Repeat the process from 1 to 4. 
+    ## 4. If the user updates any value, this is pushed to EHE tables where the updated_by_water_provider column is updated to True.
+    ## 5. Repeat the process from 1 to 4.
 # Note: steps 1 to 3 are processed in source_detail_view. The updates are processed in the relevant update functions below. 
 
 
@@ -218,20 +213,20 @@ def source_detail_view(request, pwsid, source_name):
     updated_pfas_results = Phase1PFASUpdates.objects.filter(pwsid=claim_source.pwsid, source_name=source_name, updated_by_water_provider=True)
     latest_pfas_results = get_latest_entries(updated_pfas_results)
     # combined_pfas_results = get_combined_results(claim_pfas_results, latest_pfas_results, columns)
-    
+
     claim_analytes = {entry.analyte for entry in claim_pfas_results}
     ehe_analytes = {entry.analyte for entry in latest_pfas_results}
     all_analytes = claim_analytes.union(ehe_analytes)
-    
+
     combined_pfas_results = []
-    
+
     for analyte in all_analytes:
         # Get the latest entry for this analyte from PfasResult
         latest_pfas_result = next((entry for entry in latest_pfas_results if entry.analyte == analyte), None)
 
         # Get the entry for this analyte from ClaimPfasResult
         claim_pfas_result = next((entry for entry in claim_pfas_results if entry.analyte == analyte), None)
-        
+
         # Lower bound always comes from ClaimPfasResult if it exists
         lower_bound = claim_pfas_result.result_ppt if claim_pfas_result else 0
         combined_pfas_results.append({
@@ -245,7 +240,7 @@ def source_detail_view(request, pwsid, source_name):
             'analysis_date': latest_pfas_result.analysis_date if latest_pfas_result else (claim_pfas_result.analysis_date if claim_pfas_result else None),
             'analysis_method': latest_pfas_result.analysis_method if latest_pfas_result else (claim_pfas_result.analysis_method if claim_pfas_result else None),
             'lab_sample_id': latest_pfas_result.lab_sample_id if latest_pfas_result else (claim_pfas_result.lab_sample_id if claim_pfas_result else None),
-            'filename': latest_pfas_result.filename if latest_pfas_result else (claim_pfas_result.filename if claim_pfas_result else None), 
+            'filename': latest_pfas_result.filename if latest_pfas_result else (claim_pfas_result.filename if claim_pfas_result else None),
             'updated': True if latest_pfas_result else False,
             'data_origin': latest_pfas_result.data_origin if latest_pfas_result else ('Placeholder' if not claim_pfas_result else claim_pfas_result.data_origin),
         })
@@ -253,7 +248,7 @@ def source_detail_view(request, pwsid, source_name):
     pfas_results = add_pfoas_if_missing(combined_pfas_results, claim_source.pwsid, claim_source.water_source_id, claim_source.source_name)
     pfas_results = sorted(pfas_results, key=lambda x: x['analyte'], reverse=True)
     max_other_threshold = get_max_other_threshold(pfas_results)
-    
+
     impacted = True if not claim_source.all_nds or updated_pfas_results else False
 
     #### Max Flow Rate and Annuals ####
@@ -273,7 +268,7 @@ def source_detail_view(request, pwsid, source_name):
     for year in years_to_process:
         latest_flow_rate = next((fr for fr in latest_flow_rates if fr.year == year), None)
         claim_flow_rate = next((cf for cf in claim_flow_rates if cf.year == year), None)
-        
+
         # Lower bound from ClaimFlowRate
         lower_bound = claim_flow_rate.flow_rate_gpm if claim_flow_rate else 0
 
@@ -291,11 +286,11 @@ def source_detail_view(request, pwsid, source_name):
             'flow_rate_mgd': ((latest_flow_rate.flow_rate_gpm if latest_flow_rate else (claim_flow_rate.flow_rate_gpm if claim_flow_rate else 0)) * 1440 / 1_000_000),
             'flow_rate_afpy': ((latest_flow_rate.flow_rate_gpm if latest_flow_rate else (claim_flow_rate.flow_rate_gpm if claim_flow_rate else 0)) * 1440 * 365 / 325851),
             'lower_bound': lower_bound,  # Always from ClaimFlowRate
-            'filename': latest_flow_rate.filename if latest_flow_rate else (claim_flow_rate.filename if claim_flow_rate else None), 
+            'filename': latest_flow_rate.filename if latest_flow_rate else (claim_flow_rate.filename if claim_flow_rate else None),
             'updated': True if latest_flow_rate else False,
             'data_origin': latest_flow_rate.data_origin if latest_flow_rate else ('Placeholder' if not claim_flow_rate else claim_flow_rate.data_origin),
         })
-    
+
     max_flow_rate = next((fr for fr in combined_flow_rates if fr['year'] is None), None)
     annuals = [fr for fr in combined_flow_rates if fr['year'] is not None]
 
@@ -327,7 +322,7 @@ def update_pfas_result_view(request):
             'analysis_date': 'analysis_date',
             'lab': 'lab',
             'analysis_method': 'analysis_method',
-            'lab_sample_id': 'lab_sample_id', 
+            'lab_sample_id': 'lab_sample_id',
             'comments': 'comments'
         },
         calc_func=calc_pfas_fields,
@@ -358,7 +353,7 @@ def update_annual_production_view(request):
         instance.unit = cleaned_data['unit']
         instance.flow_rate_gpm = calc_gpm_flow_rate(instance.flow_rate, instance.unit)
         instance.year = cleaned_data['year']
-        
+
     return handle_update(
         request,
         form_class=AnnualProductionForm,
@@ -370,14 +365,53 @@ def update_annual_production_view(request):
         source_variable='AFR'
     )
 
+# @login_required
+# def contact_view(request, source_name=None, message=0):
+#     pwsid = request.user.username
+#     recipients = settings.EMAIL_RECIPIENTS
+#
+#     if request.method == 'POST':
+#         form = ContactForm(request.POST)
+#
+#         if form.is_valid():
+#             name = form.cleaned_data['name']
+#             email = form.cleaned_data['email']
+#             subject = form.cleaned_data['subject']
+#             message = form.cleaned_data['message']
+#             full_message = f"From: {name}\n\n{message}"
+#
+#             email_message = EmailMessage(
+#                 subject=f"{subject} (from {pwsid})",
+#                 body=full_message,
+#                 from_email=settings.EMAIL_HOST_USER,
+#                 to=recipients,
+#                 reply_to=[email],
+#             )
+#             email_message.send(fail_silently=False)
+#
+#             # Return a JSON response for AJAX
+#             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+#                 return JsonResponse({'message': 'Email sent successfully.'})
+#
+#             return render(request, 'dashboard.html')
+#
+#         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+#                 return JsonResponse({'error': 'Invalid form submission'}, status=400)
+#
+#     else:
+#         form = ContactForm()
+#
+#     return render(request, 'contact.html', {'form': form})
+
+
 @login_required
-def contact_view(request):
+def contact_view(request, source_name=None, message=0):
     pwsid = request.user.username
     recipients = settings.EMAIL_RECIPIENTS
-    
+
     if request.method == 'POST':
         form = ContactForm(request.POST)
-        
+
         if form.is_valid():
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
@@ -388,9 +422,9 @@ def contact_view(request):
             email_message = EmailMessage(
                 subject=f"{subject} (from {pwsid})",
                 body=full_message,
-                from_email=settings.EMAIL_HOST_USER,  
+                from_email=settings.EMAIL_HOST_USER,
                 to=recipients,
-                reply_to=[email], 
+                reply_to=[email],
             )
             email_message.send(fail_silently=False)
 
@@ -399,14 +433,20 @@ def contact_view(request):
                 return JsonResponse({'message': 'Email sent successfully.'})
 
             return render(request, 'dashboard.html')
-        
+
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({'error': 'Invalid form submission'}, status=400)
-        
+            return JsonResponse({'error': 'Invalid form submission'}, status=400)
+
     else:
+        if source_name is not None and message == 1:
+            message = "I would like to inquire about submitting a Phase 1 Supplemental Fund for the source referenced in the subject line."
+
         form = ContactForm()
-    
-    return render(request, 'contact.html', {'form': form})
+
+    return render(request, 'contact.html', {'form': form,
+                                            'source_name': source_name,
+                                            'message': message,
+                                            'pwsid':pwsid})
 
 
 @login_required
