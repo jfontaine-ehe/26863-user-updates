@@ -147,6 +147,13 @@ table {
     border-collapse: collapse;
 }
 
+td {
+
+    text-align:center;
+
+
+}
+
 td.actions-col, th.actions-col {
     text-align: center; /* Align text and button in the center */
     vertical-align: middle; /* Ensure vertical alignment */
@@ -239,7 +246,7 @@ table th, table td {
 
 .text-center {
 
-    text-align: center;
+    text-align: center !important;
 
 }
 
