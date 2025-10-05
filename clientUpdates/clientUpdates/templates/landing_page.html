@@ -2,16 +2,16 @@
 
 {% block content %}
 
-<div class = "card" style="display: flex; width:100%; margin:auto; text-align:center">
+<div class = "card" style="display: flex; width:95%; margin:auto; text-align:center">
 
     <h1>{{pws.pwsid}}: {{pws.pws_name|title}}</h1>
 
 </div>
 
 <div class = "card-container" style= "flex-wrap:wrap; align-items:stretch">
-    <div class = "card" style = "width:40%; flex-direction:column">
+    <div class = "card" style = "width:30%; flex-direction:column">
 
-        <h2>PFAS Data</h2>
+        <h3 style="font-weight:bold">Action Fund<br>Data</h3>
         <div class = "card-body">
 
             <p>You are able to view the various different information that was submitted for <b>{{pws.pws_name|title}}</b>
@@ -22,13 +22,16 @@
         </div>
         <br>
         <br>
-        <a href="{% url 'data_display' %}" class="btn btn-primary" style="width:100%;margin-top:auto;">View PFAS Data</a>
+        <div style="display:flex; justify-content:space-evenly;">
+            <a href="{% url 'data_display' claim='3M_DuPont'%}" class="btn btn-primary" style="width:40%;">3M/DuPont</a>
+            <a href="{% url 'data_display' claim='Tyco_BASF'%}" class="btn btn-primary" style="width:40%;">Tyco/BASF</a>
+        </div>
 
     </div>
 
-    <div class = "card" style = "width:40%; flex-direction:column">
+    <div class = "card" style = "width:30%; flex-direction:column">
 
-        <h2>Payment Information</h2>
+        <h3 style="font-weight:bold">Payment<br>Information</h3>
         <div class = "card-body">
 
             <p>The payment information relative to <b>{{pws.pws_name|title}}</b> can be viewed by clicking
@@ -40,13 +43,16 @@
             <br>
         </div>
 
-        <a href="{% url 'payment_dashboard' %}" class="btn btn-primary" style="width:100%;margin-top:auto;">View Payment Information</a>
+        <div style="display:flex; justify-content:space-evenly;">
+            <a href="{% url 'payment_dashboard' %}" class="btn btn-primary" style="width:40%;">3M/DuPont</a>
+            <a href="{% url 'payment_dashboard' %}" class="btn btn-primary" style="width:40%;">Tyco/BASF</a>
+        </div>
 
     </div>
 
-    <div class = "card" style = "width:40%">
+    <div class = "card" style = "width:30%">
 
-        <h2>Phase I Supplemental Fund</h2>
+        <h3 style="font-weight:bold">Phase I<br>Supplemental Fund</h3>
         <div class = "card-body">
 
             <p> The 3M/DuPont Phase I Supplemental Fund is intended for water sources that were submitted under
@@ -60,7 +66,10 @@
             <br>
             <br>
         </div>
-        <a href= "{% url 'dashboard' %}"class="btn btn-primary" style="width:100%;margin-top:auto;">Edit Source Information</a>
+        <div style="display:flex; justify-content:space-evenly;">
+            <a href="{% url 'dashboard' %}" class="btn btn-primary" style="width:40%;">3M/DuPont</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-primary" style="width:40%;">Tyco/BASF</a>
+        </div>
 
     </div>
 

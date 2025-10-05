@@ -129,9 +129,9 @@ def landing_page (request):
     return render(request, 'landing_page.html', context)
 
 @login_required
-def data_display(request):
+def data_display(request, claim):
 
-# 3M/DuPont Data
+    # 3M/DuPont Data
 
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     pws_record = Pws.objects.get(form_userid=request.user.username)
@@ -154,7 +154,7 @@ def data_display(request):
                     only("source_name", "year", "flow_rate_gpm", "filename"))
 
 
-# Tyco/BASF Data
+    # Tyco/BASF Data
 
     # pfas data
     pfas_data_TB = (TB_ClaimPfasResult.objects.
@@ -173,17 +173,21 @@ def data_display(request):
                     filter(source_variable = "VFR").
                     only("source_name", "year", "flow_rate_gpm", "filename"))
 
+    if claim == "3M_DuPont":
+        context = {
+            'pws': pws_record,
+            'pfas_data_3MD': pfas_data_3MD,
+            'afr_data_3MD': afr_data_3MD,
+            'vfr_data_3MD': vfr_data_3MD,
+        }
 
-    context = {
-        'pws': pws_record,
-        'pfas_data_3MD': pfas_data_3MD,
-        'afr_data_3MD': afr_data_3MD,
-        'vfr_data_3MD': vfr_data_3MD,
-
-        'pfas_data_TB': pfas_data_TB,
-        'afr_data_TB': afr_data_TB,
-        'vfr_data_TB': vfr_data_TB
-    }
+    if claim == "Tyco_BASF":
+        context = {
+            'pws': pws_record,
+            'pfas_data_TB': pfas_data_TB,
+            'afr_data_TB': afr_data_TB,
+            'vfr_data_TB': vfr_data_TB
+        }
 
     return render(request, 'data_display.html', context)
 
