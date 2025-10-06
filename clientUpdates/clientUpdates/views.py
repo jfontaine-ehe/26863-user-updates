@@ -221,7 +221,7 @@ def source_detail_view(request, claim, pwsid, source_name):
         for i in pfas_results:
             print(i['analyte'])
 
-        pfas_results = add_pfoas_if_missing(pfas_results, source.pwsid, source.water_source_id, source.source_name)
+        #pfas_results = add_pfoas_if_missing(pfas_results, source.pwsid, source.water_source_id, source.source_name)
         pfas_results = sorted(pfas_results, key=lambda x: x['analyte'], reverse=True)
 
         flow_data = list(flow_data.values())
@@ -234,11 +234,12 @@ def source_detail_view(request, claim, pwsid, source_name):
 
     # Prepare context for rendering
     context = {
-        'claim_source': source,
+        'source': source,
         'impacted': impacted,
         'max_flow_rate': max_flow_rate,
         'annuals': annuals,
-        'pfas_results': pfas_results
+        'pfas_results': pfas_results,
+        'claim': claim
     }
 
     return render(request, 'source_detail.html', context)

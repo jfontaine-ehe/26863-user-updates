@@ -250,6 +250,19 @@ table th, table td {
 
 }
 
+.no-bottom-border {
+
+    border-bottom: none !important;
+
+}
+
+.info-callout {
+
+    border-left: solid 5px #34e1eb;
+    background-color: white;
+
+}
+
 
 .modal-header, .modal-footer {
     border: none; /* Remove borders for cleaner look */
