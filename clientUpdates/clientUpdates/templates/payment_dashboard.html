@@ -114,8 +114,6 @@
                     <th scope="col">Total Tyco/BASF GFE Amount</th>
                     <th scope="col">3M Adjusted Base Score</th>
                     <th scope="col">DuPont Adjusted Base Score</th>
-                    <!-- <th scope="col" style="width:18%;">Source Status</th> -->
-                    <th scope="col" class="text-center" style="width:12%;">View Details</th>
                 </tr>
             </thead>
             <tbody>
@@ -136,13 +134,6 @@
                     <td>{{ source.gfe_total_basf_tyco|floatformat:2|intcomma }}</td>
                     <td>{{ source.abs_3m|floatformat:2|intcomma }}</td>
                     <td>{{ source.abs_dupont|floatformat:2|intcomma }}</td>
-                    <td class="text-center">
-                        <a href="{% url 'source-detail' pwsid=source.pwsid source_name=source.source_name %}"
-                            class="text-decoration-none"
-                            style="color:inherit;">
-                            <i class="bi bi-eye-fill h5"></i>
-                        </a>
-                    </td>
                 </tr>
 
                 {% endfor %}

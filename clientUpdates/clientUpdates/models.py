@@ -733,7 +733,6 @@ class TB_ClaimPfasResult(models.Model):
     row_names = models.BigAutoField(primary_key=True)
     pwsid = models.TextField(blank=True, null=True)
     source_name = models.TextField(blank=True, null=True)
-    claim_status = models.TextField(blank=True, null=True)
     claim_number = models.FloatField(blank=True, null=True)
     water_source_id = models.TextField(blank=True, null=True)
     water_source_determination = models.TextField(blank=True, null=True)
@@ -766,7 +765,6 @@ class TB_ClaimPfasResult(models.Model):
 class TB_ClaimFlowRate(models.Model):
     row_names = models.BigAutoField(primary_key=True)
     claim_number = models.FloatField(blank=True, null=True)
-    claim_status = models.TextField(blank=True, null=True)
     pwsid = models.TextField(blank=True, null=True)
     source_name = models.TextField(blank=True, null=True)
     water_source_id = models.FloatField(blank=True, null=True)

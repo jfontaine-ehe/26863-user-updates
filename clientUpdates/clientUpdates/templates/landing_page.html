@@ -23,8 +23,8 @@
         <br>
         <br>
         <div style="display:flex; justify-content:space-evenly;">
-            <a href="{% url 'data_display' claim='3M_DuPont'%}" class="btn btn-primary" style="width:40%;">3M/DuPont</a>
-            <a href="{% url 'data_display' claim='Tyco_BASF'%}" class="btn btn-primary" style="width:40%;">Tyco/BASF</a>
+            <a href="{% url 'dashboard_simple' claim='3M_DuPont' supplemental=0%}" class="btn btn-primary" style="width:40%;">3M/DuPont</a>
+            <a href="{% url 'dashboard_simple' claim='Tyco_BASF' supplemental=0%}" class="btn btn-primary" style="width:40%;">Tyco/BASF</a>
         </div>
 
     </div>
@@ -67,8 +67,8 @@
             <br>
         </div>
         <div style="display:flex; justify-content:space-evenly;">
-            <a href="{% url 'dashboard' claim='3M_DuPont'%}" class="btn btn-primary" style="width:40%;">3M/DuPont</a>
-            <a href="{% url 'dashboard' claim='Tyco_BASF'%}" class="btn btn-primary" style="width:40%;">Tyco/BASF</a>
+            <a href="{% url 'dashboard' claim='3M_DuPont' supplemental=1%}" class="btn btn-primary" style="width:40%;">3M/DuPont</a>
+            <a href="{% url 'dashboard' claim='Tyco_BASF' supplemental=1%}" class="btn btn-primary" style="width:40%;">Tyco/BASF</a>
         </div>
 
     </div>

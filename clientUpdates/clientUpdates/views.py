@@ -61,7 +61,7 @@ def root_redirect(request):
         return redirect('login')
 
 @login_required
-def dashboard(request, claim):
+def dashboard(request, claim, supplemental=0):
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     pws_record = Pws.objects.get(form_userid=request.user.username)
     if not pws_record:
@@ -84,7 +84,10 @@ def dashboard(request, claim):
         'claim':claim
     }
 
-    return render(request, 'dashboard.html', context)
+    if supplemental == 0:
+        return render(request, 'dashboard_simple.html', context)
+    else:
+        return render(request, 'dashboard.html', context)
 
 
 @login_required
@@ -97,7 +100,7 @@ def payment_dashboard(request):
 
     context = {
         'pws': pws_record,
-        'sources': sources,
+        'sources': sources
     }
 
     return render(request, 'payment_dashboard.html', context)
@@ -217,20 +220,25 @@ def source_detail_view(request, claim, pwsid, source_name):
         pfas_results = ClaimPfasResult.objects.filter(pwsid=pwsid, source_name=source_name).exclude(analyte__isnull=True)
         flow_data = ClaimFlowRate.objects.filter(pwsid=pwsid, source_name=source_name)
 
-        pfas_results = list(pfas_results.values())
-        for i in pfas_results:
-            print(i['analyte'])
+    if claim == "Tyco_BASF":
+        source = get_object_or_404(ClaimSource, pwsid=pwsid, source_name=source_name)
+        pfas_results = TB_ClaimPfasResult.objects.filter(pwsid=pwsid, source_name=source_name).exclude(analyte__isnull=True)
+        flow_data = TB_ClaimFlowRate.objects.filter(pwsid=pwsid, source_name=source_name)
 
-        #pfas_results = add_pfoas_if_missing(pfas_results, source.pwsid, source.water_source_id, source.source_name)
-        pfas_results = sorted(pfas_results, key=lambda x: x['analyte'], reverse=True)
+    pfas_results = list(pfas_results.values())
+    for i in pfas_results:
+        print(i['analyte'])
 
-        flow_data = list(flow_data.values())
-        max_flow_rate = next((fr for fr in flow_data if fr['year'] is None), None)
-        annuals = [fr for fr in flow_data if fr['year'] is not None]
-        for annual in annuals:
-            annual['flow_rate_gpy'] = annual['flow_rate_gpm'] * 1440 * 365
+    #pfas_results = add_pfoas_if_missing(pfas_results, source.pwsid, source.water_source_id, source.source_name)
+    pfas_results = sorted(pfas_results, key=lambda x: x['analyte'], reverse=True)
 
-        impacted = True if not source.all_nds or pfas_results else False
+    flow_data = list(flow_data.values())
+    max_flow_rate = next((fr for fr in flow_data if fr['year'] is None), None)
+    annuals = [fr for fr in flow_data if fr['year'] is not None]
+    for annual in annuals:
+        annual['flow_rate_gpy'] = annual['flow_rate_gpm'] * 1440 * 365
+
+    impacted = True if not source.all_nds or pfas_results else False
 
     # Prepare context for rendering
     context = {
