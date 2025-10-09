@@ -229,7 +229,7 @@ def source_detail_view(request, claim, pwsid, source_name):
         flow_data = ClaimFlowRate.objects.filter(pwsid=pwsid, source_name=source_name)
 
     if claim == "Tyco_BASF":
-        source = get_object_or_404(ClaimSource, pwsid=pwsid, source_name=source_name)
+        source = get_object_or_404(TB_, pwsid=pwsid, source_name=source_name)
         pfas_results = TB_ClaimPfasResult.objects.filter(pwsid=pwsid, source_name=source_name).exclude(analyte__isnull=True)
         flow_data = TB_ClaimFlowRate.objects.filter(pwsid=pwsid, source_name=source_name)
 

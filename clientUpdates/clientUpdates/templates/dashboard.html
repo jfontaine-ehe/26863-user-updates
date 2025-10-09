@@ -20,32 +20,40 @@
 {% else %}
 <div class="container mt-4">
 
-    <p>
-        This page lists the "unimpacted" sources associated with <b>{{pws.pwsid}}</b>. "Unimpacted" in this context means, at
-        the time of the 3M/DuPont Phase I Action Fund Claim filing, the below sources did not have measureable concentrations
-        of PFAS.
+    <h3 class="no-bottom-border" style="text-align:center; font-weight:bold;">
+        {% if claim == "3M_DuPont" %} 3M/Dupont Phase I Supplemental Fund {% else %} Tyco/BASF Supplemental Fund {% endif %}
+    </h3>
 
+    <p>
+        The table below lists all the sources that were filed by <strong>{{pws.pwsid}}</strong> for the
+        {% if claim == "3M_DuPont" %} 3M/Dupont Phase I Action Fund Claim{% else %} Tyco/BASF Action Fund Claim{% endif %}.
+        Moreover, the table provides information on whether each source is eligible to file a Supplemental Fund Claim.
     </p>
 
+    <div class="alert alert-primary" style="display:flex">
+        <i class="bi bi-info-circle h5" style="padding-right:2px; color:blue; width:5%"></i>
 
-<!--    <p>
-        Claims for the following sources were submitted on your behalf in the Office of the Claims Administrator's Claims Portal for the 3M and DuPont claims. Please review the sources and update the data as needed. <b>If you have a source that is not listed here and you would like to either add that source or would like to get advice on whether a new source should be added, please <a href="{% url 'contact_default' %}">contact EH&E immediately</a></b>.
-    </p>
-    <p>
-        For each source listed below, please review the following information by clicking on the <i class="bi bi-eye-fill"></i> icon: 
-        <ul>
-            <li><b>PFAS results: </b>If, for any source, you have a <em>higher</em> PFAS result for PFOA, PFOS, or the next highest PFAS analyte than what was reported for the 3M and DuPont claims, please update the result and provide us with a corresponding lab report. If a source was previously unimpacted (i.e., had never previously reported a detection of any PFAS), please proceed to the source page, where you should provide the PFAS results, as well as the maximum flow rate and annual production for that source. </li>
+        <div>
 
-            <li><b>Max Flow Rate: </b>This is unlikely to change but if you have a document that shows a higher max flow rate, please  update this value.</li>
-            
-            <li><b>Annual Production: </b>For each impacted source below, i.e., sources with a Source Status of PFAS detected in the table below, please provide annual production for 2023. If the source is unimpacted, annual production is not needed at this time.</li>
+            <p>Use the "Submit Notification" button to notify EH&E staff once <strong>{{pws.pwsid}}</strong> is
+            ready to file a Supplemental Fund Claim for an eligible source. This would occur when:</p>
 
-            
-        </ul>
-    </p>
-    <p>
-        If you have no updates or corrections to make, no action is needed on your behalf at this time. EH&E or your legal team will be in contact with you once the Tyco and BASF claims are ready to be submitted with the Office of the Claims Administrator. 
-    </p>-->
+            <ol>
+
+                <li style="text-align:left;">A source was "unimpacted" (i.e., there was no measureable concentration
+                    of PFAS detected in the water source) at the time of filing the action fund claim but has since
+                    exhibited detections of PFAS; OR</li>
+                <br>
+
+                <li style="text-align:left;">A source exhibited PFOA and PFOS detections below the proposed Federal MCL of 4 ppt (ng/L) at the time of
+                filing the action fund claim but has since had a PFOA or PFOS detection above 4 ppt.</li>
+
+            </ol>
+
+        </div>
+
+    </div>
+
     <div class="container">
         <h4>Sources</h4>
 
