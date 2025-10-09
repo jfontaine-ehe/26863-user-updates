@@ -803,3 +803,37 @@ class supplementalSourceTracker(models.Model):
         managed = True
         db_table = 'supplemental_fund_source_tracker'
 
+class TB_ClaimSource(models.Model):
+    row_names = models.BigAutoField(primary_key=True)
+    claim_number = models.FloatField(blank=True, null=True)
+    pwsid = models.TextField(blank=True, null=True)
+    pws_name = models.TextField(blank=True, null=True)
+    needs_recalculation = models.TextField(blank=True, null=True)
+    water_source_id = models.FloatField(blank=True, null=True)
+    source_name = models.TextField(blank=True, null=True)
+    water_source_determination = models.FloatField(blank=True, null=True)
+    source_type = models.TextField(blank=True, null=True)
+    source_type_other = models.TextField(blank=True, null=True)
+    pws_owns_source = models.BooleanField(blank=True, null=True)
+    source_co_owned = models.BooleanField(blank=True, null=True)
+    pws_operates_source = models.BooleanField(blank=True, null=True)
+    source_operated_by = models.BooleanField(blank=True, null=True)
+    pws_purchased = models.BooleanField(blank=True, null=True)
+    source_original_pwsid = models.TextField(blank=True, null=True)
+    pws_drinking_water = models.BooleanField(blank=True, null=True)
+    is_part_of_idws = models.BooleanField(blank=True, null=True)
+    is_idws_cooperating = models.BooleanField(blank=True, null=True)
+    is_idws_responsible_pfas = models.BooleanField(blank=True, null=True)
+    partner_name = models.TextField(blank=True, null=True)
+    partner_pwsid = models.TextField(blank=True, null=True)
+    idws_partner_relationship = models.TextField(blank=True, null=True)
+    claimed_share_percent = models.FloatField(blank=True, null=True)
+    all_nds = models.BooleanField(default=False)
+    in_consortium = models.BooleanField(blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, null=True)
+    data_origin = models.TextField(default="Claims Portal")
+
+
+    class Meta:
+        managed = True
+        db_table = 'claim_tb_source'
