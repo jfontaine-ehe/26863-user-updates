@@ -25,7 +25,7 @@ urlpatterns = [
     path('login/', views.CustomLoginView.as_view(), name='login'), 
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('dashboard/<str:claim>/<int:supplemental>/', views.dashboard, name='dashboard'),
-    path('payment_dashboard/', views.payment_dashboard, name='payment_dashboard'),
+    path('payment_dashboard/<str:claim>/', views.payment_dashboard, name='payment_dashboard'),
     path('payment_details/', views.payment_details, name = 'payment_details'),
     path('landing_page/', views.landing_page, name = 'landing_page'),
     #path('data_display/<str:claim>/', views.data_display, name = 'data_display'),

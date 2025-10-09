@@ -867,7 +867,7 @@ class srcPaymentDist(models.Model):
     pwsid = models.TextField(blank=True, null=True)
     pws_name = models.TextField(blank=True, null=True)
     water_source_id = models.BigIntegerField(blank=True, null=True)
-    water_source_name = models.TextField(blank=True, null=True)
+    source_name = models.TextField(blank=True, null=True)
     law_firm_id = models.IntegerField(blank=True, null=True)
     law_firm = models.TextField(blank=True, null=True)
     entity_id = models.IntegerField(blank=True, null=True)
@@ -879,6 +879,7 @@ class srcPaymentDist(models.Model):
     payment_id = models.IntegerField(blank=True, null=True)
     payment_method = models.TextField(blank=True, null=True)
     total_transaction_value = models.FloatField(blank=True, null=True)
+    payment_date = models.DateField(blank=True, null=True)
 
 
     class Meta:

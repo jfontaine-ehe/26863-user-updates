@@ -3,7 +3,8 @@ from django.views.decorators.cache import never_cache
 
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
                      ClaimPfasResult, paymentInfo, paymentDistributions,
-                     TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource)
+                     TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
+                     pwsPaymentDist, srcPaymentDist)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm
 
 # Custom functions
@@ -99,19 +100,33 @@ def dashboard(request, claim, supplemental=0):
 
 
 @login_required
-def payment_dashboard(request):
+def payment_dashboard(request, claim):
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     pws_record = Pws.objects.get(form_userid=request.user.username)
 
-    # Pull all the sources filed in the claims portal
-    sources = Source.objects.filter(pwsid=pws_record.pwsid)
+
+    if claim == "3M_DuPont":
+        pws_payment = pwsPaymentDist.objects.filter(
+            Q(pwsid=pws_record.pwsid),
+            Q(claim_type='3M Phase 1') | Q(claim_type='Dupont Phase 1')
+
+        )
+
+        src_payment = srcPaymentDist.objects.filter(
+            Q(pwsid=pws_record.pwsid),
+            Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund')
+        )
+
+    # there is currently no Tyco/BASF payments to process
+
 
     context = {
         'pws': pws_record,
-        'sources': sources
+        'pws_payment_dist': pws_payment,
+        'src_payment_dist': src_payment
     }
 
-    return render(request, 'payment_dashboard.html', context)
+    return render(request, 'payment_dashboard2.html', context)
 
 
 @login_required
