@@ -3,7 +3,7 @@ from django.views.decorators.cache import never_cache
 
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
                      ClaimPfasResult, paymentInfo, paymentDistributions,
-                     TB_ClaimPfasResult, TB_ClaimFlowRate, Phase1PFASUpdates, Phase1FlowUpdates, supplementalSourceTracker)
+                     TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm
 
 # Custom functions
@@ -143,81 +143,70 @@ def landing_page (request):
 
     return render(request, 'landing_page.html', context)
 
-@login_required
-def data_display(request, claim):
-
-    # 3M/DuPont Data
-
-    # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
-    pws_record = Pws.objects.get(form_userid=request.user.username)
-
-    # pfas data
-    pfas_data_3MD = (ClaimPfasResult.objects.
-                     filter(pwsid=request.user.username).
-                     only("source_name", "all_nds", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
-
-    # afr data
-    afr_data_3MD = (ClaimFlowRate.objects.
-                    filter(pwsid=request.user.username).
-                    filter(source_variable = "AFR").
-                    only("source_name", "year", "flow_rate_gpm", "filename"))
-
-    # vfr data
-    vfr_data_3MD = (ClaimFlowRate.objects.
-                    filter(pwsid=request.user.username).
-                    filter(source_variable = "VFR").
-                    only("source_name", "year", "flow_rate_gpm", "filename"))
-
-
-    # Tyco/BASF Data
-
-    # pfas data
-    pfas_data_TB = (TB_ClaimPfasResult.objects.
-                     filter(pwsid=request.user.username).
-                     only("source_name", "all_nds", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
-
-    # afr data
-    afr_data_TB = (TB_ClaimFlowRate.objects.
-                    filter(pwsid=request.user.username).
-                    filter(source_variable = "AFR").
-                    only("source_name", "year", "flow_rate_gpm", "filename"))
-
-    # vfr data
-    vfr_data_TB = (TB_ClaimFlowRate.objects.
-                    filter(pwsid=request.user.username).
-                    filter(source_variable = "VFR").
-                    only("source_name", "year", "flow_rate_gpm", "filename"))
-
-    if claim == "3M_DuPont":
-        context = {
-            'claim': claim,
-            'pws': pws_record,
-            'pfas_data_3MD': pfas_data_3MD,
-            'afr_data_3MD': afr_data_3MD,
-            'vfr_data_3MD': vfr_data_3MD,
-        }
-
-    if claim == "Tyco_BASF":
-        context = {
-            'claim': claim,
-            'pws': pws_record,
-            'pfas_data_TB': pfas_data_TB,
-            'afr_data_TB': afr_data_TB,
-            'vfr_data_TB': vfr_data_TB
-        }
-
-    return render(request, 'data_display.html', context)
-
-# The logic:
-    ## 1. Get relevant rows from the Claims table and any rows from the EHE table that have been updated by the user. See point 4 below.
-    ## 2. Combine the two tables, sort in decreasing order by result per analyte per source and keep only the max result per analyte per source.
-    ## 3a. For PFAS results show PFOA, PFOS, and max other analyte.
-    ## 3b. Max Flow Rate
-    ## 3c. Annual Production
-    ## 4. If the user updates any value, this is pushed to EHE tables where the updated_by_water_provider column is updated to True.
-    ## 5. Repeat the process from 1 to 4.
-# Note: steps 1 to 3 are processed in source_detail_view. The updates are processed in the relevant update functions below. 
-
+# @login_required
+# def data_display(request, claim):
+#
+#     # 3M/DuPont Data
+#
+#     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
+#     pws_record = Pws.objects.get(form_userid=request.user.username)
+#
+#     # pfas data
+#     pfas_data_3MD = (ClaimPfasResult.objects.
+#                      filter(pwsid=request.user.username).
+#                      only("source_name", "all_nds", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
+#
+#     # afr data
+#     afr_data_3MD = (ClaimFlowRate.objects.
+#                     filter(pwsid=request.user.username).
+#                     filter(source_variable = "AFR").
+#                     only("source_name", "year", "flow_rate_gpm", "filename"))
+#
+#     # vfr data
+#     vfr_data_3MD = (ClaimFlowRate.objects.
+#                     filter(pwsid=request.user.username).
+#                     filter(source_variable = "VFR").
+#                     only("source_name", "year", "flow_rate_gpm", "filename"))
+#
+#
+#     # Tyco/BASF Data
+#
+#     # pfas data
+#     pfas_data_TB = (TB_ClaimPfasResult.objects.
+#                      filter(pwsid=request.user.username).
+#                      only("source_name", "all_nds", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
+#
+#     # afr data
+#     afr_data_TB = (TB_ClaimFlowRate.objects.
+#                     filter(pwsid=request.user.username).
+#                     filter(source_variable = "AFR").
+#                     only("source_name", "year", "flow_rate_gpm", "filename"))
+#
+#     # vfr data
+#     vfr_data_TB = (TB_ClaimFlowRate.objects.
+#                     filter(pwsid=request.user.username).
+#                     filter(source_variable = "VFR").
+#                     only("source_name", "year", "flow_rate_gpm", "filename"))
+#
+#     if claim == "3M_DuPont":
+#         context = {
+#             'claim': claim,
+#             'pws': pws_record,
+#             'pfas_data_3MD': pfas_data_3MD,
+#             'afr_data_3MD': afr_data_3MD,
+#             'vfr_data_3MD': vfr_data_3MD,
+#         }
+#
+#     if claim == "Tyco_BASF":
+#         context = {
+#             'claim': claim,
+#             'pws': pws_record,
+#             'pfas_data_TB': pfas_data_TB,
+#             'afr_data_TB': afr_data_TB,
+#             'vfr_data_TB': vfr_data_TB
+#         }
+#
+#     return render(request, 'data_display.html', context)
 
 
 @login_required
@@ -229,7 +218,7 @@ def source_detail_view(request, claim, pwsid, source_name):
         flow_data = ClaimFlowRate.objects.filter(pwsid=pwsid, source_name=source_name)
 
     if claim == "Tyco_BASF":
-        source = get_object_or_404(TB_, pwsid=pwsid, source_name=source_name)
+        source = get_object_or_404(TB_ClaimSource, pwsid=pwsid, source_name=source_name)
         pfas_results = TB_ClaimPfasResult.objects.filter(pwsid=pwsid, source_name=source_name).exclude(analyte__isnull=True)
         flow_data = TB_ClaimFlowRate.objects.filter(pwsid=pwsid, source_name=source_name)
 

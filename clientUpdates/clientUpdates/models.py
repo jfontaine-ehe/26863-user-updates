@@ -837,3 +837,50 @@ class TB_ClaimSource(models.Model):
     class Meta:
         managed = True
         db_table = 'claim_tb_source'
+
+class pwsPaymentDist(models.Model):
+    id = models.IntegerField(primary_key=True)
+    claim_id = models.IntegerField(blank=True, null=True)
+    pwsid = models.TextField(blank=True, null=True)
+    pws_name = models.TextField(blank=True, null=True)
+    law_firm = models.TextField(blank=True, null=True)
+    entity_name = models.TextField(blank=True, null=True)
+    claim_type = models.TextField(blank=True, null=True)
+    current_pws_total_abs = models.FloatField(blank=True, null=True)
+    projected_net_dollars_per_abs_point_value = models.FloatField(blank=True, null=True)
+    anticipated_total_net_settlement_award = models.FloatField(blank=True, null=True)
+    actual_paid = models.FloatField(blank=True, null=True)
+    remaining_balance = models.FloatField(blank=True, null=True)
+    remaining_balance_per_abs_pt = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'pws_payment_dist'
+
+
+class srcPaymentDist(models.Model):
+    id = models.IntegerField(primary_key=True)
+    fund_description = models.TextField(blank=True, null=True)
+    batch_id = models.IntegerField(blank=True, null=True)
+    batch_name = models.TextField(blank=True, null=True)
+    claim_id = models.IntegerField(blank=True, null=True)
+    pwsid = models.TextField(blank=True, null=True)
+    pws_name = models.TextField(blank=True, null=True)
+    water_source_id = models.BigIntegerField(blank=True, null=True)
+    water_source_name = models.TextField(blank=True, null=True)
+    law_firm_id = models.IntegerField(blank=True, null=True)
+    law_firm = models.TextField(blank=True, null=True)
+    entity_id = models.IntegerField(blank=True, null=True)
+    entity_name = models.TextField(blank=True, null=True)
+    recipient_name = models.TextField(blank=True, null=True)
+    batch_adjusted_base_score = models.TextField(blank=True, null=True)
+    batch_dollars_per_abs_points = models.TextField(blank=True, null=True)
+    payment_amount = models.FloatField(blank=True, null=True)
+    payment_id = models.IntegerField(blank=True, null=True)
+    payment_method = models.TextField(blank=True, null=True)
+    total_transaction_value = models.FloatField(blank=True, null=True)
+
+
+    class Meta:
+        managed = True
+        db_table = 'source_payment_dist'
