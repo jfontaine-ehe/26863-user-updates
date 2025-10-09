@@ -231,6 +231,11 @@ table th, table td {
 .no-click {
 
     pointer-events: none;
+    background-color:#e6e1e1;
+    border-color: black;
+    color: black;
+    cursor: not-allowed;
+    opacity: 0.6;
 
 }
 
