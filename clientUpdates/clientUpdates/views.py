@@ -1,7 +1,9 @@
 # Custom models and forms
+from django.views.decorators.cache import never_cache
+
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
                      ClaimPfasResult, paymentInfo, paymentDistributions,
-                     TB_ClaimPfasResult, TB_ClaimFlowRate, Phase1PFASUpdates, Phase1FlowUpdates)
+                     TB_ClaimPfasResult, TB_ClaimFlowRate, Phase1PFASUpdates, Phase1FlowUpdates, supplementalSourceTracker)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm
 
 # Custom functions
@@ -10,7 +12,7 @@ from .utils.tables_utils import add_pfoas_if_missing, get_max_other_threshold, g
 from .utils.calculations import calc_ppt_result, calc_gpm_flow_rate
 
 # Django functions
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.contrib import messages
@@ -20,6 +22,7 @@ from django.conf import settings
 from django.core.mail import EmailMessage
 from django.http import JsonResponse, Http404
 from itertools import chain
+from datetime import datetime
 from django.db.models import Q
 
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
@@ -61,7 +64,9 @@ def root_redirect(request):
         return redirect('login')
 
 @login_required
+@never_cache
 def dashboard(request, claim, supplemental=0):
+
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     pws_record = Pws.objects.get(form_userid=request.user.username)
     if not pws_record:
@@ -73,10 +78,13 @@ def dashboard(request, claim, supplemental=0):
     #            filter(pwsid=pws_record.pwsid).
     #            filter(all_nds=True))
 
-    sources = Source.objects.filter(pwsid=pws_record.pwsid)
-    pfas = ClaimPfasResult.objects.filter(pwsid=pws_record.pwsid)
+    if claim == "3M_DuPont":
+        claim_filter = "3M/DuPont Phase 1"
+    elif claim == "Tyco_BASF":
+        claim_filter = "Tyco/BASF"
 
-    test = Source.objects.select_related('pwsid', 'source_name').all()
+    sources = supplementalSourceTracker.objects.filter(pwsid=pws_record.pwsid, claim=claim_filter)
+    #sources = get_list_or_404(supplementalSourceTracker, pwsid=pws_record.pwsid, claim=claim_filter)
 
     context = {
         'pws': pws_record,
@@ -462,7 +470,7 @@ def update_annual_production_view(request):
 
 
 @login_required
-def contact_view(request, claim, source_name=None, message=0):
+def contact_view(request, claim=None, source_name=None, message=0):
     pwsid = request.user.username
     recipients = settings.EMAIL_RECIPIENTS
 
@@ -485,11 +493,29 @@ def contact_view(request, claim, source_name=None, message=0):
             )
             email_message.send(fail_silently=False)
 
-            # Return a JSON response for AJAX
-            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-                return JsonResponse({'message': 'Email sent successfully.'})
+            # Return a JSON response for AJAX.
+            # if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            #     return JsonResponse({'message': 'Email sent successfully.'})
 
-            return render(request, 'dashboard.html')
+            if claim is None:
+                return render(request, 'dashboard.html')
+            else:
+
+                if claim == "3M_DuPont":
+                    claim_filter = "3M/DuPont Phase 1"
+                elif claim == "Tyco_BASF":
+                    claim_filter = "Tyco/BASF"
+
+                source = get_object_or_404(supplementalSourceTracker, pwsid=pwsid, source_name=source_name,
+                                           claim=claim_filter)
+
+                source.sup_notif_sent = True
+                source.notif_datetime = datetime.now()
+                source.sup_status = "Claim Under Review"
+                source.save()
+
+                messages.success(request, "Thanks! Your message was sent successfully.")
+                return redirect('dashboard', claim=claim, supplemental=1)
 
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({'error': 'Invalid form submission'}, status=400)

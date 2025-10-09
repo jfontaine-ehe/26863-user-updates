@@ -784,3 +784,21 @@ class TB_ClaimFlowRate(models.Model):
     class Meta:
         managed = True
         db_table = 'claim_tb_flow_rate'
+
+
+class supplementalSourceTracker(models.Model):
+    id = models.IntegerField(primary_key=True)
+    claim = models.TextField(blank=True, null=True)
+    pwsid = models.TextField(blank=True, null=True)
+    pws_name = models.TextField(blank=True, null=True)
+    source_name = models.TextField(blank=True, null=True)
+    all_nds = models.BooleanField(blank=True, null=True)
+    reg_bump = models.BooleanField(blank=True, null=True)
+    sup_notif_sent = models.BooleanField(blank=True, null=True)
+    notif_datetime = models.DateTimeField(blank=True, null=True)
+    sup_status = models.TextField(blank=True, null=True)
+    completion_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'supplemental_fund_source_tracker'

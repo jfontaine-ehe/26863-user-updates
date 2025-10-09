@@ -52,19 +52,23 @@
 
     <div class = "card" style = "width:30%">
 
-        <h3 style="font-weight:bold">Phase I<br>Supplemental Fund</h3>
+        <h3 style="font-weight:bold">Supplemental<br>Fund Claims</h3>
         <div class = "card-body">
 
-            <p> The 3M/DuPont Phase I Supplemental Fund is intended for water sources that were submitted under
-                the 3M/DuPont Phase I Action Fund Claim as "unimpacted" (i.e., there was no measureable concentration
-                of PFAS detected in the water source) but have since exhibited measureable concentrations of PFAS analytes.
+            <p style="text-align:left;"> Supplemental Fund Claims are intended for sources that:</p>
+                <ol>
 
-                Click the button below to be directed to a portion of the website that will allow <b>{{pws.pws_name|title}}</b>
-                to update the PFAS information associated with the "unimpacted" sources submitted under the 3M/DuPont
-                Phase I Action Fund Claim.
-            </p>
-            <br>
-            <br>
+                    <li style="text-align:left;">Were "unimpacted" (i.e., there was no measureable concentration
+                        of PFAS detected in the water source) at the time of filing the action fund claim but have since
+                        exhibited detections of PFAS; OR</li>
+                    <br>
+                    <li style="text-align:left;">Exhibited PFOA and PFOS detections below the proposed Federal MCL of 4 ppt (ng/L) at the time of
+                    filing the action fund claim but have since had a PFOA or PFOS detection above 4 ppt.</li>
+
+                </ol>
+
+                <p style="text-align:left;">Use the buttons below to file a Supplemental Fund Claim for water
+                    sources relative to a specific claim.</p>
         </div>
         <div style="display:flex; justify-content:space-evenly;">
             <a href="{% url 'dashboard' claim='3M_DuPont' supplemental=1%}" class="btn btn-primary" style="width:40%;">3M/DuPont</a>

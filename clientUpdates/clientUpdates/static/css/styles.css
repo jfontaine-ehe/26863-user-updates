@@ -173,13 +173,13 @@ table th, table td {
 }
 
 /* Behavior for dashboard table */
-.table .impacted-row  {
+.table .eligible-row  {
     opacity: 1;
 }
 
-.table .unimpacted-row {
+.table .ineligible-row {
 
-    opacity: 0.8; /* Slight transparency to give a more subdued look */
+    opacity: 0.5; /* Slight transparency to give a more subdued look */
 }
 
 #activityTable {
@@ -226,6 +226,12 @@ table th, table td {
         color: #555;
         white-space: nowrap;
     }
+}
+
+.no-click {
+
+    pointer-events: none;
+
 }
 
 /* Modal styling */
