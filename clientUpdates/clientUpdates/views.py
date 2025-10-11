@@ -501,8 +501,11 @@ def contact_view(request, claim=None, source_name=None, message=0):
             # if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             #     return JsonResponse({'message': 'Email sent successfully.'})
 
+            # if this is a user filling out a regular contact form, unrelated to supplemental funds:
             if claim is None:
                 return render(request, 'dashboard.html')
+
+            # otherwise...:
             else:
 
                 if claim == "3M_DuPont":
@@ -510,6 +513,7 @@ def contact_view(request, claim=None, source_name=None, message=0):
                 elif claim == "Tyco_BASF":
                     claim_filter = "Tyco/BASF"
 
+                # update supplemental fund information for the source:
                 source = get_object_or_404(supplementalSourceTracker, pwsid=pwsid, source_name=source_name,
                                            claim=claim_filter)
 
@@ -518,7 +522,6 @@ def contact_view(request, claim=None, source_name=None, message=0):
                 source.sup_status = "Claim Under Review"
                 source.save()
 
-                messages.success(request, "Thanks! Your message was sent successfully.")
                 return redirect('dashboard', claim=claim, supplemental=1)
 
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
