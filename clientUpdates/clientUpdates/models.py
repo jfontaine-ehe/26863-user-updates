@@ -295,8 +295,6 @@ class Source(models.Model):
     data_origin = models.TextField(blank=True, null=True)
     abs_3m = models.FloatField(blank=True, null=True)
     abs_dupont = models.FloatField(blank=True, null=True)
-    phase1_sup_notification_sent = models.BooleanField(blank=False, null=False)
-    phase1_sup_status = models.TextField(blank=False, null=False)
 
     class Meta:
         managed = True
@@ -334,39 +332,6 @@ class FlowRate(models.Model):
         managed = True
         db_table = 'flow_rate'
 
-
-class Phase1FlowUpdates(models.Model):
-    row_names = models.BigAutoField(primary_key=True)
-    water_source_id = models.BigIntegerField(blank=True, null=True)
-    submit_date = models.DateTimeField(blank=True, null=True)
-    pwsid = models.CharField(max_length=9, unique=False, blank=False, null=False)
-    sample_id = models.TextField(blank=True, null=True)
-    year = models.FloatField(blank=True, null=True)
-    flow_rate = models.FloatField(blank=True, null=True)
-    unit = models.TextField(blank=True, null=True)
-    flow_rate_reduced = models.BooleanField(blank=True, null=True)
-    source_variable = models.TextField(blank=True, null=True)
-    comments = models.TextField(blank=True, null=True)
-    method = models.TextField(blank=True, null=True)
-    flow_rate_gpm = models.FloatField(blank=True, null=True)
-    flag = models.BooleanField(blank=True, null=True)
-    ehe_comments = models.TextField(blank=True, null=True)
-    system_gswc = models.TextField(blank=True, null=True)
-    gswc_loc = models.TextField(blank=True, null=True)
-    source_name = models.TextField(blank=True, null=True)
-    sample_id_from = models.TextField(blank=True, null=True)
-    filename = models.FileField(upload_to='uploads/', blank=True, null=True)
-    dms_initials = models.TextField(blank=True, null=True)
-    rm_row = models.FloatField(blank=True, null=True)
-    qc_flag = models.TextField(blank=True, null=True)
-    updated_by_water_provider = models.BooleanField(default=False)
-    data_origin = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = True
-        db_table = 'phase1_sup_flow_updates'
-
-
 class PfasResult(models.Model):
     row_names = models.BigAutoField(primary_key=True)
     water_source_id = models.BigIntegerField(blank=True, null=True)
@@ -401,42 +366,6 @@ class PfasResult(models.Model):
     class Meta:
         managed = True
         db_table = 'pfas_result'
-
-
-class Phase1PFASUpdates(models.Model):
-    row_names = models.BigAutoField(primary_key=True)
-    water_source_id = models.BigIntegerField(blank=True, null=True)
-    submit_date = models.DateTimeField(blank=True, null=True)
-    pwsid = models.CharField(max_length=9, unique=False, blank=False, null=False)
-    sample_id = models.TextField(blank=True, null=True)
-    sampling_date = models.DateField(blank=True, null=True)
-    analyte = models.TextField(blank=True, null=True)
-    result = models.TextField(blank=True, null=True)
-    unit = models.TextField(blank=True, null=True)
-    detected = models.BooleanField(blank=True, null=True)
-    result_ppt = models.FloatField(blank=True, null=True)
-    flag = models.BooleanField(blank=True, null=True)
-    comment = models.TextField(blank=True, null=True)
-    qc_flag = models.TextField(blank=True, null=True)
-    analysis_method = models.TextField(blank=True, null=True)
-    lab_sample_id = models.TextField(blank=True, null=True)
-    lab = models.TextField(blank=True, null=True)
-    cas_number = models.TextField(blank=True, null=True)
-    mdl = models.FloatField(blank=True, null=True)
-    rl = models.FloatField(blank=True, null=True)
-    filename = models.FileField(upload_to='uploads/', blank=True, null=True)
-    analysis_date = models.DateField(blank=True, null=True)
-    comments = models.TextField(blank=True, null=True)
-    dms_initials = models.TextField(blank=True, null=True)
-    all_nds = models.BooleanField(blank=True, null=True)
-    source_name = models.TextField(blank=True, null=True)
-    sample_id_from = models.TextField(blank=True, null=True)
-    updated_by_water_provider = models.BooleanField(default=False)
-    data_origin = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = True
-        db_table = 'phase1_sup_pfas_updates'
 
 
 ## Filenames ##
@@ -713,21 +642,6 @@ class paymentInfo(models.Model):
     class Meta:
         managed = True
         db_table = 'payment_information'
-
-
-class paymentDistributions(models.Model):
-    distribution_id = models.TextField(blank=False, null=False, primary_key=True)
-    distribution_date = models.DateField(blank=True, null=True)
-    distribution_amount = models.FloatField(blank=False, null=False)
-    pwsid = models.TextField(blank=False, null=False)
-    pws_name = models.TextField(blank=True, null=True)
-    claim_number = models.IntegerField(blank=True, null=True)
-    claim_name = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = True
-        db_table = 'payment_distributions'
-
 
 class TB_ClaimPfasResult(models.Model):
     row_names = models.BigAutoField(primary_key=True)
