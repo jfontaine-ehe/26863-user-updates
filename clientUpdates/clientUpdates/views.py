@@ -2,7 +2,7 @@
 from django.views.decorators.cache import never_cache
 
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
-                     ClaimPfasResult, paymentInfo, paymentDistributions,
+                     ClaimPfasResult, paymentInfo,
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
                      pwsPaymentDist, srcPaymentDist)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm
@@ -117,14 +117,21 @@ def payment_dashboard(request, claim):
             Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund')
         )
 
-    # there is currently no Tyco/BASF payments to process
+        context = {
+            'pws': pws_record,
+            'pws_payment_dist': pws_payment,
+            'src_payment_dist': src_payment,
+            'claim': claim
+        }
+
+    # there are currently no Tyco/BASF payments to process
+    else:
+        context = {
+            'pws': pws_record,
+            'claim': claim
+        }
 
 
-    context = {
-        'pws': pws_record,
-        'pws_payment_dist': pws_payment,
-        'src_payment_dist': src_payment
-    }
 
     return render(request, 'payment_dashboard2.html', context)
 

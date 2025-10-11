@@ -3,6 +3,8 @@
 {% load humanize %}
 
 {% block content %}
+
+{% if claim == '3M_DuPont' %}
 <div>
 
     <div class="alert alert-primary" style="display:flex">
@@ -71,6 +73,18 @@
     </div>
 
 </div>
+
+{% elif claim == 'Tyco_BASF' %}
+
+    <div class="alert alert-primary" style="display:flex">
+        <i class="bi bi-info-circle h5" style="padding-right:2px; color:blue; width:5%"></i>
+        <p>There have been no payment distributions or allocation amounts established under the Tyco/BASF Action Fund Claim yet.
+            Once this information is available from the Claims Administrator, it will be posted to this site.
+            If you are seeking to determine the wiring/banking information that was originally provided for
+        <strong>{{pws.pwsid}}</strong>, please send EH&E a message by filling out the contact form <a href="{% url 'contact_default' %}">here.</a></p>
+    </div>
+
+{% endif %}
 <script>
     $(document).ready(function() {
         $('#srctable').DataTable({

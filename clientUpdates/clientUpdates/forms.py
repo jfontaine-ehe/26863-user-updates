@@ -62,7 +62,7 @@ class PfasResultUpdateForm(forms.ModelForm):
     """
     class Meta:
 
-        model = FlowRate
+        model = PfasResult
 
         fields = [
             'analyte',
