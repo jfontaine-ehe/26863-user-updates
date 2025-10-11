@@ -9,100 +9,103 @@
     {% if not impacted %}
         <div class="alert alert-primary" style="display:flex">
             <i class="bi bi-info-circle h5" style="padding-right:2px; color:blue; width:5%"></i>
-            <p>This source was <strong>unimpacted</strong> by PFAS; therefore there is no PFAS results to be shown in the
-            sections below. In most cases, for sources unimpacted by PFAS, a value of zero (0) was assigned to the source's max flow rate attribute and its annual flow rate data.</p>
-
+            <p style="text-align:left">This source was <strong>unimpacted</strong> by PFAS; therefore there are no PFAS, maximum flow rate, or annual
+                production data to be shown in the sections below.</p>
         </div>
-    {% endif %}
-
-    {% if impacted %}
-    <div class="card">
-        <div class="card-body">
-            <h4>PFAS Results</h4>
-            <div id="pfas-results-section">
-                <table class="table table-container text-center">
-                    <thead>
-                        <tr>
-                            <th>Analyte</th>
-                            <th>Result</th>
-                            <th>Sample Date</th>
-                            <th>Analysis Method</th>
-                            <th>Filename</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for pfas_result in pfas_results %}
+    {% elif impacted %}
+        <div class="card">
+            <div class="card-body">
+                <h4>PFAS Results</h4>
+                <p style="text-align:left">The PFAS results that were submitted as part of the action fund claim are listed below.</p>
+                <div id="pfas-results-section">
+                    <table class="table table-container text-center">
+                        <thead>
                             <tr>
-                                <td class="text-center">{{ pfas_result.analyte }}</td>
-                                <td data-label="Result (ppt)">{{ pfas_result.result_ppt }} ng/L (ppt) </td>
-                                <td data-label="Sample Date">{{ pfas_result.sampling_date }}</td>
-                                <td data-label="Method">{{ pfas_result.analysis_method }}</td>
-                                <td data-label="Filename">
-                                    <i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ pfas_result.filename }}"></i>
-                                </td>
+                                <th>Analyte</th>
+                                <th>Result</th>
+                                <th>Sample Date</th>
+                                <th>Analysis Method</th>
+                                <th>Filename</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div> 
-        </div> 
-    </div> 
-    {% endif %}
-
-    <div class="card">
-        <div class="card-body">
-            <div id="max-flow-rate-section">
-                <h4>Maximum Flow Rate</h4>
-                <table class="table table-container text-center">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th>Flow Rate (GPM)</th>
-                            <th>Filename</th>
-<!--                            <th>Updated</th>-->
-<!--                            <th class="text-center">Actions</th>-->
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-center">Maximum</td>
-                            <td data-label="Flow Rate (GPM)">{{ max_flow_rate.flow_rate_gpm|floatformat:2 }}</td>
-                            <td data-label="Filename"><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ max_flow_rate.filename }}"></i></td>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for pfas_result in pfas_results %}
+                                <tr>
+                                    <td class="text-center">{{ pfas_result.analyte }}</td>
+                                    <td data-label="Result (ppt)">{{ pfas_result.result_ppt }} ng/L (ppt) </td>
+                                    <td data-label="Sample Date">{{ pfas_result.sampling_date }}</td>
+                                    <td data-label="Method">{{ pfas_result.analysis_method }}</td>
+                                    <td data-label="Filename">
+                                        <i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ pfas_result.filename }}"></i>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <div class="card">
-        <div class="card-body">
-            <div id="annual-production-section">
-                <h4>Annual Production</h4>
-                <table class="table table-container text-center">
-                    <thead>
-                        <tr>
-                            <th>Year</th>
-                            <th>Gallons Per Minute (GPM)</th>
-                            <th>Gallons Per Year (GPY)</th>
-                            <th>Filename</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for annual in annuals %}
+
+
+        <div class="card">
+            <div class="card-body">
+                <div id="max-flow-rate-section">
+                    <h4>Maximum Flow Rate</h4>
+                    <p style="text-align:left">At the time of the action fund claim filing, each source was required to provide its maximum flow rate. The maximum flow rate for {{source.source_name}} is shown below.</p>
+                    <table class="table table-container text-center">
+                        <thead>
                             <tr>
-                                <td class="text-center" width="15%">{{ annual.year|stringformat:'d' }}</td>
-                                <td data-label="Gallons Per Minute (GPM)">{{ annual.flow_rate_gpm|floatformat:2|intcomma }}</td>
-                                <td data-label="Gallons Per Year (GPY)">{{annual.flow_rate_gpy|floatformat:0|intcomma}}</td>
-                                <td data-label="Filename"><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ annual.filename }}"></i></td>
-                            </tr>        
-                        {% endfor %}
-                    </tbody>
-                </table>
+                                <th></th>
+                                <th>Flow Rate (GPM)</th>
+                                <th>Filename</th>
+    <!--                            <th>Updated</th>-->
+    <!--                            <th class="text-center">Actions</th>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center">Maximum</td>
+                                <td data-label="Flow Rate (GPM)">{{ max_flow_rate.flow_rate_gpm|floatformat:2 }}</td>
+                                <td data-label="Filename"><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ max_flow_rate.filename }}"></i></td>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 
+        <div class="card">
+            <div class="card-body">
+                <div id="annual-production-section">
+                    <h4>Annual Production</h4>
+                    <p style="text-align:left">At the time of the action fund claim filing, each source was required to provide its annual production data from {% if claim == "3M_DuPont" %} 2013 to 2022.{% else %} 2014 to 2023.{% endif %}
+                        Note that there are some cases where additional years of annual production could've been submitted, such as if the source was taken offline or flow was reduced due to PFAS contamination. Annual production data for {{source.source_name}} is shown below.</p>
+                    <table class="table table-container text-center">
+                        <thead>
+                            <tr>
+                                <th>Year</th>
+                                <th>Gallons Per Minute (GPM)</th>
+                                <th>Gallons Per Year (GPY)</th>
+                                <th>Filename</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for annual in annuals %}
+                                <tr>
+                                    <td class="text-center" width="15%">{{ annual.year|stringformat:'d' }}</td>
+                                    <td data-label="Gallons Per Minute (GPM)">{{ annual.flow_rate_gpm|floatformat:2|intcomma }}</td>
+                                    <td data-label="Gallons Per Year (GPY)">{{annual.flow_rate_gpy|floatformat:0|intcomma}}</td>
+                                    <td data-label="Filename"><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ annual.filename }}"></i></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 </div>
+
+{% endblock %}
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -112,4 +115,4 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 </script>
-{% endblock %}
+

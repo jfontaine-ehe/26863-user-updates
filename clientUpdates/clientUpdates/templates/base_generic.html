@@ -27,7 +27,7 @@
         <nav class="navbar navbar-expand-lg bg-light navbar-light fixed-top">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{% url 'landing_page' %}">
-                    EH&E AFFF Claims Payment Portal
+                    EH&E AFFF Claims Portal
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -37,9 +37,30 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'landing_page' %}">Home</a>
                         </li>
-<!--                        <li class="nav-item">
-                            <a class="nav-link" href="">Payment-Info</a>
-                        </li>-->
+
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            3M/DuPont
+                          </a>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'landing_page' %}">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                          </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Tyco/BASF
+                          </a>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'landing_page' %}">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                          </ul>
+                        </li>
+
+
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'contact_default' %}">Contact</a>
                         </li>

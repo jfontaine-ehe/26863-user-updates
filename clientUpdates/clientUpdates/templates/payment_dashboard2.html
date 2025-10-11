@@ -44,14 +44,14 @@
     <h3 class="label-center">Source Level Payments</h3>
 
     <div>
-        <table id="srctable">
+        <table id="srctable" class="text-center">
             <thead>
                 <tr>
-                    <th>Payment ID</th>
-                    <th>Payment Date</th>
-                    <th>Payment Amount</th>
-                    <th>Source Name</th>
-                    <th>Fund</th>
+                    <th class="text-center">Payment ID</th>
+                    <th class="text-center">Payment Date</th>
+                    <th class="text-center">Payment Amount</th>
+                    <th class="text-center">Source Name</th>
+                    <th class="text-center">Fund</th>
                 </tr>
             </thead>
             <tbody>
@@ -59,7 +59,7 @@
                     <tr>
                         <td>{{ dist.payment_id }}</td>
                         <td>{{ dist.payment_date }}</td>
-                        <td>{{ dist.payment_amount|floatformat:2|intcomma }}</td>
+                        <td>${{ dist.payment_amount|floatformat:2|intcomma }}</td>
                         <td>{{ dist.source_name }}</td>
                         <td>{{ dist.fund_description }}</td>
                     </tr>
