@@ -1,4 +1,5 @@
 # Custom models and forms
+from django.contrib.auth import logout
 from django.views.decorators.cache import never_cache
 
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
@@ -164,72 +165,6 @@ def landing_page (request):
     }
 
     return render(request, 'landing_page.html', context)
-
-# @login_required
-# def data_display(request, claim):
-#
-#     # 3M/DuPont Data
-#
-#     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
-#     pws_record = Pws.objects.get(form_userid=request.user.username)
-#
-#     # pfas data
-#     pfas_data_3MD = (ClaimPfasResult.objects.
-#                      filter(pwsid=request.user.username).
-#                      only("source_name", "all_nds", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
-#
-#     # afr data
-#     afr_data_3MD = (ClaimFlowRate.objects.
-#                     filter(pwsid=request.user.username).
-#                     filter(source_variable = "AFR").
-#                     only("source_name", "year", "flow_rate_gpm", "filename"))
-#
-#     # vfr data
-#     vfr_data_3MD = (ClaimFlowRate.objects.
-#                     filter(pwsid=request.user.username).
-#                     filter(source_variable = "VFR").
-#                     only("source_name", "year", "flow_rate_gpm", "filename"))
-#
-#
-#     # Tyco/BASF Data
-#
-#     # pfas data
-#     pfas_data_TB = (TB_ClaimPfasResult.objects.
-#                      filter(pwsid=request.user.username).
-#                      only("source_name", "all_nds", "analyte", "result_ppt", "sampling_date", "analysis_method", "lab", "filename"))
-#
-#     # afr data
-#     afr_data_TB = (TB_ClaimFlowRate.objects.
-#                     filter(pwsid=request.user.username).
-#                     filter(source_variable = "AFR").
-#                     only("source_name", "year", "flow_rate_gpm", "filename"))
-#
-#     # vfr data
-#     vfr_data_TB = (TB_ClaimFlowRate.objects.
-#                     filter(pwsid=request.user.username).
-#                     filter(source_variable = "VFR").
-#                     only("source_name", "year", "flow_rate_gpm", "filename"))
-#
-#     if claim == "3M_DuPont":
-#         context = {
-#             'claim': claim,
-#             'pws': pws_record,
-#             'pfas_data_3MD': pfas_data_3MD,
-#             'afr_data_3MD': afr_data_3MD,
-#             'vfr_data_3MD': vfr_data_3MD,
-#         }
-#
-#     if claim == "Tyco_BASF":
-#         context = {
-#             'claim': claim,
-#             'pws': pws_record,
-#             'pfas_data_TB': pfas_data_TB,
-#             'afr_data_TB': afr_data_TB,
-#             'vfr_data_TB': vfr_data_TB
-#         }
-#
-#     return render(request, 'data_display.html', context)
-
 
 @login_required
 def source_detail_view(request, claim, pwsid, source_name):
@@ -588,3 +523,9 @@ def activity_view(request):
 
     # Pass logs to template
     return render(request, 'activity.html', {'activity_logs': activity_logs})
+
+@login_required
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect(f"{settings.LOGIN_URL}")

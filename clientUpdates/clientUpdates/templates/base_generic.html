@@ -64,8 +64,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'contact_default' %}">Contact</a>
                         </li>
-                        <li class="nav-item">
+<!--                        <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>-->
+                        <li>
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="nav-link" style="border:none; background: none !important;">Log Out</button>
+                            </form>
                         </li>
                     </ul>
                 </div>
