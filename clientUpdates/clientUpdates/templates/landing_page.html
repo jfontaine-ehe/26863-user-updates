@@ -2,19 +2,19 @@
 
 {% block content %}
 
-<div class = "card" style="display: flex; width:100%; margin:auto; text-align:center">
+<div class = "card" style="display: flex; width:95%; margin:auto; text-align:center">
 
     <h1>{{pws.pwsid}}: {{pws.pws_name|title}}</h1>
 
 </div>
 
 <div class = "card-container" style= "flex-wrap:wrap; align-items:stretch">
-    <div class = "card" style = "width:40%; flex-direction:column">
+    <div class = "card" style = "width:30%; flex-direction:column">
 
-        <h2>PFAS Data</h2>
+        <h3 style="font-weight:bold">Action Fund<br>Data</h3>
         <div class = "card-body">
 
-            <p>You are able to view the various different information that was submitted for <b>{{pws.pws_name|title}}</b>
+            <p style="text-align:left">You are able to view the various different information that was submitted for <b>{{pws.pws_name|title}}</b>
                 for both the 3M/DuPont Phase I Action Fund Claim and the Tyco/BASF Action Fund Claim. For each source
                 that was part of the aforementioned claims, you are able to view the PFAS analytical data, maximum flow rate data,
                 and annual production data that was submitted.
@@ -22,45 +22,57 @@
         </div>
         <br>
         <br>
-        <a href="{% url 'data_display' %}" class="btn btn-primary" style="width:100%;margin-top:auto;">View PFAS Data</a>
+        <div style="display:flex; justify-content:space-evenly;">
+            <a href="{% url 'dashboard_simple' claim='3M_DuPont' supplemental=0%}" class="btn btn-primary" style="width:40%;">3M/DuPont</a>
+            <a href="{% url 'dashboard_simple' claim='Tyco_BASF' supplemental=0%}" class="btn btn-primary" style="width:40%;">Tyco/BASF</a>
+        </div>
 
     </div>
 
-    <div class = "card" style = "width:40%; flex-direction:column">
+    <div class = "card" style = "width:30%; flex-direction:column">
 
-        <h2>Payment Information</h2>
+        <h3 style="font-weight:bold">Payment<br>Information</h3>
         <div class = "card-body">
 
-            <p>The payment information relative to <b>{{pws.pws_name|title}}</b> can be viewed by clicking
+            <p style="text-align:left">The payment information relative to <b>{{pws.pws_name|title}}</b> can be viewed by clicking
                 the button below. The information includes system-level and source-level payment distribution details
-                that <b>{{pws.pws_name|title}}</b> is anticipated to receive, in addition to payment transfer (e.g., bank wiring info)
-                information.
+                that <b>{{pws.pws_name|title}}</b> is anticipated to receive.
             </p>
             <br>
             <br>
         </div>
 
-        <a href="{% url 'payment_dashboard' %}" class="btn btn-primary" style="width:100%;margin-top:auto;">View Payment Information</a>
+        <div style="display:flex; justify-content:space-evenly;">
+            <a href="{% url 'payment_dashboard' claim='3M_DuPont' %}" class="btn btn-primary" style="width:40%;">3M/DuPont</a>
+            <a href="{% url 'payment_dashboard' claim='Tyco_BASF' %}" class="btn btn-primary" style="width:40%;">Tyco/BASF</a>
+        </div>
 
     </div>
 
-    <div class = "card" style = "width:40%">
+    <div class = "card" style = "width:30%">
 
-        <h2>Phase I Supplemental Fund</h2>
+        <h3 style="font-weight:bold">Supplemental<br>Fund Claims</h3>
         <div class = "card-body">
 
-            <p> The 3M/DuPont Phase I Supplemental Fund is intended for water sources that were submitted under
-                the 3M/DuPont Phase I Action Fund Claim as "unimpacted" (i.e., there was no measureable concentration
-                of PFAS detected in the water source) but have since exhibited measureable concentrations of PFAS analytes.
+            <p style="text-align:left;"> Supplemental Fund Claims are intended for sources that:</p>
+                <ol>
 
-                Click the button below to be directed to a portion of the website that will allow <b>{{pws.pws_name|title}}</b>
-                to update the PFAS information associated with the "unimpacted" sources submitted under the 3M/DuPont
-                Phase I Action Fund Claim.
-            </p>
-            <br>
-            <br>
+                    <li style="text-align:left;">Were "unimpacted" (i.e., there was no measureable concentration
+                        of PFAS detected in the water source) at the time of filing the action fund claim but have since
+                        exhibited detections of PFAS; OR</li>
+                    <br>
+                    <li style="text-align:left;">Exhibited PFOA and PFOS detections below the proposed Federal MCL of 4 ppt (ng/L) at the time of
+                    filing the action fund claim but have since had a PFOA or PFOS detection above 4 ppt.</li>
+
+                </ol>
+
+                <p style="text-align:left;">Use the buttons below to file a Supplemental Fund Claim for water
+                    sources relative to a specific claim.</p>
         </div>
-        <a href= "{% url 'dashboard' %}"class="btn btn-primary" style="width:100%;margin-top:auto;">Edit Source Information</a>
+        <div style="display:flex; justify-content:space-evenly;">
+            <a href="{% url 'dashboard' claim='3M_DuPont' supplemental=1%}" class="btn btn-primary" style="width:40%;">3M/DuPont</a>
+            <a href="{% url 'dashboard' claim='Tyco_BASF' supplemental=1%}" class="btn btn-primary" style="width:40%;">Tyco/BASF</a>
+        </div>
 
     </div>
 

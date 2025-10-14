@@ -1,0 +1,103 @@
+{% extends 'base_generic.html' %}
+
+{% load humanize %}
+
+{% block content %}
+
+{% if claim == '3M_DuPont' %}
+<div>
+
+    <div class="alert alert-primary" style="display:flex">
+        <i class="bi bi-info-circle h5" style="padding-right:2px; color:blue; width:5%"></i>
+        <p>If you are seeking to determine the wiring/banking information that was originally provided for
+        <strong>{{pws.pwsid}}</strong>, please send EH&E a message by filling out the contact form <a href="{% url 'contact_default' %}">here.</a></p>
+    </div>
+
+    <br>
+
+    <h3 class="label-center">System Level Payments</h3>
+
+    <div>
+        <table class="table table-container text-center">
+            <thead>
+                <tr>
+                    <th>Claim</th>
+                    <th>Total Adjusted Base Score</th>
+                    <th>Anticipated Total Net Settlement Award</th>
+                    <th>Actual Paid</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dist in pws_payment_dist %}
+                    <tr>
+                        <td class="text-center">{{ dist.claim_type }}</td>
+                        <td>{{ dist.current_pws_total_abs|floatformat:2|intcomma }}</td>
+                        <td>{{ dist.anticipated_total_net_settlement_award|floatformat:2|intcomma }}</td>
+                        <td>${{ dist.actual_paid|floatformat:2|intcomma }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+
+    <br>
+
+    <h3 class="label-center">Source Level Payments</h3>
+
+    <div>
+        <table id="srctable" class="text-center">
+            <thead>
+                <tr>
+                    <th class="text-center">Payment ID</th>
+                    <th class="text-center">Payment Date</th>
+                    <th class="text-center">Payment Amount</th>
+                    <th class="text-center">Source Name</th>
+                    <th class="text-center">Fund</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dist in src_payment_dist %}
+                    <tr>
+                        <td>{{ dist.payment_id }}</td>
+                        <td>{{ dist.payment_date }}</td>
+                        <td>${{ dist.payment_amount|floatformat:2|intcomma }}</td>
+                        <td>{{ dist.source_name }}</td>
+                        <td>{{ dist.fund_description }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+    </div>
+
+</div>
+
+{% elif claim == 'Tyco_BASF' %}
+
+    <div class="alert alert-primary" style="display:flex">
+        <i class="bi bi-info-circle h5" style="padding-right:2px; color:blue; width:5%"></i>
+        <p>There have been no payment distributions or allocation amounts established under the Tyco/BASF Action Fund Claim yet.
+            Once this information is available from the Claims Administrator, it will be posted to this site.
+            If you are seeking to determine the wiring/banking information that was originally provided for
+        <strong>{{pws.pwsid}}</strong>, please send EH&E a message by filling out the contact form <a href="{% url 'contact_default' %}">here.</a></p>
+    </div>
+
+{% endif %}
+<script>
+    $(document).ready(function() {
+        $('#srctable').DataTable({
+            pageLength: 10,
+            responsive: true,
+            order: [
+                [3, 'asc']
+            ],
+        });
+    });
+</script>
+
+
+
+
+{% endblock %}

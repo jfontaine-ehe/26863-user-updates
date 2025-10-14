@@ -1,4 +1,7 @@
 import logging
+
+from django.core.files.storage import default_storage
+
 # Custom functions
 from .updates import update_ehe_pws_table, update_ehe_source_table
 from .dropbox_utils import upload_to_dropbox
@@ -53,8 +56,8 @@ def handle_update(request, form_class, extra_fields, impacted=None, calc_func=No
                 instance.save()
 
                 # Trigger updates of EH&E Source and Pws tables
-                update_ehe_source_table(pwsid, source_name)
-                update_ehe_pws_table(pwsid)
+                # update_ehe_source_table(pwsid, source_name)
+                # update_ehe_pws_table(pwsid)
 
                 filetype = 'Flow Rate' if source_variable else 'PFAS Results'
                 logger.info(f"{filetype} updated successfully for {source_name}.")
@@ -64,7 +67,12 @@ def handle_update(request, form_class, extra_fields, impacted=None, calc_func=No
                 file = request.FILES.get('filename')
                 
                 if file:
-                    upload_to_dropbox(file, filetype, pwsid)
+                    #upload_to_dropbox(file, filetype, pwsid)
+
+                    # Temporarily saving files locally. Uncomment the upload_to_dropbox function
+                    # once ready for production.
+                    local_path = f"{pwsid}/{filetype}/{file.name}"
+                    default_storage.save(local_path, file)
 
                 return redirect('source-detail', pwsid=pwsid, source_name=source_name)
             except Exception as e:

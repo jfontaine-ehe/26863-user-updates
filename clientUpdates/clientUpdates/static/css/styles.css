@@ -147,6 +147,13 @@ table {
     border-collapse: collapse;
 }
 
+td {
+
+    text-align:center;
+
+
+}
+
 td.actions-col, th.actions-col {
     text-align: center; /* Align text and button in the center */
     vertical-align: middle; /* Ensure vertical alignment */
@@ -166,13 +173,13 @@ table th, table td {
 }
 
 /* Behavior for dashboard table */
-.table .impacted-row  {
+.table .eligible-row  {
     opacity: 1;
 }
 
-.table .unimpacted-row {
+.table .ineligible-row {
 
-    opacity: 0.8; /* Slight transparency to give a more subdued look */
+    opacity: 0.5; /* Slight transparency to give a more subdued look */
 }
 
 #activityTable {
@@ -221,6 +228,17 @@ table th, table td {
     }
 }
 
+.no-click {
+
+    pointer-events: none;
+    background-color:#e6e1e1;
+    border-color: black;
+    color: black;
+    cursor: not-allowed;
+    opacity: 0.6;
+
+}
+
 /* Modal styling */
 .modal-content {
     border-radius: 8px; /* Rounded corners */
@@ -239,7 +257,20 @@ table th, table td {
 
 .text-center {
 
-    text-align: center;
+    text-align: center !important;
+
+}
+
+.no-bottom-border {
+
+    border-bottom: none !important;
+
+}
+
+.info-callout {
+
+    border-left: solid 5px #34e1eb;
+    background-color: white;
 
 }
 

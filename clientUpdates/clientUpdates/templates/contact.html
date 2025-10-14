@@ -6,31 +6,31 @@
 <p>Please be specific about the questions that you have and if you have been in contact with a specific person, provide their name as well.</p>
 <form id="contactForm" method="post">
     {% csrf_token %}
-    
+
     <div class="form-floating mb-4">
         <input type="text" id="id_name" name="name" class="form-control" placeholder="Your Name" required>
         <label for="id_name">Your Name</label>
     </div>
-    
+
     <div class="form-floating mb-4">
         <input type="email" id="id_email" name="email" class="form-control" placeholder="Your Email" required>
         <label for="id_email">Your Email</label>
     </div>
-    
+
     <div class="form-floating mb-4">
-        <input type="text" id="id_subject" name="subject" class="form-control" placeholder="Subject" required>
+        <input type="text" id="id_subject" name="subject" class="form-control" value="{% if source_name is not None %}{{claim}}{%if claim == '3M_DuPont'%} Phase 1 {% else %} {% endif %}Supplemental Fund Claim; PWSID: {{pwsid}}; Source: {{source_name}}{% else %}{% endif %}" placeholder="Subject">
         <label for="id_subject">Subject</label>
     </div>
-    
+
     <div class="form-floating mb-4">
-        <textarea id="id_message" name="message" class="form-control" placeholder="Message" rows="6" style="height: 150px;" required></textarea>
+        <textarea id="id_message" name="message" class="form-control" placeholder="Message" rows="6" style="height: 150px;" required>{% if message != 0 %}{{message}}{% else %}{% endif %}</textarea>
         <label for="id_message">Message</label>
     </div>
-    
+
     <div class="mb-4">
         <button type="submit" class="btn btn-outline-success" id="submit-button">Send</button>
-        <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='{% url 'dashboard' %}'">Cancel</button>
-        
+        <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='{% url 'landing_page' %}'">Cancel</button>
+
     </div>
 </form>
 
@@ -60,7 +60,7 @@
 
                 // Automatically redirect after a short delay
                 setTimeout(() => {
-                    window.location.href = "{% url 'dashboard' %}";
+                    window.location.href = "{% url 'landing_page' %}";
                 }, 1500);
             } else {
                 // Handle errors
@@ -72,5 +72,17 @@
             alert("An unexpected error occurred. Please try again later.");
         }
     });
+
+    // code to make the subject line
+    const subject = document.getElementById("id_subject");
+    function makeSubjectReadOnly() {
+        if(subject.value !== "") {
+
+            subject.readOnly = true;
+
+        }
+    };
+    makeSubjectReadOnly();
+
 </script>
 {% endblock %}

@@ -26,7 +26,9 @@ class AnnualProductionForm(forms.ModelForm):
     Form for updating Annual production. 
     """
     class Meta:
+
         model = FlowRate
+
         fields = [
             'year',
             'flow_rate',
@@ -59,7 +61,9 @@ class PfasResultUpdateForm(forms.ModelForm):
     Includes all relevant fields for PFAS data entry and editing.
     """
     class Meta:
+
         model = PfasResult
+
         fields = [
             'analyte',
             'result',

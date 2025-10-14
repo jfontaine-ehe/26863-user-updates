@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 ## DJANGO user ##
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
@@ -188,7 +189,6 @@ class Pws(models.Model):
     date_reviewed = models.DateField(blank=True, null=True)
     data_origin = models.TextField(blank=True, null=True)
 
-
     # JF 07/02/2025: Adding new columns to PWS class
     abs_3m = models.FloatField(blank=True, null=True)
     abs_dupont = models.FloatField(blank=True, null=True)
@@ -196,8 +196,6 @@ class Pws(models.Model):
     gfe_dupont_original = models.FloatField(blank=True, null=True)
     allocation_3m = models.FloatField(blank=True, null=True)
     allocation_dupont = models.FloatField(blank=True, null=True)
-
-
 
     #pfas_files_associated = models.FloatField(blank=True, null=True)
     #n_x = models.IntegerField(db_column='n.x', blank=True, null=True)  # Field renamed to remove unsuitable characters.
@@ -241,6 +239,7 @@ class PwsContact(models.Model):
     class Meta:
         managed = True
         db_table = 'pws_contact'
+
 
 ## Source level tables ##
 class Source(models.Model):
@@ -296,7 +295,6 @@ class Source(models.Model):
     data_origin = models.TextField(blank=True, null=True)
     abs_3m = models.FloatField(blank=True, null=True)
     abs_dupont = models.FloatField(blank=True, null=True)
-
 
     class Meta:
         managed = True
@@ -386,6 +384,7 @@ class ProductionDataFilenames(models.Model):
         managed = True
         db_table = 'production_data_filenames'
 
+
 class EurofinsReportsFilenames(models.Model):
     row_names = models.BigAutoField(primary_key=True)
     excel_name = models.TextField(blank=True, null=True)
@@ -399,6 +398,7 @@ class EurofinsReportsFilenames(models.Model):
     class Meta:
         managed = True
         db_table = 'eurofins_reports_filenames'
+
 
 class PfasReportsFilenames(models.Model):
     row_names = models.BigAutoField(primary_key=True)
@@ -415,8 +415,9 @@ class PfasReportsFilenames(models.Model):
         managed = True
         db_table = 'pfas_reports_filenames'
 
+
 class DropboxLinks(models.Model):
-    row_names = models.BigAutoField(primary_key=True)  
+    row_names = models.BigAutoField(primary_key=True)
     pwsid = models.TextField(blank=True, null=True)
     url_file_request = models.TextField(blank=True, null=True)
 
@@ -425,10 +426,9 @@ class DropboxLinks(models.Model):
         db_table = 'dropbox_links'
 
 
-
 ## Claims portal tables ##
 class ClaimDocumentInfo(models.Model):
-    row_names = models.BigAutoField(primary_key=True)  
+    row_names = models.BigAutoField(primary_key=True)
     pwsid = models.TextField(blank=True, null=True)
     water_system_id = models.FloatField(blank=True, null=True)
     water_system_name = models.TextField(blank=True, null=True)
@@ -453,7 +453,7 @@ class ClaimDocumentInfo(models.Model):
 
 
 class ClaimFlowRate(models.Model):
-    row_names = models.BigAutoField(primary_key=True)  
+    row_names = models.BigAutoField(primary_key=True)
     claim_number = models.FloatField(blank=True, null=True)
     pwsid = models.TextField(blank=True, null=True)
     source_name = models.TextField(blank=True, null=True)
@@ -476,7 +476,7 @@ class ClaimFlowRate(models.Model):
 
 
 class ClaimPfasResult(models.Model):
-    row_names = models.BigAutoField(primary_key=True)  
+    row_names = models.BigAutoField(primary_key=True)
     pwsid = models.TextField(blank=True, null=True)
     source_name = models.TextField(blank=True, null=True)
     claim_number = models.FloatField(blank=True, null=True)
@@ -507,7 +507,7 @@ class ClaimPfasResult(models.Model):
 
 
 class ClaimPws(models.Model):
-    row_names = models.BigAutoField(primary_key=True)  
+    row_names = models.BigAutoField(primary_key=True)
     claim_number = models.FloatField(blank=True, null=True)
     pwsid = models.TextField(blank=True, null=True)
     pws_name = models.TextField(blank=True, null=True)
@@ -643,28 +643,10 @@ class paymentInfo(models.Model):
         managed = True
         db_table = 'payment_information'
 
-class paymentDistributions(models.Model):
-
-    distribution_id = models.TextField(blank=False, null=False, primary_key=True)
-    distribution_date = models.DateField(blank=True, null=True)
-    distribution_amount = models.FloatField(blank=False, null=False)
-    pwsid = models.TextField(blank=False, null=False)
-    pws_name = models.TextField(blank=True, null=True)
-    claim_number = models.IntegerField(blank=True, null=True)
-    claim_name = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = True
-        db_table = 'payment_distributions'
-
-
-
-
 class TB_ClaimPfasResult(models.Model):
     row_names = models.BigAutoField(primary_key=True)
     pwsid = models.TextField(blank=True, null=True)
     source_name = models.TextField(blank=True, null=True)
-    claim_status = models.TextField(blank=True, null=True)
     claim_number = models.FloatField(blank=True, null=True)
     water_source_id = models.TextField(blank=True, null=True)
     water_source_determination = models.TextField(blank=True, null=True)
@@ -693,10 +675,10 @@ class TB_ClaimPfasResult(models.Model):
         managed = True
         db_table = 'claim_tb_pfas_result'
 
+
 class TB_ClaimFlowRate(models.Model):
     row_names = models.BigAutoField(primary_key=True)
     claim_number = models.FloatField(blank=True, null=True)
-    claim_status = models.TextField(blank=True, null=True)
     pwsid = models.TextField(blank=True, null=True)
     source_name = models.TextField(blank=True, null=True)
     water_source_id = models.FloatField(blank=True, null=True)
@@ -716,3 +698,104 @@ class TB_ClaimFlowRate(models.Model):
     class Meta:
         managed = True
         db_table = 'claim_tb_flow_rate'
+
+
+class supplementalSourceTracker(models.Model):
+    id = models.IntegerField(primary_key=True)
+    claim = models.TextField(blank=True, null=True)
+    pwsid = models.TextField(blank=True, null=True)
+    pws_name = models.TextField(blank=True, null=True)
+    source_name = models.TextField(blank=True, null=True)
+    all_nds = models.BooleanField(blank=True, null=True)
+    reg_bump = models.BooleanField(blank=True, null=True)
+    sup_notif_sent = models.BooleanField(blank=True, null=True)
+    notif_datetime = models.DateTimeField(blank=True, null=True)
+    sup_status = models.TextField(blank=True, null=True)
+    completion_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'supplemental_fund_source_tracker'
+
+class TB_ClaimSource(models.Model):
+    row_names = models.BigAutoField(primary_key=True)
+    claim_number = models.FloatField(blank=True, null=True)
+    pwsid = models.TextField(blank=True, null=True)
+    pws_name = models.TextField(blank=True, null=True)
+    needs_recalculation = models.TextField(blank=True, null=True)
+    water_source_id = models.FloatField(blank=True, null=True)
+    source_name = models.TextField(blank=True, null=True)
+    water_source_determination = models.FloatField(blank=True, null=True)
+    source_type = models.TextField(blank=True, null=True)
+    source_type_other = models.TextField(blank=True, null=True)
+    pws_owns_source = models.BooleanField(blank=True, null=True)
+    source_co_owned = models.BooleanField(blank=True, null=True)
+    pws_operates_source = models.BooleanField(blank=True, null=True)
+    source_operated_by = models.BooleanField(blank=True, null=True)
+    pws_purchased = models.BooleanField(blank=True, null=True)
+    source_original_pwsid = models.TextField(blank=True, null=True)
+    pws_drinking_water = models.BooleanField(blank=True, null=True)
+    is_part_of_idws = models.BooleanField(blank=True, null=True)
+    is_idws_cooperating = models.BooleanField(blank=True, null=True)
+    is_idws_responsible_pfas = models.BooleanField(blank=True, null=True)
+    partner_name = models.TextField(blank=True, null=True)
+    partner_pwsid = models.TextField(blank=True, null=True)
+    idws_partner_relationship = models.TextField(blank=True, null=True)
+    claimed_share_percent = models.FloatField(blank=True, null=True)
+    all_nds = models.BooleanField(default=False)
+    in_consortium = models.BooleanField(blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, null=True)
+    data_origin = models.TextField(default="Claims Portal")
+
+
+    class Meta:
+        managed = True
+        db_table = 'claim_tb_source'
+
+class pwsPaymentDist(models.Model):
+    id = models.IntegerField(primary_key=True)
+    claim_id = models.IntegerField(blank=True, null=True)
+    pwsid = models.TextField(blank=True, null=True)
+    pws_name = models.TextField(blank=True, null=True)
+    law_firm = models.TextField(blank=True, null=True)
+    entity_name = models.TextField(blank=True, null=True)
+    claim_type = models.TextField(blank=True, null=True)
+    current_pws_total_abs = models.FloatField(blank=True, null=True)
+    projected_net_dollars_per_abs_point_value = models.FloatField(blank=True, null=True)
+    anticipated_total_net_settlement_award = models.FloatField(blank=True, null=True)
+    actual_paid = models.FloatField(blank=True, null=True)
+    remaining_balance = models.FloatField(blank=True, null=True)
+    remaining_balance_per_abs_pt = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'pws_payment_dist'
+
+
+class srcPaymentDist(models.Model):
+    id = models.IntegerField(primary_key=True)
+    fund_description = models.TextField(blank=True, null=True)
+    batch_id = models.IntegerField(blank=True, null=True)
+    batch_name = models.TextField(blank=True, null=True)
+    claim_id = models.IntegerField(blank=True, null=True)
+    pwsid = models.TextField(blank=True, null=True)
+    pws_name = models.TextField(blank=True, null=True)
+    water_source_id = models.BigIntegerField(blank=True, null=True)
+    source_name = models.TextField(blank=True, null=True)
+    law_firm_id = models.IntegerField(blank=True, null=True)
+    law_firm = models.TextField(blank=True, null=True)
+    entity_id = models.IntegerField(blank=True, null=True)
+    entity_name = models.TextField(blank=True, null=True)
+    recipient_name = models.TextField(blank=True, null=True)
+    batch_adjusted_base_score = models.TextField(blank=True, null=True)
+    batch_dollars_per_abs_points = models.TextField(blank=True, null=True)
+    payment_amount = models.FloatField(blank=True, null=True)
+    payment_id = models.IntegerField(blank=True, null=True)
+    payment_method = models.TextField(blank=True, null=True)
+    total_transaction_value = models.FloatField(blank=True, null=True)
+    payment_date = models.DateField(blank=True, null=True)
+
+
+    class Meta:
+        managed = True
+        db_table = 'source_payment_dist'
