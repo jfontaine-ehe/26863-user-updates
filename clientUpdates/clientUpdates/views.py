@@ -93,11 +93,11 @@ def dashboard(request, claim, supplemental=0):
         'sources': sources,
         'claim':claim
     }
-
-    if supplemental == 0:
-        return render(request, 'dashboard_simple.html', context)
-    else:
+    if supplemental: 
         return render(request, 'dashboard.html', context)
+    else:
+        return render(request, 'dashboard_simple.html', context)
+        
 
 
 @login_required
@@ -188,13 +188,22 @@ def source_detail_view(request, claim, pwsid, source_name):
 
     flow_data = list(flow_data.values())
     max_flow_rate = next((fr for fr in flow_data if fr['year'] is None), None)
+    max_gpm = max_flow_rate.get('flow_rate_gpm') or 0
+    max_flow_rate.update({
+        'flow_rate_gpy': max_gpm * 1440 * 365,
+        'flow_rate_mgd': max_gpm * 1440 / 1_000_000,
+        'flow_rate_afpy': max_gpm * 1440 * 365 / 325851,
+    })
+    
     annuals = [fr for fr in flow_data if fr['year'] is not None]
     for annual in annuals:
-        annual['flow_rate_gpy'] = annual['flow_rate_gpm'] * 1440 * 365
+        gpm = annual.get('flow_rate_gpm') or 0
+        annual['flow_rate_gpm'] = gpm  # overwrite None with 0
+        annual['flow_rate_gpy'] = gpm * 1440 * 365
+        annual['flow_rate_afpy'] = gpm * 1440 * 365 / 325_851
 
     impacted = True if not source.all_nds or pfas_results else False
 
-    # Prepare context for rendering
     context = {
         'source': source,
         'impacted': impacted,
@@ -460,7 +469,7 @@ def contact_view(request, claim=None, source_name=None, message=0):
                                            claim=claim_filter)
 
                 source.sup_notif_sent = True
-                source.notif_datetime = datetime.now()
+                source.notif_datetime = timezone.now()
                 source.sup_status = "Claim Under Review"
                 source.save()
 

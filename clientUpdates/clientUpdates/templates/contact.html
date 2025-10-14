@@ -60,7 +60,11 @@
 
                 // Automatically redirect after a short delay
                 setTimeout(() => {
-                    window.location.href = "{% url 'landing_page' %}";
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        window.location.href = "{% url 'landing_page' %}";
+                    }
                 }, 1500);
             } else {
                 // Handle errors

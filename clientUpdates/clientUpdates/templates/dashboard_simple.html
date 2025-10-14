@@ -26,14 +26,16 @@
         <table id="sourcesTable" class="table table-hover table-bordered">
             <thead class="table-light">
                 <tr>
-                    <th scope="col" class="text-center">Source Name</th>
+                    <th scope="col" class="text-center" style="width:50%">Source Name</th>
+                    <th scope="col" class="text-center">Source Status</th>
                     <th scope="col" class="text-center">View Source Info</th>
                 </tr>
             </thead>
             <tbody>
                 {% for source in sources %}
                 <tr>
-                    <td>{{ source.source_name }}</td>
+                    <td class="text-left">{{ source.source_name }}</td>
+                    <td class="text-center">{% if source.all_nds %} Not Impacted {% else %} Impacted with PFAS {% endif %}</td>
                     <td class="text-center">
                         <a href="{% url 'source-detail' claim=claim pwsid=source.pwsid source_name=source.source_name %}"
                             class="text-decoration-none"
@@ -54,8 +56,12 @@
 <script>
     $(document).ready(function() {
         $('#sourcesTable').DataTable({
-            pageLength: 25,
+            pageLength: 25, 
+            columnDefs: [
+                {orderable: false, targets: 2}
+            ], 
             order: [
+                [1, 'asc'], 
                 [0, 'asc']
             ],
         });

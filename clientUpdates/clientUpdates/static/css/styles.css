@@ -147,12 +147,9 @@ table {
     border-collapse: collapse;
 }
 
-td {
-
+/* td {
     text-align:center;
-
-
-}
+} */
 
 td.actions-col, th.actions-col {
     text-align: center; /* Align text and button in the center */
@@ -214,11 +211,7 @@ table th, table td {
         border: none; /* Remove unnecessary borders */
     }
 
-    #sourcesTable td {
-        text-align: center; 
-    }
-
-    td::before {
+td::before {
         content: attr(data-label); /* Display the column header as a label */
         position: absolute;
         left: 10px;

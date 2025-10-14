@@ -57,6 +57,8 @@
                             <tr>
                                 <th></th>
                                 <th>Flow Rate (GPM)</th>
+                                <th>Flow Rate (MGD)</th>
+                                <th>Flow Rate (GPY)</th>
                                 <th>Filename</th>
     <!--                            <th>Updated</th>-->
     <!--                            <th class="text-center">Actions</th>-->
@@ -65,7 +67,9 @@
                         <tbody>
                             <tr>
                                 <td class="text-center">Maximum</td>
-                                <td data-label="Flow Rate (GPM)">{{ max_flow_rate.flow_rate_gpm|floatformat:2 }}</td>
+                                <td data-label="Flow Rate (GPM)">{{ max_flow_rate.flow_rate_gpm|floatformat:0|intcomma }}</td>
+                                <td data-label="Flow Rate (MGD)">{{ max_flow_rate.flow_rate_mgd|floatformat:2|intcomma }}</td>
+                                <td data-label="Flow Rate (GPY)">{{ max_flow_rate.flow_rate_gpy|floatformat:0|intcomma }}</td>
                                 <td data-label="Filename"><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ max_flow_rate.filename }}"></i></td>
                         </tbody>
                     </table>
@@ -83,8 +87,8 @@
                         <thead>
                             <tr>
                                 <th>Year</th>
-                                <th>Gallons Per Minute (GPM)</th>
-                                <th>Gallons Per Year (GPY)</th>
+                                <th>Total Flow (Gallons)</th>
+                                <th>Total Flow (Acre-Feet)</th>
                                 <th>Filename</th>
                             </tr>
                         </thead>
@@ -92,8 +96,8 @@
                             {% for annual in annuals %}
                                 <tr>
                                     <td class="text-center" width="15%">{{ annual.year|stringformat:'d' }}</td>
-                                    <td data-label="Gallons Per Minute (GPM)">{{ annual.flow_rate_gpm|floatformat:2|intcomma }}</td>
-                                    <td data-label="Gallons Per Year (GPY)">{{annual.flow_rate_gpy|floatformat:0|intcomma}}</td>
+                                    <td data-label="Gallons">{{ annual.flow_rate_gpy|floatformat:0|intcomma }}</td>
+                                    <td data-label="Acre-Feet">{{ annual.flow_rate_afpy|floatformat:2|intcomma }}</td>
                                     <td data-label="Filename"><i class="bi bi-info-circle h5" data-bs-toggle="tooltip" data-bs-placement="bottom" title="{{ annual.filename }}"></i></td>
                                 </tr>
                             {% endfor %}
