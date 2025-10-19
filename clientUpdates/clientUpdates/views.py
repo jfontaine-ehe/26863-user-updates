@@ -25,7 +25,7 @@ from django.core.mail import EmailMessage
 from django.http import JsonResponse, Http404
 from itertools import chain
 from datetime import datetime
-from django.db.models import Q
+from django.db.models import Q, Sum
 
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
 # class CustomLoginView(LoginView):
@@ -107,21 +107,28 @@ def payment_dashboard(request, claim):
 
 
     if claim == "3M_DuPont":
-        pws_payment = pwsPaymentDist.objects.filter(
+        pws_payment_info = pwsPaymentDist.objects.filter(
             Q(pwsid=pws_record.pwsid),
             Q(claim_type='3M Phase 1') | Q(claim_type='Dupont Phase 1')
 
         )
 
-        src_payment = srcPaymentDist.objects.filter(
-            Q(pwsid=pws_record.pwsid),
-            Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund')
-        )
+        # src_payment = srcPaymentDist.objects.filter(
+        #     Q(pwsid=pws_record.pwsid),
+        #     Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund')
+        # )
+
+        pws_date_totals = (srcPaymentDist
+                .objects
+                .filter(Q(pwsid=pws_record.pwsid),
+                        Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund'))
+                .values('payment_date', 'fund_description').annotate(total=Sum('payment_amount')))
 
         context = {
             'pws': pws_record,
-            'pws_payment_dist': pws_payment,
-            'src_payment_dist': src_payment,
+            'pws_payment_info': pws_payment_info,
+            #'src_payment_dist': src_payment,
+            'pws_date_totals': pws_date_totals,
             'claim': claim
         }
 
@@ -446,7 +453,12 @@ def contact_view(request, claim=None, source_name=None, message=0):
                 to=recipients,
                 reply_to=[email],
             )
+
+
             email_message.send(fail_silently=False)
+            messages.success(request, "This is a test!")
+
+
 
             # Return a JSON response for AJAX.
             # if request.headers.get('X-Requested-With') == 'XMLHttpRequest':

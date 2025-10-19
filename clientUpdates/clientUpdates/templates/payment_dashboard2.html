@@ -15,35 +15,65 @@
 
     <br>
 
-    <h3 class="label-center">System Level Payments</h3>
 
+    <div class="card-container">
+
+        <div class="card" style="width:75%;">
+            <div class="card-body">
+                <h3 class="label-center">PWS Payment Summary</h3>
+                <p style="text-align:left">The information below is provided by the Claims Portal. The information
+                    provides the adjusted base score for <strong>{{pws.pwsid}}</strong> by claim; whthe adjusted base score is the
+                variable used to determine the portion of the Settlement Fund that a given PWS receives. The
+                anticipated settlement amount that <strong>{{pws.pwsid}}</strong> expects to receive is also listed below.</p>
+                <div>
+                    <table class="table table-container text-center">
+                        <thead>
+                            <tr>
+                                <th>Claim</th>
+                                <th>Total Adjusted Base Score</th>
+                                <th>Anticipated Total Net Settlement Award</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in pws_payment_info %}
+                                <tr>
+                                    <td class="text-center">{{ record.claim_type }}</td>
+                                    <td>{{ record.current_pws_total_abs|floatformat:2|intcomma }}</td>
+                                    <td>${{ record.anticipated_total_net_settlement_award|floatformat:2|intcomma }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
     <div>
-        <table class="table table-container text-center">
+        <table id="payDateTable" class="text-center">
             <thead>
                 <tr>
-                    <th>Claim</th>
-                    <th>Total Adjusted Base Score</th>
-                    <th>Anticipated Total Net Settlement Award</th>
-                    <th>Actual Paid</th>
+                    <th class="text-center">Date</th>
+                    <th class="text-center">Fund</th>
+                    <th class="text-center">Total</th>
                 </tr>
             </thead>
             <tbody>
-                {% for dist in pws_payment_dist %}
+                {% for record in pws_date_totals %}
                     <tr>
-                        <td class="text-center">{{ dist.claim_type }}</td>
-                        <td>{{ dist.current_pws_total_abs|floatformat:2|intcomma }}</td>
-                        <td>{{ dist.anticipated_total_net_settlement_award|floatformat:2|intcomma }}</td>
-                        <td>${{ dist.actual_paid|floatformat:2|intcomma }}</td>
+                        <td>{{ record.payment_date }}</td>
+                        <td>{{ record.fund_description }}</td>
+                        <td>${{ record.total|floatformat:2|intcomma }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
 
+
     </div>
 
-    <br>
 
-    <h3 class="label-center">Source Level Payments</h3>
+   <!-- <h3 class="label-center">Source Level Payments</h3>
 
     <div>
         <table id="srctable" class="text-center">
@@ -71,7 +101,7 @@
 
 
     </div>
-
+-->
 </div>
 
 {% elif claim == 'Tyco_BASF' %}
@@ -87,7 +117,7 @@
 {% endif %}
 <script>
     $(document).ready(function() {
-        $('#srctable').DataTable({
+        $('#payDateTable').DataTable({
             pageLength: 10,
             responsive: true,
             order: [
