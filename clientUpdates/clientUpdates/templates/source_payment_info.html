@@ -1,0 +1,61 @@
+{% extends 'base_generic.html' %}
+
+{% load humanize %}
+
+{% block content %}
+<div>
+    <div style="display:flex; flex-wrap:wrap; justify-content:center;">
+        <div class="card" style="width:95%;">
+            <div class="card-body">
+                <h3 class="label-center">Source Payments</h3>
+                <p style="text-align:left">The information shown in the table below, derived from
+                the Claims Portal, shows payments made to <strong>{{pws.pws_name|title}}</strong></p>
+                by source, date, and fund.
+                <br>
+                <div>
+                    <table id="srcPaymentTable" class="table table-container text-center">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Payment ID</th>
+                                <th class="text-center">Payment Date</th>
+                                <th class="text-center">Fund Description</th>
+                                <th class="text-center">Source Name</th>
+                                <th class="text-center">Payment Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for record in src_payment_dist %}
+                                <tr>
+                                    <td class="text-center">{{ record.payment_id|floatformat:0 }}</td>
+                                    <td class="text-center">{{ record.payment_date }}</td>
+                                    <td class="text-center">{{ record.fund_description }}</td>
+                                    <td class="text-center">{{ record.source_name }}</td>
+                                    <td>${{ record.payment_amount|floatformat:2|intcomma }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="display:flex; justify-content:center;">
+        <div style="width:95%;">
+            <a href="{% url 'payment_dashboard' claim=claim  %}" class="btn btn-primary">Back to PWS Payment Info</a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#srcPaymentTable').DataTable({
+            pageLength: 5,
+            order: [
+                [3, 'asc'],
+            ],
+        });
+    });
+</script>
+
+{% endblock %}

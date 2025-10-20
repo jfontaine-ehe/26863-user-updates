@@ -113,22 +113,31 @@ def payment_dashboard(request, claim):
 
         )
 
-        # src_payment = srcPaymentDist.objects.filter(
-        #     Q(pwsid=pws_record.pwsid),
-        #     Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund')
-        # )
+        src_payment = srcPaymentDist.objects.filter(
+            Q(pwsid=pws_record.pwsid),
+            Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund')
+        )
 
         pws_date_totals = (srcPaymentDist
                 .objects
                 .filter(Q(pwsid=pws_record.pwsid),
                         Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund'))
-                .values('payment_date', 'fund_description').annotate(total=Sum('payment_amount')))
+                .values('payment_date', 'fund_description')
+                .annotate(total=Sum('payment_amount')))
+
+
+        pws_total = (srcPaymentDist
+                .objects
+                .filter(Q(pwsid=pws_record.pwsid),
+                        Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund'))
+                .aggregate(total=Sum('payment_amount')))
 
         context = {
             'pws': pws_record,
             'pws_payment_info': pws_payment_info,
             #'src_payment_dist': src_payment,
             'pws_date_totals': pws_date_totals,
+            'pws_total': pws_total,
             'claim': claim
         }
 
@@ -139,9 +148,28 @@ def payment_dashboard(request, claim):
             'claim': claim
         }
 
-
-
     return render(request, 'payment_dashboard2.html', context)
+
+
+@login_required
+def source_payment_info(request, claim):
+    # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
+    pws_record = Pws.objects.get(form_userid=request.user.username)
+
+    if claim == "3M_DuPont":
+
+        src_payment = srcPaymentDist.objects.filter(
+            Q(pwsid=pws_record.pwsid),
+            Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund')
+        )
+
+        context = {
+            'pws': pws_record,
+            'src_payment_dist': src_payment,
+            'claim': claim
+        }
+
+    return render(request, 'source_payment_info.html', context)
 
 
 @login_required

@@ -5,26 +5,28 @@
 {% block content %}
 
 {% if claim == '3M_DuPont' %}
-<div>
 
-    <div class="alert alert-primary" style="display:flex">
-        <i class="bi bi-info-circle h5" style="padding-right:2px; color:blue; width:5%"></i>
-        <p>If you are seeking to determine the wiring/banking information that was originally provided for
-        <strong>{{pws.pwsid}}</strong>, please send EH&E a message by filling out the contact form <a href="{% url 'contact_default' %}">here.</a></p>
+
+
+    <div>
+        <div class="alert alert-primary" style="display:flex; width:75%; margin:auto;">
+            <i class="bi bi-info-circle h5" style="padding-right:2px; color:blue; width:5%"></i>
+            <p>If you are seeking to determine the wiring/banking information that was originally provided for
+            <strong>{{pws.pwsid}}</strong>, please send EH&E a message by filling out the contact form <a href="{% url 'contact_default' %}">here.</a></p>
+        </div>
     </div>
-
     <br>
 
 
-    <div class="card-container">
-
+    <div style="display:flex; flex-wrap: wrap; justify-content:center;">
         <div class="card" style="width:75%;">
             <div class="card-body">
                 <h3 class="label-center">PWS Payment Summary</h3>
-                <p style="text-align:left">The information below is provided by the Claims Portal. The information
-                    provides the adjusted base score for <strong>{{pws.pwsid}}</strong> by claim; whthe adjusted base score is the
-                variable used to determine the portion of the Settlement Fund that a given PWS receives. The
-                anticipated settlement amount that <strong>{{pws.pwsid}}</strong> expects to receive is also listed below.</p>
+                <p style="text-align:left">The information below is provided by the Claims Portal and includes <strong>{{pws.pws_name|title}}'s</strong> Adjusted Base Score (ABS)
+                    for each claim; the ABS is the variable used to determine the portion of
+                    Settlement Fund that a given PWS receives. The anticipated settlement amount that <strong>{{pws.pwsid}}</strong> expects
+                    to receive is also listed below.</p>
+                <br>
                 <div>
                     <table class="table table-container text-center">
                         <thead>
@@ -47,62 +49,48 @@
                 </div>
             </div>
         </div>
+
+        <br>
+
+        <div class="card" style="width:75%;">
+            <div class="card-body">
+                <h3>Payment Amounts by Date and Fund</h3>
+                <p style="text-align:left;">The table below, derived from information in the Claims Portal,
+                    shows the payments that have been made to <strong>{{pws.pws_name|title}}</strong>
+                    by date and by fund. A grand total is also provided at the bottom of the table.
+                </p>
+                <br>
+                <table id="payDateTable" class="text-center">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Fund</th>
+                            <th class="text-center">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in pws_date_totals %}
+                            <tr>
+                                <td>{{ record.payment_date }}</td>
+                                <td>{{ record.fund_description }}</td>
+                                <td>${{ record.total|floatformat:2|intcomma }}</td>
+                            </tr>
+                        {% endfor %}
+                            <tr>
+                                <td></td>
+                                    <td></td>
+                                    <td><strong>Total: </strong>${{pws_total.total|floatformat:2|intcomma}}</td>
+                                </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <p style="text-align:left;">If you would like to see a breakdown of how payments have been made per source, please click the button below</p>
+                    <a href="{% url 'source_payment_info' claim=claim  %}" class="btn btn-primary">Source Payment Breakdown</a>
+                </div>
+            </div>
+        </div>
     </div>
-    <br>
-    <div>
-        <table id="payDateTable" class="text-center">
-            <thead>
-                <tr>
-                    <th class="text-center">Date</th>
-                    <th class="text-center">Fund</th>
-                    <th class="text-center">Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for record in pws_date_totals %}
-                    <tr>
-                        <td>{{ record.payment_date }}</td>
-                        <td>{{ record.fund_description }}</td>
-                        <td>${{ record.total|floatformat:2|intcomma }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
 
-
-    </div>
-
-
-   <!-- <h3 class="label-center">Source Level Payments</h3>
-
-    <div>
-        <table id="srctable" class="text-center">
-            <thead>
-                <tr>
-                    <th class="text-center">Payment ID</th>
-                    <th class="text-center">Payment Date</th>
-                    <th class="text-center">Payment Amount</th>
-                    <th class="text-center">Source Name</th>
-                    <th class="text-center">Fund</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for dist in src_payment_dist %}
-                    <tr>
-                        <td>{{ dist.payment_id }}</td>
-                        <td>{{ dist.payment_date }}</td>
-                        <td>${{ dist.payment_amount|floatformat:2|intcomma }}</td>
-                        <td>{{ dist.source_name }}</td>
-                        <td>{{ dist.fund_description }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-
-    </div>
--->
-</div>
 
 {% elif claim == 'Tyco_BASF' %}
 

@@ -37,6 +37,7 @@ urlpatterns = [
     path('update-annual-production/', views.update_annual_production_view, name='update-annual-production'),
     path('contact/', views.contact_view, name='contact_default'),
     path('contact/<str:claim>/<path:source_name>/<int:message>', views.contact_view, name='contact_phase1'),
-    path('activity/', views.activity_view, name='activity')
+    path('activity/', views.activity_view, name='activity'),
+    path('source_payment_info/<str:claim>/', views.source_payment_info, name='source_payment_info')
 
 ]
