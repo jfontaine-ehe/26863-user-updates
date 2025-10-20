@@ -31,9 +31,9 @@
                     <table class="table table-container text-center">
                         <thead>
                             <tr>
-                                <th>Claim</th>
-                                <th>Total Adjusted Base Score</th>
-                                <th>Anticipated Total Net Settlement Award</th>
+                                <th style="border-bottom: 2px solid black;">Claim</th>
+                                <th style="border-bottom: 2px solid black;">Total Adjusted Base Score</th>
+                                <th style="border-bottom: 2px solid black;">Anticipated Total Net Settlement Award</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,12 +60,12 @@
                     by date and by fund. A grand total is also provided at the bottom of the table.
                 </p>
                 <br>
-                <table id="payDateTable" class="text-center">
+                <table id="payDateTable" class="text-center table table-container">
                     <thead>
                         <tr>
-                            <th class="text-center">Date</th>
-                            <th class="text-center">Fund</th>
-                            <th class="text-center">Amount</th>
+                            <th class="text-center" style="border-bottom: 2px solid black;">Date</th>
+                            <th class="text-center" style="border-bottom: 2px solid black;">Fund</th>
+                            <th class="text-center" style="border-bottom: 2px solid black;">Amount</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -84,7 +84,7 @@
                         </tbody>
                     </table>
                     <br>
-                    <p style="text-align:left;">If you would like to see a breakdown of how payments have been made per source, please click the button below</p>
+                    <p style="text-align:left;">If you would like to see a breakdown of how payments have been made per source, please click the button below:</p>
                     <a href="{% url 'source_payment_info' claim=claim  %}" class="btn btn-primary">Source Payment Breakdown</a>
                 </div>
             </div>
