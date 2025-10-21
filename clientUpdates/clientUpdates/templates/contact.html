@@ -1,6 +1,7 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
+
 <h3>Contact EH&E</h3>
 <p>Please use the form below to contact EH&E with any inquiries. We will get back to you within 2-5 business days upon receiving your email.</p>
 <p>Please be specific about the questions that you have and if you have been in contact with a specific person, provide their name as well.</p>
@@ -32,6 +33,11 @@
         <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='{% url 'landing_page' %}'">Cancel</button>
 
     </div>
+
+    <div id="loader-container">
+        <div id="loader"></div>
+    </div>
+
 </form>
 
 <script>
@@ -40,6 +46,13 @@
 
         const form = event.target;
         const formData = new FormData(form);
+
+
+        var loaderContainer = document.getElementById('loader-container');
+        loaderContainer.style.display = 'flex';
+
+        var loader = document.getElementById('loader');
+        loader.style.display = 'block';
 
         try {
             // Send the form data using Fetch API
@@ -51,7 +64,11 @@
                 body: formData
             });
 
+
+
             if (response.ok) {
+                loader.style.display = 'none';
+                loaderContainer.style.display = 'none';
                 // Show a non-blocking alert
                 const alertDiv = document.createElement('div');
                 alertDiv.className = 'alert alert-success';
@@ -67,13 +84,20 @@
                     }
                 }, 1500);
             } else {
-                // Handle errors
+
+                loader.style.display = 'none';
+                loaderContainer.style.display = 'none';
                 const errorText = await response.text();
-                alert("An error occurred: " + errorText);
+                // Handle errors
+
+                // delay alert slightly so that loader can disappear before alert message shows up
+                setTimeout(() => {alert("An error occurred: please try again or report this issue to jfontaine@eheinc.com.")}, 100);
             }
         } catch (error) {
+            loader.style.display = 'none';
+            loaderContainer.style.display = 'none';
             console.error("An error occurred:", error);
-            alert("An unexpected error occurred. Please try again later.");
+            alert("An unexpected error occurred. Please try again later.")
         }
     });
 

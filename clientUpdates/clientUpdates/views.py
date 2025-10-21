@@ -25,7 +25,7 @@ from django.core.mail import EmailMessage
 from django.http import JsonResponse, Http404
 from itertools import chain
 from datetime import datetime
-from django.db.models import Q
+from django.db.models import Q, Sum
 
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
 # class CustomLoginView(LoginView):
@@ -107,7 +107,7 @@ def payment_dashboard(request, claim):
 
 
     if claim == "3M_DuPont":
-        pws_payment = pwsPaymentDist.objects.filter(
+        pws_payment_info = pwsPaymentDist.objects.filter(
             Q(pwsid=pws_record.pwsid),
             Q(claim_type='3M Phase 1') | Q(claim_type='Dupont Phase 1')
 
@@ -118,10 +118,26 @@ def payment_dashboard(request, claim):
             Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund')
         )
 
+        pws_date_totals = (srcPaymentDist
+                .objects
+                .filter(Q(pwsid=pws_record.pwsid),
+                        Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund'))
+                .values('payment_date', 'fund_description')
+                .annotate(total=Sum('payment_amount')))
+
+
+        pws_total = (srcPaymentDist
+                .objects
+                .filter(Q(pwsid=pws_record.pwsid),
+                        Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund'))
+                .aggregate(total=Sum('payment_amount')))
+
         context = {
             'pws': pws_record,
-            'pws_payment_dist': pws_payment,
-            'src_payment_dist': src_payment,
+            'pws_payment_info': pws_payment_info,
+            #'src_payment_dist': src_payment,
+            'pws_date_totals': pws_date_totals,
+            'pws_total': pws_total,
             'claim': claim
         }
 
@@ -132,9 +148,28 @@ def payment_dashboard(request, claim):
             'claim': claim
         }
 
-
-
     return render(request, 'payment_dashboard2.html', context)
+
+
+@login_required
+def source_payment_info(request, claim):
+    # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
+    pws_record = Pws.objects.get(form_userid=request.user.username)
+
+    if claim == "3M_DuPont":
+
+        src_payment = srcPaymentDist.objects.filter(
+            Q(pwsid=pws_record.pwsid),
+            Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund')
+        )
+
+        context = {
+            'pws': pws_record,
+            'src_payment_dist': src_payment,
+            'claim': claim
+        }
+
+    return render(request, 'source_payment_info.html', context)
 
 
 @login_required
@@ -446,7 +481,12 @@ def contact_view(request, claim=None, source_name=None, message=0):
                 to=recipients,
                 reply_to=[email],
             )
+
+
             email_message.send(fail_silently=False)
+            messages.success(request, "This is a test!")
+
+
 
             # Return a JSON response for AJAX.
             # if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
