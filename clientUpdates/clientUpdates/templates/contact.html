@@ -33,6 +33,14 @@
         <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='{% url 'landing_page' %}'">Cancel</button>
 
     </div>
+
+    <div id="loader-container">
+        <div id="loader"></div>
+<!--        <div class="card" style="display:flex; justify-content:center; align-items:center; width:200px; height:100px;">
+            <p style="margin: 0;">Please wait...</p>
+        </div>-->
+    </div>
+
 </form>
 
 <script>
@@ -41,6 +49,13 @@
 
         const form = event.target;
         const formData = new FormData(form);
+
+
+        var loaderContainer = document.getElementById('loader-container');
+        loaderContainer.style.display = 'flex';
+
+        var loader = document.getElementById('loader');
+        loader.style.display = 'block';
 
         try {
             // Send the form data using Fetch API
@@ -52,7 +67,11 @@
                 body: formData
             });
 
+
+
             if (response.ok) {
+                loader.style.display = 'none';
+                loaderContainer.style.display = 'none';
                 // Show a non-blocking alert
                 const alertDiv = document.createElement('div');
                 alertDiv.className = 'alert alert-success';
@@ -68,11 +87,15 @@
                     }
                 }, 1500);
             } else {
+                loader.style.display = 'none';
+                loaderContainer.style.display = 'none';
                 // Handle errors
                 const errorText = await response.text();
                 alert("An error occurred: please try again or report this issue to jfontaine@eheinc.com");
             }
         } catch (error) {
+            loader.style.display = 'none';
+            loaderContainer.style.display = 'none';
             console.error("An error occurred:", error);
             alert("An unexpected error occurred. Please try again later.");
         }
