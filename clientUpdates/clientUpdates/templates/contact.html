@@ -84,17 +84,20 @@
                     }
                 }, 1500);
             } else {
+
                 loader.style.display = 'none';
                 loaderContainer.style.display = 'none';
-                // Handle errors
                 const errorText = await response.text();
-                alert("An error occurred: please try again or report this issue to jfontaine@eheinc.com");
+                // Handle errors
+
+                // delay alert slightly so that loader can disappear before alert message shows up
+                setTimeout(() => {alert("An error occurred: please try again or report this issue to jfontaine@eheinc.com.")}, 100);
             }
         } catch (error) {
             loader.style.display = 'none';
             loaderContainer.style.display = 'none';
             console.error("An error occurred:", error);
-            alert("An unexpected error occurred. Please try again later.");
+            alert("An unexpected error occurred. Please try again later.")
         }
     });
 
