@@ -2,14 +2,14 @@
 
 {% block content %}
 
-<div class = "card" style="display: flex; width:95%; margin:auto; text-align:center">
+<div class = "card" style="display: flex; width:80%; margin:auto; text-align:center">
 
     <h1>{{pws.pwsid}}: {{pws.pws_name|title}}</h1>
 
 </div>
 
 <div class = "card-container" style= "flex-wrap:wrap; align-items:stretch">
-    <div class = "card" style = "width:30%; flex-direction:column">
+    <div class = "card" style = "width:35%; flex-direction:column">
 
         <h3 style="font-weight:bold">Action Fund<br>Data</h3>
         <div class = "card-body">
@@ -29,7 +29,7 @@
 
     </div>
 
-    <div class = "card" style = "width:30%; flex-direction:column">
+<!--    <div class = "card" style = "width:30%; flex-direction:column">
 
         <h3 style="font-weight:bold">Payment<br>Information</h3>
         <div class = "card-body">
@@ -47,9 +47,9 @@
             <a href="{% url 'payment_dashboard' claim='Tyco_BASF' %}" class="btn btn-primary" style="width:40%;">Tyco/BASF</a>
         </div>
 
-    </div>
+    </div>-->
 
-    <div class = "card" style = "width:30%">
+    <div class = "card" style = "width:35%">
 
         <h3 style="font-weight:bold">Supplemental<br>Fund Claims</h3>
         <div class = "card-body">

@@ -102,53 +102,59 @@ def dashboard(request, claim, supplemental=0):
 
 @login_required
 def payment_dashboard(request, claim):
+
+    # 10/27/2025 JF: Commenting this view function out until further notice. For now,
+    # redirect to the landing page.
+
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     pws_record = Pws.objects.get(form_userid=request.user.username)
 
 
-    if claim == "3M_DuPont":
-        pws_payment_info = pwsPaymentDist.objects.filter(
-            Q(pwsid=pws_record.pwsid),
-            Q(claim_type='3M Phase 1') | Q(claim_type='Dupont Phase 1')
+    # if claim == "3M_DuPont":
+    #     pws_payment_info = pwsPaymentDist.objects.filter(
+    #         Q(pwsid=pws_record.pwsid),
+    #         Q(claim_type='3M Phase 1') | Q(claim_type='Dupont Phase 1')
+    #
+    #     )
+    #
+    #     src_payment = srcPaymentDist.objects.filter(
+    #         Q(pwsid=pws_record.pwsid),
+    #         Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund')
+    #     )
+    #
+    #     pws_date_totals = (srcPaymentDist
+    #             .objects
+    #             .filter(Q(pwsid=pws_record.pwsid),
+    #                     Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund'))
+    #             .values('payment_date', 'fund_description')
+    #             .annotate(total=Sum('payment_amount')))
+    #
+    #
+    #     pws_total = (srcPaymentDist
+    #             .objects
+    #             .filter(Q(pwsid=pws_record.pwsid),
+    #                     Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund'))
+    #             .aggregate(total=Sum('payment_amount')))
+    #
+    #     context = {
+    #         'pws': pws_record,
+    #         'pws_payment_info': pws_payment_info,
+    #         #'src_payment_dist': src_payment,
+    #         'pws_date_totals': pws_date_totals,
+    #         'pws_total': pws_total,
+    #         'claim': claim
+    #     }
+    #
+    # # there are currently no Tyco/BASF payments to process
+    # else:
+    #     context = {
+    #         'pws': pws_record,
+    #         'claim': claim
+    #     }
+    #
+    # return render(request, 'payment_dashboard2.html', context)
 
-        )
-
-        src_payment = srcPaymentDist.objects.filter(
-            Q(pwsid=pws_record.pwsid),
-            Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund')
-        )
-
-        pws_date_totals = (srcPaymentDist
-                .objects
-                .filter(Q(pwsid=pws_record.pwsid),
-                        Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund'))
-                .values('payment_date', 'fund_description')
-                .annotate(total=Sum('payment_amount')))
-
-
-        pws_total = (srcPaymentDist
-                .objects
-                .filter(Q(pwsid=pws_record.pwsid),
-                        Q(fund_description='3M Phase One Action Fund') | Q(fund_description='Dupont Phase One Action Fund'))
-                .aggregate(total=Sum('payment_amount')))
-
-        context = {
-            'pws': pws_record,
-            'pws_payment_info': pws_payment_info,
-            #'src_payment_dist': src_payment,
-            'pws_date_totals': pws_date_totals,
-            'pws_total': pws_total,
-            'claim': claim
-        }
-
-    # there are currently no Tyco/BASF payments to process
-    else:
-        context = {
-            'pws': pws_record,
-            'claim': claim
-        }
-
-    return render(request, 'payment_dashboard2.html', context)
+    return render(request, 'landing_page.html')
 
 
 @login_required
