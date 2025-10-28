@@ -1,0 +1,128 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+
+<h3 class="no-bottom-border" style="text-align:center;">Supplemental Fund Information</h3>
+
+<p>Please reference the information below to help understand important elements and requirements of the 3M/DuPont and Tyco/BASF
+Supplemental Fund claims. If you require additional assistance, please use the <a style="color:blue;" href="{% url 'contact_default' %}">contact</a> form.</p>
+
+<div class="card-alt">
+    <h5 style="border-bottom:2px solid rgba(0, 0, 0, 0.5)">Background Information</h5>
+
+    <p>The Supplemental Funds, relative to both 3M/DuPont and Tyco/BASF action fund claims, are designed to compensate Public Water Systems (PWS)
+    in the following circumstances:</p>
+
+    <ol>
+        <li style="text-align:left;">When a source was "unimpacted" (i.e., there was no measureable concentration
+            of PFAS detected in the water source) at the time of filing the action fund claim but has since
+            exhibited detections of PFAS; OR</li>
+
+        <br>
+
+        <li style="text-align:left;">When a source exhibited PFAS detections <strong>below</strong> the Proposed Federal PFAS Maximum Contaminant Levels (MCLs) or applicable State PFAS MCLs at
+                the time of filing the action fund claim, but have since had one or more PFAS detections above the Proposed Federal PFAS MCLs or applicable State PFAS MCLs.</li>
+    </ol>
+    <div class="alert alert-primary" style="display:flex">
+        <i class="bi bi-info-circle h5" style="padding-right:5px; color:blue; width:5%"></i>
+        <p style="margin: 0px;">Note that, based on the above, there are a maximum of two (2) opportunities for a PWS to submit a Supplemental Fund Claim for a given "unimpacted" source. For example,
+            suppose a source by the name of "Well-1" is deemed "unimpacted" at the time of the action fund claim filing. The first Supplemental
+            Fund Claim that could be filed for Well-1 is when the first PFAS detection is identified for the source, but said detection is below
+        the Proposed Federal PFAS MCLs and any applicable State PFAS MCLs. The second Supplemental Fund Claim that can be filed for Well-1 is when PFAS detections go
+        from being <strong>below</strong> Proposed Federal MCLs and any applicable State PFAS MCLs to <strong>exceeding</strong> any Proposed Federal
+        MCLs and any applicable State PFAS MCLs. </p>
+    </div>
+</div>
+
+
+<div class="card-alt">
+    <h5 style="border-bottom:2px solid rgba(0, 0, 0, 0.5)">Timeframe</h5>
+    <p>Supplemental Fund claims, for both 3M/Dupont and Tyco/BASF, can be submitted up to and including December 31, 2030.</p>
+</div>
+
+
+<div class="card-alt">
+    <h5 style="border-bottom:2px solid rgba(0, 0, 0, 0.5)">Submittal Process</h5>
+    <p>If you are interested in submitting a supplemental claim relative to either 3M/DuPont or Tyco/BASF, please notify EH&E by
+    navigating to the appropriate "Supplemental Fund Claims" portion of this website and following the on-screen instructions. For example,
+    if you are trying to submit a Supplemental Fund Claim relative to 3M/DuPont, click the "3M/DuPont" dropdown in the navigation bar, then
+    click on "Supplemental Fund Claims" &mdash; this site will have instructions on how to proceed. </p>
+</div>
+
+
+<div class="card-alt">
+    <h5 style="border-bottom:2px solid rgba(0, 0, 0, 0.5)">Definitions</h5>
+    <p><span class="bold-italic-underline">Proposed Federal PFAS MCLs:</span> This refers to the federal PFAS MCLs proposed by the Environmental Protection Agency (EPA)
+        in 88 Fed. Reg. 18,638, 18,748 (March 29, 2023). In summary, the EPA proposed the following MCLs:
+    </p>
+    <ul>
+        <li><strong>PFOS:</strong> 4 ng/L (ppt)</li>
+        <li><strong>PFOA:</strong> 4 ng/L (ppt)</li>
+        <li>A Hazard Index (HI) of 1.0 relative to the combined Hazard Quotients (HQs) for the following four analytes:
+            <ol>
+                <li style="padding: 10px 0px 5px 0px;">PFHxS (reference value of 9 ppt)</li>
+                <li style="padding: 5px 0px;">HFPO-DA (reference value of 10 ppt)</li>
+                <li style="padding: 5px 0px;">PFNA (reference value of 10 ppt)</li>
+                <li style="padding: 5px 0px 10px 0px;">PFBS (reference value of 2000 ppt)</li>
+            </ol>
+        </li>
+        <p> The last MCL requires some more explanation. A HQ is calculated by dividing a measured concentration of an analyte
+            by some reference value. The reference value for each analyte is provided in the list above. So, for example, the
+            HQ for a source with a measured PFNA concentration of 5 ppt would be calculated as follows:
+        <div>
+            <math display="block" style="font-size:18px; margin:auto;">
+                <msub>
+                    <mi>HQ</mi>
+                    <mi>PFNA</mi>
+                </msub>
+                <mo>=</mo>
+                <mfrac>
+                    <msub>
+                      <mi>5.0 ppt</mi>
+                      <mi>PFNA-measured</mi>
+                    </msub>
+                    <msub>
+                      <mi>10.0 ppt</mi>
+                      <mi>PFNA-reference</mi>
+                    </msub>
+                </mfrac>
+                <mo>=</mo>
+                <mn>0.5</mn>
+            </math>
+        </div>
+        <br>
+        <p>So, to determine the HI relative to PFHxS, HFPO-DA, PFNA, and PFBS, the following equation can be used:</p>
+        <div>
+            <math display="block" style="font-size:18px; margin:auto;">
+                <mi>HI</mi>
+                <mo>=</mo>
+                <msub>
+                    <mi>HQ</mi>
+                    <mi>PFHxS</mi>
+                </msub>
+                <mo>+</mo>
+                <msub>
+                    <mi>HQ</mi>
+                    <mi>HFPO-DA</mi>
+                </msub>
+                <mo>+</mo>
+                <msub>
+                    <mi>HQ</mi>
+                    <mi>PFNA</mi>
+                </msub>
+                <mo>+</mo>
+                <msub>
+                    <mi>HQ</mi>
+                    <mi>PFBS</mi>
+                </msub>
+            </math>
+        </div>
+    </ul>
+    <br>
+    <p><span class="bold-italic-underline">State PFAS MCLs: </span>These are state-specific MCLs for PFAS analytes that were effective at or before the Settlement Date relative to
+    3M/DuPont and Tyco/BASF, as applicable.</p>
+</div>
+
+
+
+{% endblock %}
