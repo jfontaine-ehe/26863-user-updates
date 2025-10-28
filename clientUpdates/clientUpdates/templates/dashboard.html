@@ -35,20 +35,38 @@
 
         <div>
 
-            <p>Use the "Submit Notification" button to notify EH&E staff once <strong>{{pws.pwsid}}</strong> is
-            ready to file a Supplemental Fund Claim for an eligible source. This would occur when:</p>
-
+            <h5 style="border-bottom: 2px solid rgba(8,66,152,0.25); margin-bottom:10px;">Please note the following:</h5>
             <ol>
+                <li>
+                    <p>Use the "Submit Notification" button to notify EH&E staff once <strong>{{pws.pwsid}}</strong> is
+                    ready to file a Supplemental Fund Claim for an eligible source. This would occur when:</p>
 
-                <li style="text-align:left;">A source was "unimpacted" (i.e., there was no measureable concentration
-                    of PFAS detected in the water source) at the time of filing the action fund claim but has since
-                    exhibited detections of PFAS; OR</li>
+                    <ul>
+                        <li style="text-align:left;">A source was "unimpacted" (i.e., there was no measureable concentration
+                            of PFAS detected in the water source) at the time of filing the action fund claim but has since
+                            exhibited detections of PFAS; OR</li>
+
+                        <br>
+
+                        <li style="text-align:left;">A source exhibited PFAS detections <strong>below</strong> the Proposed Federal PFAS MCLs or applicable State PFAS MCLs at
+                                the time of filing the action fund claim, but have since had one or more PFAS detections above the Proposed Federal PFAS MCLs or applicable State PFAS MCLs.</li>
+                    </ul>
+                </li>
+
                 <br>
 
-                <li style="text-align:left;">A source exhibited PFOA and PFOS detections below the proposed Federal MCL of 4 ppt (ng/L) at the time of
-                filing the action fund claim but has since had a PFOA or PFOS detection above 4 ppt.</li>
+<!--                <li>
+                    <p>Supplemental Fund Claims can be submitted at any time up to and including December 31, 2030.</p>
+                </li>
 
+                <li>
+                    <p>A Supplemental Fund Claim can be submitted for each source a maximum of two times.</p>
+                </li>-->
             </ol>
+
+            <p>Please refer to our <a style="color:blue;" href="{% url 'supplemental_info' %}">Supplemental Fund Information</a> page for more details on the requirements
+            of the Supplemental Funds.</p>
+
 
         </div>
 

@@ -95,6 +95,23 @@ h4 {
     text-align:center;
 }
 
+.card-alt{
+
+    background-color:white;
+    border-radius:20px;
+    padding:20px;
+    margin:20px 0px;
+
+}
+
+.bold-italic-underline {
+
+    font-weight: bold;
+    font-style: italic;
+    text-decoration: underline;
+
+}
+
 .card-body {
     padding: 20px;
 }

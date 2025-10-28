@@ -158,6 +158,11 @@ def payment_dashboard(request, claim):
 
 
 @login_required
+def supplemental_info(request):
+    return render(request, 'supplemental_info.html')
+
+
+@login_required
 def source_payment_info(request, claim):
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     pws_record = Pws.objects.get(form_userid=request.user.username)
