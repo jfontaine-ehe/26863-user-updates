@@ -7,10 +7,12 @@
     <h5 class="no-bottom-border" style="text-align:center; font-style:italic; margin-bottom:20px;">{{source.source_name}}</h5>
 
     {% if not impacted %}
-        <div class="alert alert-primary" style="display:flex">
-            <i class="bi bi-info-circle h5" style="padding-right:2px; color:blue; width:5%"></i>
-            <p style="text-align:left">This source was <strong>unimpacted</strong> by PFAS; therefore there are no PFAS, maximum flow rate, or annual
-                production data to be shown in the sections below.</p>
+        <div class="alert alert-primary" style="display:flex;">
+            <i class="bi bi-info-circle h5" style="padding-right:5px; color:blue; width:5%"></i>
+            <p style="text-align:left; margin:0px;">This source was <strong>unimpacted</strong> by PFAS, meaning there were no detections of PFAS at the time
+                of filing the {% if claim == "3M_DuPont" %} 3M/Dupont Phase I Action Fund Claim{% else %} Tyco/BASF Action Fund Claim{% endif %}. Additionally, since this source
+                was unimpacted, max flow rate and annual production data were not required to be submitted. Therefore, there is no useful information
+                to display for this source. If you have any questions, please <a style="color:blue;" href="{% url 'contact_default' %}">contact</a> EH&E.</p>
         </div>
     {% elif impacted %}
         <div class="card">

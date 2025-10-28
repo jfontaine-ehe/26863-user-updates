@@ -27,7 +27,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('dashboard/<str:claim>/<int:supplemental>/', views.dashboard, name='dashboard'),
     path('payment_dashboard/<str:claim>/', views.payment_dashboard, name='payment_dashboard'),
-    path('payment_details/', views.payment_details, name = 'payment_details'),
+    #path('payment_details/', views.payment_details, name = 'payment_details'),
     path('landing_page/', views.landing_page, name = 'landing_page'),
     #path('data_display/<str:claim>/', views.data_display, name = 'data_display'),
     path('dashboard_simple/<str:claim>/<int:supplemental>/', views.dashboard, name='dashboard_simple'),
@@ -38,6 +38,7 @@ urlpatterns = [
     path('contact/', views.contact_view, name='contact_default'),
     path('contact/<str:claim>/<path:source_name>/<int:message>', views.contact_view, name='contact_phase1'),
     path('activity/', views.activity_view, name='activity'),
-    path('source_payment_info/<str:claim>/', views.source_payment_info, name='source_payment_info')
+    path('source_payment_info/<str:claim>/', views.source_payment_info, name='source_payment_info'),
+    path('supplemental_info/', views.supplemental_info, name='supplemental_info')
 
 ]
