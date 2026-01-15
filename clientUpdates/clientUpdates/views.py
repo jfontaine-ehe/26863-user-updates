@@ -201,13 +201,28 @@ def payment_details(request):
 @login_required
 def landing_page(request):
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
-    pws_record = Pws.objects.get(form_userid=request.user.username)
+    try:
+        pws_record = Pws.objects.get(form_userid=request.user.username)
 
-    context = {
-        'pws': pws_record,
-    }
+        context = {
+            'pws': pws_record,
+        }
 
-    return render(request, 'landing_page.html', context)
+        return render(request, 'landing_page.html', context)
+    # exception handling for if the query in the above try statement returns nothing.
+    except Pws.DoesNotExist:
+
+        context = {
+            'pws': request.user.username,
+        }
+
+        return render(request, 'no_data_landing_page.html', context)
+
+
+
+
+
+
 
 
 @login_required
