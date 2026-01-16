@@ -550,6 +550,43 @@ def contact_view(request, claim=None, source_name=None, message=0):
                                             'pwsid': pwsid,
                                             'claim': claim})
 
+@login_required
+def no_data_contact_view(request):
+    pwsid = request.user.username
+    recipients = settings.EMAIL_RECIPIENTS
+
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            full_message = f"From: {name}\n\n{message}"
+
+            email_message = EmailMessage(
+                subject=f"{subject} (from {pwsid})",
+                body=full_message,
+                from_email=settings.EMAIL_HOST_USER,
+                to=recipients,
+                reply_to=[email],
+            )
+
+            email_message.send(fail_silently=False)
+            messages.success(request, "This is a test!")
+
+            return render(request, 'no_data_landing_page.html')
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'error': 'Invalid form submission'}, status=400)
+
+    else:
+        form = ContactForm()
+
+    return render(request, 'no_data_contact.html', {'form': form,'pwsid': pwsid})
+
+
 
 @login_required
 def activity_view(request):

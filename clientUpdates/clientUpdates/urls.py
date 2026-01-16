@@ -40,6 +40,7 @@ urlpatterns = [
     path('activity/', views.activity_view, name='activity'),
     path('source_payment_info/<str:claim>/', views.source_payment_info, name='source_payment_info'),
     path('supplemental_info/', views.supplemental_info, name='supplemental_info'),
-    path('no_data_landing_page/', views.landing_page, name='no_data_landing_page')
+    path('no_data_landing_page/', views.landing_page, name='no_data_landing_page'),
+    path('no_data_contact/', views.no_data_contact_view, name = 'no_data_contact')
 
 ]
