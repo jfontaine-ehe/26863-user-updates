@@ -5,7 +5,7 @@ from django.views.decorators.cache import never_cache
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
                      ClaimPfasResult, paymentInfo,
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
-                     pwsPaymentDist, srcPaymentDist)
+                     pwsPaymentDist, srcPaymentDist, ClaimSubmission)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm
 
 # Custom functions
@@ -202,6 +202,8 @@ def payment_details(request):
 def landing_page(request):
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     try:
+
+        pws_submitted_claim = ClaimSubmission.objects.get(pwsid=request.user.username)
         pws_record = Pws.objects.get(form_userid=request.user.username)
 
         context = {
@@ -210,7 +212,7 @@ def landing_page(request):
 
         return render(request, 'landing_page.html', context)
     # exception handling for if the query in the above try statement returns nothing.
-    except Pws.DoesNotExist:
+    except ClaimSubmission.DoesNotExist:
 
         context = {
             'pws': request.user.username,
