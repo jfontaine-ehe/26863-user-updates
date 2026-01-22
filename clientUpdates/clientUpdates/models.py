@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+import django_localflavor_us.us_states as us_states
 from django.db import models
 
 
@@ -830,9 +830,13 @@ class pwsInfo(models.Model):
     pws_name = models.TextField(blank=True, null=True)
     ein = models.TextField(blank=True, null=True)
     facility_address = models.TextField(blank=True, null=True)
-    facility_city = models.TextField(blank=True, null=True)
+    facility_city = models.CharField(choices=us_states.STATE_CHOICES, null=True)
     facility_state = models.TextField(blank=True, null=True)
     facility_zip = models.TextField(blank=True, null=True)
+    mailing_address = models.TextField(blank=True, null=True)
+    mailing_city = models.CharField(choices=us_states.STATE_CHOICES, null=True)
+    mailing_state = models.TextField(blank=True, null=True)
+    mailing_zip = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True

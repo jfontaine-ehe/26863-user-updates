@@ -1,6 +1,7 @@
 # Custom models and forms
 from django.contrib.auth import logout
 from django.views.decorators.cache import never_cache
+import django_localflavor_us.us_states as us_states
 
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
                      ClaimPfasResult, paymentInfo,
@@ -651,5 +652,5 @@ def pwsInfo(request):
         form = pwsInfoForm()
         form.fields['pwsid'].label = 'This is a test'
 
-    return render(request, "pws_info_form.html", {"form": form})
+    return render(request, "pws_info_form.html", {"form": form, "stateOptions": us_states.STATE_CHOICES})
 
