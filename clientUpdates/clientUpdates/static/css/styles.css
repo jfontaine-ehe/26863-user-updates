@@ -389,3 +389,17 @@ td::before {
     border-top: 0px;
 
 }
+
+.tf-label {
+
+    display:block;
+    margin:auto;
+    width: 80%;
+
+}
+
+.tf-select{
+
+    width:20%;
+
+}
