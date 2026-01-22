@@ -156,6 +156,13 @@ button, .btn {
     box-shadow: none;
 }
 
+
+.form-group {
+
+    padding: 10px;
+
+}
+
 /* Table styling */
 table {
     width: 100%;

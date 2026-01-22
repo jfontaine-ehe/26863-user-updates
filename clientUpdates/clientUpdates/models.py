@@ -823,3 +823,17 @@ class pwsCreds(models.Model):
     class Meta:
         managed = True
         db_table = 'consortium_pws_creds'
+
+class pwsInfo(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    pwsid = models.TextField(blank=True, null=True)
+    pws_name = models.TextField(blank=True, null=True)
+    ein = models.TextField(blank=True, null=True)
+    facility_address = models.TextField(blank=True, null=True)
+    facility_city = models.TextField(blank=True, null=True)
+    facility_state = models.TextField(blank=True, null=True)
+    facility_zip = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'pwsInfo'

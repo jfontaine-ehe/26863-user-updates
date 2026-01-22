@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from .models import FlowRate, PfasResult
+from .models import FlowRate, PfasResult, pwsInfo
 
 class MaxFlowRateUpdateForm(forms.ModelForm):
     """
@@ -123,4 +123,19 @@ class ContactForm(forms.Form):
     email = forms.EmailField(required=True, label="Your Email")
     subject = forms.CharField(max_length=150, required=True, label="Subject")
     message = forms.CharField(widget=forms.Textarea, required=True, label="Message")
-    
+
+
+class pwsInfoForm(forms.ModelForm):
+    class Meta:
+
+        model = pwsInfo
+
+        fields = [
+            'pwsid',
+            'pws_name',
+            'ein',
+            'facility_address',
+            'facility_city',
+            'facility_state',
+            'facility_zip'
+        ]

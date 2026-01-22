@@ -6,7 +6,7 @@ from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRa
                      ClaimPfasResult, paymentInfo,
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
                      pwsPaymentDist, srcPaymentDist, ClaimSubmission)
-from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm
+from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm
 
 # Custom functions
 from .utils.handler import handle_update
@@ -639,3 +639,17 @@ def logout_view(request):
     if request.method == 'POST':
         logout(request)
         return redirect(f"{settings.LOGIN_URL}")
+
+@never_cache
+def pwsInfo(request):
+    if request.method == "POST":
+        form = pwsInfoForm(request.POST)
+        if form.is_valid():
+            print("here")
+
+    else:
+        form = pwsInfoForm()
+        form.fields['pwsid'].label = 'This is a test'
+
+    return render(request, "pws_info_form.html", {"form": form})
+
