@@ -393,8 +393,8 @@ td::before {
 .tf-label {
 
     display:block;
-    margin:auto;
-    width: 80%;
+    margin: auto 0px;
+    width: 60%;
 
 }
 
@@ -403,3 +403,11 @@ td::before {
     width:20%;
 
 }
+
+.grey-bottom {
+
+    border-bottom: 2px solid rgba(210, 210, 210, 0.5)
+
+}
+
+

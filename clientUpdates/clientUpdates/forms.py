@@ -163,6 +163,7 @@ class pwsInfoForm(forms.ModelForm):
             'residents_25',
             'pop_fewer_3300_062223',
             'pop_fewer_3300_063023',
+            'pop_fewer_3300_051524',
             'pws_in_usa',
             'pws_owned_state_fed',
             'sdwis_owner_code',

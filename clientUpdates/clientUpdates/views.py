@@ -645,6 +645,7 @@ def logout_view(request):
 def pwsInfo(request):
     if request.method == "POST":
         form = pwsInfoForm(request.POST)
+        form.errors.as_data()
         if form.is_valid():
             print("here")
 
@@ -653,4 +654,3 @@ def pwsInfo(request):
         form.fields['pwsid'].label = 'This is a test'
 
     return render(request, "pws_info_form.html", {"form": form, "stateOptions": us_states.STATE_CHOICES})
-

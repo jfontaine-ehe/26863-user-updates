@@ -1,6 +1,7 @@
 import django_localflavor_us.us_states as us_states
 from django.db import models
 
+state_abbrev = [elem[0] for elem in us_states.STATE_CHOICES]
 
 ## DJANGO user ##
 class AuthGroup(models.Model):
@@ -830,12 +831,12 @@ class pwsInfo(models.Model):
     pws_name = models.TextField(blank=True, null=True)
     ein = models.TextField(blank=True, null=True)
     facility_address = models.TextField(blank=True, null=True)
-    facility_city = models.CharField(choices=us_states.STATE_CHOICES, null=True)
-    facility_state = models.TextField(blank=True, null=True)
+    facility_city = models.TextField(blank=True, null=True)
+    facility_state = models.CharField(blank=True, choices=us_states.STATE_CHOICES, null=True)
     facility_zip = models.TextField(blank=True, null=True)
     mailing_address = models.TextField(blank=True, null=True)
-    mailing_city = models.CharField(choices=us_states.STATE_CHOICES, null=True)
-    mailing_state = models.TextField(blank=True, null=True)
+    mailing_city = models.TextField(blank=True, null=True)
+    mailing_state = models.CharField(blank=True, choices=us_states.STATE_CHOICES, null=True)
     mailing_zip = models.TextField(blank=True, null=True)
     primary_contact_name = models.TextField(blank=True, null=True)
     primary_contact_title = models.TextField(blank=True, null=True)
