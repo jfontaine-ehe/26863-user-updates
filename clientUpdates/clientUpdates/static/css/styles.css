@@ -410,4 +410,10 @@ td::before {
 
 }
 
+.unfilled-value {
+
+    border: 2px solid red !important;
+
+}
+
 

@@ -175,4 +175,3 @@ class pwsInfoForm(forms.ModelForm):
             'eurofins_auth',
             'comments'
         ]
-

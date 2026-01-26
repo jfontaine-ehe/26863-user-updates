@@ -1,7 +1,7 @@
 import django_localflavor_us.us_states as us_states
 from django.db import models
 
-state_abbrev = [elem[0] for elem in us_states.STATE_CHOICES]
+
 
 ## DJANGO user ##
 class AuthGroup(models.Model):
