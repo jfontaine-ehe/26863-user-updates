@@ -645,12 +645,16 @@ def logout_view(request):
 def pwsInfo(request):
     if request.method == "POST":
         form = pwsInfoForm(request.POST)
-        form.errors.as_data()
         if form.is_valid():
-            print("here")
+            form.save()
+            return render(request, 'form_success.html')
 
     else:
         form = pwsInfoForm()
-        form.fields['pwsid'].label = 'This is a test'
 
     return render(request, "pws_info_form.html", {"form": form, "stateOptions": us_states.STATE_CHOICES})
+
+@never_cache
+@login_required
+def formSuccess(request):
+    return render(request, 'form_success.html')
