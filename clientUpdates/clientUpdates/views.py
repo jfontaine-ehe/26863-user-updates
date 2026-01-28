@@ -646,9 +646,11 @@ def pwsInfo(request):
     if request.method == "POST":
         form = pwsInfoForm(request.POST)
         if form.is_valid():
-            form.save()
-            return render(request, 'form_success.html')
-
+            try:
+                form.save()
+                return render(request, 'form_success.html')
+            except Exception as e:
+                print(e)
     else:
         form = pwsInfoForm()
 

@@ -826,7 +826,7 @@ class pwsCreds(models.Model):
         db_table = 'consortium_pws_creds'
 
 class pwsInfo(models.Model):
-    id = models.BigAutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, null=False, blank=False)
     pwsid = models.TextField(blank=True, null=True)
     pws_name = models.TextField(blank=True, null=True)
     ein = models.TextField(blank=True, null=True)
@@ -876,4 +876,4 @@ class pwsInfo(models.Model):
 
     class Meta:
         managed = True
-        db_table = 'pwsInfo'
+        db_table = 'pws_info'
