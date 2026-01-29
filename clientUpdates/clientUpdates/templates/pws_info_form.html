@@ -10,38 +10,30 @@
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>General PWS Information</h3>
             <div class="form-group">
-                <label for="pwsid"> PWS ID </label>
-                <input required id="pwsid" name="pwsid" type="text" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="pws_name"> PWS Name </label>
-                <input required id="pws_name" name="pws_name" type="text" class="form-control">
-            </div>
-            <div class="form-group">
                 <label for="ein">Employee Identification Number</label>
-                <input required id="ein" name="ein" type="text" class="form-control">
+                <input required id="ein" name="ein" type="text" class="form-control" value="{{form.ein.value|default_if_none:''}}">
             </div>
             <div class="form-group">
                 <label for="facility_address">Facility Address</label>
-                <input required id="facility_address" name="facility_address" type="text" class="form-control">
+                <input required id="facility_address" name="facility_address" type="text" class="form-control" value="{{form.facility_address.value|default_if_none:''}}">
             </div>
             <div class="form-row" style="display:flex; justify-content:space-between;">
                 <div class="form-group" style="width:50%;">
                     <label for="facility_city">Facility City</label>
-                    <input required id="facility_city" name="facility_city" type="text" class="form-control">
+                    <input required id="facility_city" name="facility_city" type="text" class="form-control" value="{{form.facility_city.value|default_if_none:''}}">
                 </div>
                 <div class="form-group" style="width:20%;">
                     <label for="facility_state">Facility State</label>
                     <select required id="facility_state" name="facility_state" class="form-control">
-                        <option disabled selected value=""></option>
+                        <option disabled {% if not form.facility_state.value %} selected {% endif %} value=""></option>
                         {% for i in stateOptions %}
-                        <option value="{{i.0}}">{{i.0}}</option>
+                        <option value="{{i.0}}" {% if form.facility_state.value == i.0 %} selected {% endif %}>{{i.0}}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="form-group" style="width:30%;">
                     <label for="facility_zip">Facility Zip Code</label>
-                    <input required id="facility_zip" name="facility_zip" type="text" class="form-control">
+                    <input required id="facility_zip" name="facility_zip" type="text" class="form-control" value="{{form.facility_zip.value|default_if_none:''}}">
                 </div>
             </div>
         </div>
@@ -80,7 +72,7 @@
             <h3>Primary Contact</h3>
             <div class="form-group">
                 <label for="primary_contact_name">Name</label>
-                <input required id="primary_contact_name" name="primary_contact_name" type="text" class="form-control">
+                <input required id="primary_contact_name" name="primary_contact_name" value="{{form.primary_contact_name.value|default_if_none:''}}" type="text" class="form-control">
             </div>
             <div class="form-group">
                 <label for="primary_contact_title">Title</label>

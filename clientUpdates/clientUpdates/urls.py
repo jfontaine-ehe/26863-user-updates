@@ -42,7 +42,8 @@ urlpatterns = [
     path('supplemental_info/', views.supplemental_info, name='supplemental_info'),
     path('no_data_landing_page/', views.landing_page, name='no_data_landing_page'),
     path('no_data_contact/', views.no_data_contact_view, name='no_data_contact'),
-    path('pws-info/', views.pwsInfo, name='pws-info'),
-    path('form_success/', views.formSuccess, name='form_success')
+    path('pws-info/', views.pwsInfoView, name='pws-info'),
+    path('form_success/', views.formSuccess, name='form_success'),
+    path('source-form/', views.sourceForm, name='source-form')
 
 ]
