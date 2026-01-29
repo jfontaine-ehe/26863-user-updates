@@ -28,6 +28,29 @@ from itertools import chain
 from datetime import datetime
 from django.db.models import Q, Sum
 
+
+sdwisOwnerCodes = {("L", "L-Local Government"),
+                   ("M", "M-Public/Private"),
+                   ("P", "P-Private"),
+                   ("N", "N-Native American"),
+                   ("S", "S-State Government"),
+                   ("F", "F-Federal Government"),
+                   ("unknown", "Unknown")}
+
+sdwisFacilityCodes = {("cws", "Community Water System"),
+                      ("ntncws", "Non-Transient Non-Community Water System"),
+                      ("tncws", "Transient Non-Community Water System"),
+                      ("unknown", "Unknown")}
+
+sdwisActivityCodes = {("active", "Active"),
+                      ("inactive", "Inactive"),
+                      ("change", "Change from public to non-public"),
+                      ("merge", "Merged with another system"),
+                      ("potential", "Potential future system to be regulated"),
+                      ("unknown", "Unknown")}
+
+
+
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
 # class CustomLoginView(LoginView):
 #     template_name = 'login.html'
@@ -655,7 +678,11 @@ def pwsInfoView(request):
         x = get_object_or_404(pwsInfo, id=1, pwsid='asdf')
         form = pwsInfoForm(instance=x)
 
-    return render(request, "pws_info_form.html", {"form": form, "stateOptions": us_states.STATE_CHOICES})
+    return render(request, "pws_info_form.html", {"form": form,
+                                                  "stateOptions": us_states.STATE_CHOICES,
+                                                  "sdwisOwnerCodes": sdwisOwnerCodes,
+                                                  "sdwisFacilityCodes": sdwisFacilityCodes,
+                                                  "sdwisActivityCodes": sdwisActivityCodes})
 
 @never_cache
 @login_required
