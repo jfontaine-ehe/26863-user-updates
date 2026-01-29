@@ -40,7 +40,7 @@
                 <select required id="pws_owns_source" name="pws_owns_source" class="form-control tf-select">
                     <option disabled {% if not phase2SourceInfoForm.pws_owns_source.value %} selected {% endif %} value=""></option>
                     {% for option in yesNoUnknown %}
-                        <option {% if phase2SourceInfoForm.pws_owns_source.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
+                        <option {% if phase2SourceInfoForm.pws_owns_source.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -50,10 +50,70 @@
                 <select required id="source_co_owned" name="source_co_owned" class="form-control tf-select">
                     <option disabled {% if not phase2SourceInfoForm.source_co_owned.value %} selected {% endif %} value=""></option>
                     {% for option in yesNoUnknown %}
-                        <option {% if phase2SourceInfoForm.source_co_owned.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
+                        <option {% if phase2SourceInfoForm.source_co_owned.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
             </div>
+
+
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
+                <label for="pws_operates_source" class="tf-label">Does the PWS operate this Water Source?</label>
+                <select required id="pws_operates_source" name="pws_operates_source" class="form-control tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.pws_operates_source.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.pws_operates_source.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
+                <label for="pws_purchased" class="tf-label">Is this Water Source a purchased water connection?</label>
+                <select required id="pws_purchased" name="pws_purchased" class="form-control tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.pws_purchased.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.pws_purchased.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
+                <label for="pws_drinking_water" class="tf-label">Is this Water Source a purchased water connection?</label>
+                <select required id="pws_drinking_water" name="pws_drinking_water" class="form-control tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.pws_drinking_water.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.pws_drinking_water.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
+                <label for="is_part_of_idws" class="tf-label">Is this Water Source a purchased water connection?</label>
+                <select required id="is_part_of_idws" name="is_part_of_idws" class="form-control tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.is_part_of_idws.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.is_part_of_idws.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+
+<!--            Left off trying to incorporate pop ups in forms for the yes/no section-->
+
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
+                <label for="is_part_of_idws" class="tf-label">Is this Water Source a purchased water connection?</label>
+                <select required id="is_part_of_idws" name="is_part_of_idws" class="form-control tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.is_part_of_idws.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.is_part_of_idws.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+
+
 
         </div>
     </form>

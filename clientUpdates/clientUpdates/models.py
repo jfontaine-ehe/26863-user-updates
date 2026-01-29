@@ -885,7 +885,6 @@ class phase2SourceInfo(models.Model):
     pws_owns_source = models.TextField(blank=True, null=True)
     source_co_owned = models.TextField(blank=True, null=True)
     pws_operates_source = models.TextField(blank=True, null=True)
-    source_operated_by = models.TextField(blank=True, null=True)
     pws_purchased = models.BooleanField(blank=True, null=True)
     pws_drinking_water = models.BooleanField(blank=True, null=True)
     is_part_of_idws = models.BooleanField(blank=True, null=True)
