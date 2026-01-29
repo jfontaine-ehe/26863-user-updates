@@ -422,4 +422,16 @@ td::before {
 
 }
 
+.hidden {
+
+    display: none;
+
+}
+
+.show-block {
+
+    display: block;
+
+}
+
 

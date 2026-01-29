@@ -1,8 +1,6 @@
 import django_localflavor_us.us_states as us_states
 from django.db import models
 
-
-
 ## DJANGO user ##
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
@@ -826,6 +824,7 @@ class pwsCreds(models.Model):
         db_table = 'consortium_pws_creds'
 
 class pwsInfo(models.Model):
+
     id = models.AutoField(primary_key=True, null=False, blank=False)
     pwsid = models.TextField(blank=True, null=True)
     pws_name = models.TextField(blank=True, null=True)
@@ -871,9 +870,34 @@ class pwsInfo(models.Model):
     eurofins_auth = models.TextField(blank=True, null=True)
     comments = models.TextField(blank=True, null=True)
 
-
-
-
     class Meta:
         managed = True
         db_table = 'pws_info'
+
+
+class phase2SourceInfo(models.Model):
+
+    id = models.AutoField(primary_key=True, null=False, blank=False)
+    pwsid = models.TextField(blank=True, null=True)
+    pws_name = models.TextField(blank=True, null=True)
+    source_name = models.TextField(blank=True, null=True)
+    source_type = models.TextField(blank=True, null=True)
+    pws_owns_source = models.TextField(blank=True, null=True)
+    source_co_owned = models.TextField(blank=True, null=True)
+    pws_operates_source = models.TextField(blank=True, null=True)
+    source_operated_by = models.TextField(blank=True, null=True)
+    pws_purchased = models.BooleanField(blank=True, null=True)
+    pws_drinking_water = models.BooleanField(blank=True, null=True)
+    is_part_of_idws = models.BooleanField(blank=True, null=True)
+    is_idws_cooperating = models.BooleanField(blank=True, null=True)
+    is_idws_responsible_pfas = models.BooleanField(blank=True, null=True)
+    partner_name = models.TextField(blank=True, null=True)
+    partner_pwsid = models.TextField(blank=True, null=True)
+    idws_partner_relationship = models.TextField(blank=True, null=True)
+    claimed_share_percent = models.FloatField(blank=True, null=True)
+    idws_adjustment_factor = models.FloatField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'phase2_source_info'
+

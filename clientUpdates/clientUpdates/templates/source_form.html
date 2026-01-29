@@ -1,0 +1,93 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+<div>
+    <form id="sourceForm" action="/source-form/" method="post" onSubmit="return confirm('Are you sure you would like to submit this form?')">
+        {% csrf_token %}
+
+        <!--Source Name-->
+        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>Source Name</h3>
+            <div class="form-group">
+                <label for="source_name">Please enter the source name:</label>
+                <input required id="source_name" name="source_name" type="text" class="form-control" value="{{phase2SourceInfoForm.source_name.value|default_if_none:''}}">
+            </div>
+        </div>
+
+        <!--Source Type-->
+        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>Source Type</h3>
+            <div class="form-group">
+                <label for="source_type">Please enter the source name:</label>
+                <select required id="source_type" name="source_type" type="text" class="form-control">
+                    <option disabled {% if not phase2SourceInfoForm.source_type_other.value %} selected {% endif %} value=""></option>
+                    {% for option in sourceTypeOptions %}
+                        <option {% if phase2SourceInfoForm.source_type.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div id="sourceTypeOther" class="form-group hidden">
+                <label for="source_type_other">Please describe the source type:</label>
+                <input required id="source_type_other" name="source_type_other" type="text" class="form-control" value="{{phase2SourceInfoForm.source_type_other.value|default_if_none:''}}">
+            </div>
+        </div>
+
+    <!--- Yes/No Questions -->
+        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>Yes/No Questions</h3>
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
+                <label for="pws_owns_source" class="tf-label">Does the PWS own this Water Source?</label>
+                <select required id="pws_owns_source" name="pws_owns_source" class="form-control tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.pws_owns_source.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.pws_owns_source.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
+                <label for="source_co_owned" class="tf-label">Are there any co-owners to this water source?</label>
+                <select required id="source_co_owned" name="source_co_owned" class="form-control tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.source_co_owned.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.source_co_owned.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+
+
+<script>
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const sourceTypeSelect = document.getElementById('source_type');
+        const sourceTypeOtherDiv = document.getElementById('sourceTypeOther');
+
+        // create function that toggles whether the 'hidden' class is applied
+        function toggleOther() {
+            sourceTypeOtherDiv.classList.toggle(
+                "hidden", sourceTypeSelect.value !== "Other"
+
+            )
+
+        };
+
+        // once the page is loaded, trigger the function to hide/show based on value
+        toggleOther();
+
+        // apply function any time there are changes
+        sourceTypeSelect.addEventListener("change", toggleOther);
+
+
+    });
+
+
+</script>
+
+
+{% endblock %}

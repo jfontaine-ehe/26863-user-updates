@@ -7,7 +7,8 @@ from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRa
                      ClaimPfasResult, paymentInfo,
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
                      pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo)
-from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm
+from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
+    phase2SourceInfoForm
 
 # Custom functions
 from .utils.handler import handle_update
@@ -27,7 +28,6 @@ from django.http import JsonResponse, Http404
 from itertools import chain
 from datetime import datetime
 from django.db.models import Q, Sum
-
 
 sdwisOwnerCodes = {("L", "L-Local Government"),
                    ("M", "M-Public/Private"),
@@ -49,7 +49,9 @@ sdwisActivityCodes = {("active", "Active"),
                       ("potential", "Potential future system to be regulated"),
                       ("unknown", "Unknown")}
 
+yesNoUnknown = ("Yes", "No", "Unknown")
 
+sourceTypeOptions = {("GW", "Groundwater Well"), ("SW", "Surface Water"), ("Other", "Other")}
 
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
 # class CustomLoginView(LoginView):
@@ -244,12 +246,6 @@ def landing_page(request):
         }
 
         return render(request, 'no_data_landing_page.html', context)
-
-
-
-
-
-
 
 
 @login_required
@@ -577,6 +573,7 @@ def contact_view(request, claim=None, source_name=None, message=0):
                                             'pwsid': pwsid,
                                             'claim': claim})
 
+
 @login_required
 def no_data_contact_view(request):
     pwsid = request.user.username
@@ -611,8 +608,7 @@ def no_data_contact_view(request):
     else:
         form = ContactForm()
 
-    return render(request, 'no_data_contact.html', {'form': form,'pwsid': pwsid})
-
+    return render(request, 'no_data_contact.html', {'form': form, 'pwsid': pwsid})
 
 
 @login_required
@@ -664,6 +660,7 @@ def logout_view(request):
         logout(request)
         return redirect(f"{settings.LOGIN_URL}")
 
+
 @never_cache
 def pwsInfoView(request):
     if request.method == "POST":
@@ -684,6 +681,7 @@ def pwsInfoView(request):
                                                   "sdwisFacilityCodes": sdwisFacilityCodes,
                                                   "sdwisActivityCodes": sdwisActivityCodes})
 
+
 @never_cache
 @login_required
 def formSuccess(request):
@@ -692,4 +690,24 @@ def formSuccess(request):
 
 @never_cache
 def sourceForm(request):
-    return render(request, 'source_form.html')
+    if request.method == "POST":
+        form = phase2SourceInfoForm(request.POST)
+        if form.is_valid():
+            try:
+                form.save()
+                return render(request, 'form_success.html')
+            except Exception as e:
+                print(e)
+    else:
+        #x = get_object_or_404(pwsInfo, id=1, pwsid='asdf')
+        form1 = phase2SourceInfoForm()
+
+    context = {
+
+        "phase2SourceInfoForm": form1,
+        "yesNoUnknown": yesNoUnknown,
+        "sourceTypeOptions": sourceTypeOptions
+
+    }
+
+    return render(request, 'source_form.html', context=context)
