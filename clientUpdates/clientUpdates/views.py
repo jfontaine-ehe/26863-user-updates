@@ -8,7 +8,7 @@ from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRa
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
                      pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
-    phase2SourceInfoForm
+    phase2SourceInfoForm, phase2SourceMaxFlowForm
 
 # Custom functions
 from .utils.handler import handle_update
@@ -52,6 +52,10 @@ sdwisActivityCodes = {("active", "Active"),
 yesNoUnknown = ("Yes", "No", "Unknown")
 
 sourceTypeOptions = {("GW", "Groundwater Well"), ("SW", "Surface Water"), ("Other", "Other")}
+
+unitOptions = {("GPM", "GPM (Gallons Per Minute)"), ("GPY", "GPY (Gallons Per Year)"),
+               ("MGD", "MGD (Million Gallons Per Day"), ("AFPY", "AFPY (Acre-feet Per Year")}
+
 
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
 # class CustomLoginView(LoginView):
@@ -701,12 +705,15 @@ def sourceForm(request):
     else:
         #x = get_object_or_404(pwsInfo, id=1, pwsid='asdf')
         form1 = phase2SourceInfoForm()
+        form2 = phase2SourceMaxFlowForm()
 
     context = {
 
         "phase2SourceInfoForm": form1,
+        "phase2SourceMaxFlowForm": form2,
         "yesNoUnknown": yesNoUnknown,
-        "sourceTypeOptions": sourceTypeOptions
+        "sourceTypeOptions": sourceTypeOptions,
+        "unitOptions": unitOptions
 
     }
 

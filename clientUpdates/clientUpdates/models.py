@@ -878,22 +878,38 @@ class pwsInfo(models.Model):
 class phase2SourceInfo(models.Model):
 
     id = models.AutoField(primary_key=True, null=False, blank=False)
-    pwsid = models.TextField(blank=True, null=True)
-    pws_name = models.TextField(blank=True, null=True)
-    source_name = models.TextField(blank=True, null=True)
-    source_type = models.TextField(blank=True, null=True)
-    pws_owns_source = models.TextField(blank=True, null=True)
-    source_co_owned = models.TextField(blank=True, null=True)
-    co_owner_pwsid = models.TextField(blank=True, null=True)
-    co_owner_explained = models.TextField(blank=True, null=True)
-    pws_operates_source = models.TextField(blank=True, null=True)
-    pws_purchased = models.TextField(blank=True, null=True)
-    purchased_treatment = models.TextField(blank=True, null=True)
-    pws_drinking_water = models.TextField(blank=True, null=True)
-    is_part_of_idws = models.TextField(blank=True, null=True)
-    idws_explanation = models.TextField(blank=True, null=True)
+    pwsid = models.TextField(blank=True)
+    pws_name = models.TextField(blank=True)
+    source_name = models.TextField(blank=True)
+    source_type = models.TextField(blank=True)
+    source_type_other = models.TextField(blank=True)
+    pws_owns_source = models.TextField(blank=True)
+    source_co_owned = models.TextField(blank=True)
+    co_owner_pwsid = models.TextField(blank=True)
+    co_owner_explained = models.TextField(blank=True)
+    pws_operates_source = models.TextField(blank=True)
+    pws_purchased = models.TextField(blank=True)
+    pws_drinking_water = models.TextField(blank=True)
+    is_part_of_idws = models.TextField(blank=True)
+    idws_explanation = models.TextField(blank=True)
 
     class Meta:
         managed = True
         db_table = 'phase2_source_info'
+
+class phase2SourceMaxFlow(models.Model):
+
+    id = models.AutoField(primary_key=True, null=False, blank=False)
+    pwsid = models.TextField(blank=True)
+    pws_name = models.TextField(blank=True)
+    source_name = models.TextField(blank=True)
+    flow_rate = models.FloatField(blank=True, null=True)
+    units = models.TextField(blank=True)
+    flow_determination = models.TextField(blank=True)
+    file_name = models.TextField(blank=True)
+    comments = models.TextField(blank=True)
+
+    class Meta:
+        managed = True
+        db_table = 'phase2_source_max_flow'
 

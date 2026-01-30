@@ -18,7 +18,7 @@
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>Source Type</h3>
             <div class="form-group">
-                <label for="source_type">Please enter the source name:</label>
+                <label for="source_type">Please provide the source type:</label>
                 <select required id="source_type" name="source_type" type="text" class="form-control">
                     <option disabled {% if not phase2SourceInfoForm.source_type_other.value %} selected {% endif %} value=""></option>
                     {% for option in sourceTypeOptions %}
@@ -79,7 +79,7 @@
 
 
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
-                <label for="pws_drinking_water" class="tf-label">Is this Water Source a purchased water connection?</label>
+                <label for="pws_drinking_water" class="tf-label">Has the water form this Water Source ever been used as Drinking Water?</label>
                 <select required id="pws_drinking_water" name="pws_drinking_water" class="form-control tf-select">
                     <option disabled {% if not phase2SourceInfoForm.pws_drinking_water.value %} selected {% endif %} value=""></option>
                     {% for option in yesNoUnknown %}
@@ -90,7 +90,7 @@
 
 
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
-                <label for="is_part_of_idws" class="tf-label">Is this Water Source a purchased water connection?</label>
+                <label for="is_part_of_idws" class="tf-label">Is this Water Source part of an Interrelated Drinking Water System (IDWS)?</label>
                 <select required id="is_part_of_idws" name="is_part_of_idws" class="form-control tf-select">
                     <option disabled {% if not phase2SourceInfoForm.is_part_of_idws.value %} selected {% endif %} value=""></option>
                     {% for option in yesNoUnknown %}
@@ -100,19 +100,58 @@
             </div>
         </div>
 
+        <!--Hidden divs but will appear based on yes/no responses-->
+
         <div id="coOwnerInfo" class="card-alt hidden" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>Source Co-Owner Information</h3>
             <div class="form-group">
                 <label for="co_owner_pwsid">Co-owner PWSID:</label>
-                <input required id="co_owner_pwsid" name="co_owner_pwsid" type="text" class="form-control" value="{{phase2SourceInfoForm.co_owner_pwsid.value|default_if_none:''}}">
+                <input id="co_owner_pwsid" name="co_owner_pwsid" type="text" class="form-control" value="{{phase2SourceInfoForm.co_owner_pwsid.value|default_if_none:''}}">
             </div>
-            <div class="form-group hidden">
+            <div class="form-group">
                 <label for="co_owner_explained">Please describe the PWS's relationship with the co-owner:</label>
-                <input required id="co_owner_explained" name="co_owner_explained" type="text" class="form-control" value="{{phase2SourceInfoForm.co_owner_explained.value|default_if_none:''}}">
+                <textarea id="co_owner_explained" name="co_owner_explained" class="form-control">{{phase2SourceInfoForm.co_owner_explained.value|default_if_none:''}}</textarea>
+            </div>
+        </div>
+
+        <div id="idwsExplanation" class="card-alt hidden" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>IDWS Information</h3>
+            <div class="form-group">
+                <label for="idws_explanation">Please explain the relationship between the PWS and the IDWS:</label>
+                <textarea id="idws_explanation" name="idws_explanation" class="form-control">{{phase2SourceInfoForm.idws_explanation.value|default_if_none:''}}</textarea>
+            </div>
+        </div>
+
+        <!--________________________ Max Flow Rate Section ______________________-->
+
+        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>Maximum Flow Rate</h3>
+            <div style="display:flex; justify-content:space-between;">
+                <div class="form-group" style="width:50%;">
+                    <label for="flow_rate">Verified maximum flow rate of the Water Source:</label>
+                    <input id="flow_rate" name="flow_rate" type="text" class="form-control" value="{{phase2SourceMaxFlowForm.flow_rate.value|default_if_none:''}}">
+                </div>
+                <div class="form-group" style="width:50%;">
+                    <label for="units">Units of Provided Flow Rate:</label>
+                    <select id="units" name="flow_rate" class="form-control">
+                        <option disabled {% if not phase2SourceMaxFlowForm.units.value %} selected {% endif %} value=""></option>
+                        {% for option in unitOptions %}
+                            <option {% if phase2SourceMaxFlowForm.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
         </div>
 
 
+
+
+
+
+        <!--Submit Button-->
+        <div class="card-alt" style="background:none; width:75%; height:200%; margin:20px auto; display:flex; justify-content:center;">
+            <input id="submit" type="submit" value="Submit" class="btn btn-primary" style="width:20%; font-size:1.5em;">
+        </div>
     </form>
 </div>
 
@@ -124,38 +163,45 @@
     document.addEventListener("DOMContentLoaded", function () {
         const sourceTypeSelect = document.getElementById('source_type');
         const sourceTypeOtherDiv = document.getElementById('sourceTypeOther');
-        const coOwnerInfoDiv = document.getElementById('coOwnerInfo');
+        const sourceTypeOther = document.getElementById('source_type_other');
         const sourceCoOwned = document.getElementById('source_co_owned');
+        const coOwnerInfoDiv = document.getElementById('coOwnerInfo');
+        const coOwnerPWSID = document.getElementById('co_owner_pwsid')
+        const coOwnerExplained = document.getElementById('co_owner_explained')
+        const isPartOfIDWS = document.getElementById('is_part_of_idws')
+        const idwsExplanationDiv = document.getElementById('idwsExplanation')
+        const idwsExplanation = document.getElementById('idws_explanation')
+
 
         // create function that toggles whether the 'hidden' class is applied
-        function toggleHidden() {
+        function toggleHiddenRequired() {
             console.log("here");
-            sourceTypeOtherDiv.classList.toggle(
-                "hidden", sourceTypeSelect.value !== "Other"
-            );
 
-            coOwnerInfoDiv.classList.toggle(
-                "hidden", sourceCoOwned.value !== "Yes"
-            );
+            // True/False Statements
+            tf1 = sourceTypeSelect.value === "Other";
+            tf2 = sourceCoOwned.value === "Yes"
+            tf3 = isPartOfIDWS.value === "Yes"
 
+            // toggle whether the elements are hidden or not
+            sourceTypeOtherDiv.classList.toggle("hidden", !tf1);
+            coOwnerInfoDiv.classList.toggle("hidden", !tf2);
+            idwsExplanationDiv.classList.toggle("hidden", !tf3);
 
+            // toggle whether they are required.
+            sourceTypeOther.required = tf1;
+            coOwnerPWSID.required = tf2;
+            coOwnerExplained.required = tf2;
+            idwsExplanation.required = tf3;
 
         };
 
         // once the page is loaded, trigger the function to hide/show based on value
-        toggleHidden();
+        toggleHiddenRequired();
 
         // apply function any time there are changes
-        sourceTypeSelect.addEventListener("change", toggleHidden);
-        coOwnerInfoDiv.addEventListener("change", toggleHidden);
-
-        // ------------------------------------------------------------------
-
-
-
-
-
-
+        sourceTypeSelect.addEventListener("change", toggleHiddenRequired);
+        sourceCoOwned.addEventListener("change", toggleHiddenRequired);
+        isPartOfIDWS.addEventListener("change", toggleHiddenRequired);
 
     });
 

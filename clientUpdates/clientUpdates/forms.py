@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from .models import FlowRate, PfasResult, pwsInfo, phase2SourceInfo
+from .models import FlowRate, PfasResult, pwsInfo, phase2SourceInfo, phase2SourceMaxFlow
 
 class MaxFlowRateUpdateForm(forms.ModelForm):
     """
@@ -185,25 +185,15 @@ class phase2SourceInfoForm(forms.ModelForm):
             'id',
             'pwsid',
             'pws_name'
-            ]
-    #     fields = [
-    #         'pwsid',
-    #         'pws_name',
-    #         'source_type',
-    #         'source_type_other',
-    #         'pws_owns_source',
-    #         'source_co_owned',
-    #         'pws_operates_source',
-    #         'source_operated_by',
-    #         'pws_purchased',
-	# pws_drinking_water boolean,
-	# is_part_of_idws boolean,
-	# is_idws_cooperating boolean,
-	# is_idws_responsible_pfas boolean,
-	# partner_name text,
-	# partner_pwsid text,
-	# idws_partner_relationship text,
-	# claimed_share_percent float,
-	# idws_adjustment_factor float
+        ]
 
-     #   ]
+class phase2SourceMaxFlowForm(forms.ModelForm):
+
+    class Meta:
+        model = phase2SourceMaxFlow
+
+        exclude = [
+            'id',
+            'pwsid',
+            'pws_name'
+        ]
