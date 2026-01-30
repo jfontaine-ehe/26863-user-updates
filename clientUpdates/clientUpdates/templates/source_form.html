@@ -98,24 +98,21 @@
                     {% endfor %}
                 </select>
             </div>
-
-
-<!--            Left off trying to incorporate pop ups in forms for the yes/no section-->
-
-            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
-                <label for="is_part_of_idws" class="tf-label">Is this Water Source a purchased water connection?</label>
-                <select required id="is_part_of_idws" name="is_part_of_idws" class="form-control tf-select">
-                    <option disabled {% if not phase2SourceInfoForm.is_part_of_idws.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
-                        <option {% if phase2SourceInfoForm.is_part_of_idws.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-
-
-
         </div>
+
+        <div id="coOwnerInfo" class="card-alt hidden" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>Source Co-Owner Information</h3>
+            <div class="form-group">
+                <label for="co_owner_pwsid">Co-owner PWSID:</label>
+                <input required id="co_owner_pwsid" name="co_owner_pwsid" type="text" class="form-control" value="{{phase2SourceInfoForm.co_owner_pwsid.value|default_if_none:''}}">
+            </div>
+            <div class="form-group hidden">
+                <label for="co_owner_explained">Please describe the PWS's relationship with the co-owner:</label>
+                <input required id="co_owner_explained" name="co_owner_explained" type="text" class="form-control" value="{{phase2SourceInfoForm.co_owner_explained.value|default_if_none:''}}">
+            </div>
+        </div>
+
+
     </form>
 </div>
 
@@ -124,24 +121,40 @@
 <script>
 
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const sourceTypeSelect = document.getElementById('source_type');
         const sourceTypeOtherDiv = document.getElementById('sourceTypeOther');
+        const coOwnerInfoDiv = document.getElementById('coOwnerInfo');
+        const sourceCoOwned = document.getElementById('source_co_owned');
 
         // create function that toggles whether the 'hidden' class is applied
-        function toggleOther() {
+        function toggleHidden() {
+            console.log("here");
             sourceTypeOtherDiv.classList.toggle(
                 "hidden", sourceTypeSelect.value !== "Other"
+            );
 
-            )
+            coOwnerInfoDiv.classList.toggle(
+                "hidden", sourceCoOwned.value !== "Yes"
+            );
+
+
 
         };
 
         // once the page is loaded, trigger the function to hide/show based on value
-        toggleOther();
+        toggleHidden();
 
         // apply function any time there are changes
-        sourceTypeSelect.addEventListener("change", toggleOther);
+        sourceTypeSelect.addEventListener("change", toggleHidden);
+        coOwnerInfoDiv.addEventListener("change", toggleHidden);
+
+        // ------------------------------------------------------------------
+
+
+
+
+
 
 
     });
