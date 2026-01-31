@@ -907,7 +907,7 @@ class phase2SourceMaxFlow(models.Model):
     units = models.TextField(blank=True)
     flow_determination = models.TextField(blank=True)
     file_name = models.TextField(blank=True)
-    comments = models.TextField(blank=True)
+    comments_max_flow = models.TextField(blank=True)
 
     class Meta:
         managed = True

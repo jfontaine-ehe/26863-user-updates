@@ -197,3 +197,7 @@ class phase2SourceMaxFlowForm(forms.ModelForm):
             'pwsid',
             'pws_name'
         ]
+
+
+for i in range(2010, 2020):
+    print(i)

@@ -56,6 +56,8 @@ sourceTypeOptions = {("GW", "Groundwater Well"), ("SW", "Surface Water"), ("Othe
 unitOptions = {("GPM", "GPM (Gallons Per Minute)"), ("GPY", "GPY (Gallons Per Year)"),
                ("MGD", "MGD (Million Gallons Per Day"), ("AFPY", "AFPY (Acre-feet Per Year")}
 
+years = range(2013, 2024)
+
 
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
 # class CustomLoginView(LoginView):
@@ -713,7 +715,8 @@ def sourceForm(request):
         "phase2SourceMaxFlowForm": form2,
         "yesNoUnknown": yesNoUnknown,
         "sourceTypeOptions": sourceTypeOptions,
-        "unitOptions": unitOptions
+        "unitOptions": unitOptions,
+        "years": years
 
     }
 

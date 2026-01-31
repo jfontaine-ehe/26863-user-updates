@@ -141,10 +141,34 @@
                     </select>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="flow_determination">How was the verified maximum flow rate determined?</label>
+                <input id="flow_determination" name="flow_determination" type="text" class="form-control" value="{{phase2SourceMaxFlowForm.flow_determination.value|default_if_none:''}}">
+            </div>
+            <div class="mb-3">
+                <label for="pfasFileUpload" class="form-label">This is a placeholder for the filename upload.</label>
+                <input type="file" class="form-control" id="pfasFileUpload" name="filename" accept=".pdf, .jpg, .jpeg, .png">
+<!--                <small class="text-muted">Supported file types: .pdf, .jpg, .jpeg, .png (max file size = 25MB)</small>
+                <div class="invalid-feedback" id="file-upload-error"></div>-->
+            </div>
+            <div class="form-group">
+                <label for="comments_max_flow">Comments</label>
+                <textarea id="comments_max_flow" name="comments_max_flow" class="form-control">{{phase2SourceMaxFlowForm.comments_max_flow.value|default_if_none:''}}</textarea>
+            </div>
         </div>
 
+        <!--___________________________________Annual Flow Rates_________________________________-->
+        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
 
+            {% for year in years %}
+            <div style="display:flex; justify-content:space-between;">
+                <p style="width:10%; text-align:center;">{{year}}</p>
+                <input type="text" class="form-control" value="" style="width:30%;">
+                <input type="text" class="form-control" value="" style="width:30%;">
+            </div>
+            {% endfor %}
 
+        </div>
 
 
 
