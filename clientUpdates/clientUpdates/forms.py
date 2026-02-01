@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from .models import FlowRate, PfasResult, pwsInfo, phase2SourceInfo, phase2SourceMaxFlow
+from .models import FlowRate, PfasResult, pwsInfo, phase2SourceInfo, phase2MaxFlow, phase2AnnualFlow
 
 class MaxFlowRateUpdateForm(forms.ModelForm):
     """
@@ -187,17 +187,23 @@ class phase2SourceInfoForm(forms.ModelForm):
             'pws_name'
         ]
 
-class phase2SourceMaxFlowForm(forms.ModelForm):
+class phase2MaxFlowForm(forms.ModelForm):
 
     class Meta:
-        model = phase2SourceMaxFlow
+        model = phase2MaxFlow
 
         exclude = [
-            'id',
-            'pwsid',
-            'pws_name'
+            ''
         ]
 
 
-for i in range(2010, 2020):
-    print(i)
+class phase2AnnualFlowForm(forms.ModelForm):
+    class Meta:
+        model = phase2AnnualFlow
+
+        fields = [
+            'year',
+            'annual_flow_rate',
+            'flow_rate_reduced',
+            'did_not_exist'
+        ]

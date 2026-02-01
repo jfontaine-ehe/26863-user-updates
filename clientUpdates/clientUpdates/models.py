@@ -1,6 +1,9 @@
 import django_localflavor_us.us_states as us_states
 from django.db import models
 
+
+years = [(y, y) for y in range(2013, 2024)]
+
 ## DJANGO user ##
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
@@ -331,6 +334,7 @@ class FlowRate(models.Model):
         managed = True
         db_table = 'flow_rate'
 
+
 class PfasResult(models.Model):
     row_names = models.BigAutoField(primary_key=True)
     water_source_id = models.BigIntegerField(blank=True, null=True)
@@ -642,6 +646,7 @@ class paymentInfo(models.Model):
         managed = True
         db_table = 'payment_information'
 
+
 class TB_ClaimPfasResult(models.Model):
     row_names = models.BigAutoField(primary_key=True)
     pwsid = models.TextField(blank=True, null=True)
@@ -716,6 +721,7 @@ class supplementalSourceTracker(models.Model):
         managed = True
         db_table = 'supplemental_fund_source_tracker'
 
+
 class TB_ClaimSource(models.Model):
     row_names = models.BigAutoField(primary_key=True)
     claim_number = models.FloatField(blank=True, null=True)
@@ -746,10 +752,10 @@ class TB_ClaimSource(models.Model):
     timestamp = models.DateTimeField(blank=True, null=True)
     data_origin = models.TextField(default="Claims Portal")
 
-
     class Meta:
         managed = True
         db_table = 'claim_tb_source'
+
 
 class pwsPaymentDist(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -794,10 +800,10 @@ class srcPaymentDist(models.Model):
     total_transaction_value = models.FloatField(blank=True, null=True)
     payment_date = models.DateField(blank=True, null=True)
 
-
     class Meta:
         managed = True
         db_table = 'source_payment_dist'
+
 
 class ClaimSubmission(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -809,6 +815,7 @@ class ClaimSubmission(models.Model):
     class Meta:
         managed = True
         db_table = 'claim_submissions'
+
 
 class pwsCreds(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -823,8 +830,8 @@ class pwsCreds(models.Model):
         managed = True
         db_table = 'consortium_pws_creds'
 
-class pwsInfo(models.Model):
 
+class pwsInfo(models.Model):
     id = models.AutoField(primary_key=True, null=False, blank=False)
     pwsid = models.TextField(blank=True, null=True)
     pws_name = models.TextField(blank=True, null=True)
@@ -876,7 +883,6 @@ class pwsInfo(models.Model):
 
 
 class phase2SourceInfo(models.Model):
-
     id = models.AutoField(primary_key=True, null=False, blank=False)
     pwsid = models.TextField(blank=True)
     pws_name = models.TextField(blank=True)
@@ -897,13 +903,13 @@ class phase2SourceInfo(models.Model):
         managed = True
         db_table = 'phase2_source_info'
 
-class phase2SourceMaxFlow(models.Model):
 
+class phase2MaxFlow(models.Model):
     id = models.AutoField(primary_key=True, null=False, blank=False)
     pwsid = models.TextField(blank=True)
     pws_name = models.TextField(blank=True)
     source_name = models.TextField(blank=True)
-    flow_rate = models.FloatField(blank=True, null=True)
+    max_flow_rate = models.FloatField(blank=True, null=True)
     units = models.TextField(blank=True)
     flow_determination = models.TextField(blank=True)
     file_name = models.TextField(blank=True)
@@ -913,3 +919,21 @@ class phase2SourceMaxFlow(models.Model):
         managed = True
         db_table = 'phase2_source_max_flow'
 
+
+class phase2AnnualFlow(models.Model):
+
+    id = models.AutoField(primary_key=True, null=False, blank=False)
+    pwsid = models.TextField(blank=True)
+    pws_name = models.TextField(blank=True)
+    source_name = models.TextField(blank=True)
+    year = models.IntegerField(blank=True, choices=years)
+    annual_flow_rate = models.FloatField(blank=True)
+    flow_rate_reduced = models.TextField(blank=True)
+    did_not_exist = models.TextField(blank=True)
+    flow_units = models.TextField(blank=True)
+    file_name = models.TextField(blank=True)
+    comments_annual_flow = models.TextField(blank=True)
+
+    class Meta:
+        managed = True
+        db_table = 'phase2_source_annual_flow'

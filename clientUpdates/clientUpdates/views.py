@@ -1,5 +1,6 @@
 # Custom models and forms
 from django.contrib.auth import logout
+from django.forms import formset_factory
 from django.views.decorators.cache import never_cache
 import django_localflavor_us.us_states as us_states
 
@@ -8,7 +9,7 @@ from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRa
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
                      pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
-    phase2SourceInfoForm, phase2SourceMaxFlowForm
+    phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm
 
 # Custom functions
 from .utils.handler import handle_update
@@ -707,12 +708,16 @@ def sourceForm(request):
     else:
         #x = get_object_or_404(pwsInfo, id=1, pwsid='asdf')
         form1 = phase2SourceInfoForm()
-        form2 = phase2SourceMaxFlowForm()
+        test = form1.fields["co_owner_explained"]
+        form2 = phase2MaxFlowForm()
+        form3 = formset_factory(phase2AnnualFlowForm, extra=11)
+        #form2 = formset_factory(phase2MaxFlowForm, extra=10, )
 
     context = {
 
         "phase2SourceInfoForm": form1,
-        "phase2SourceMaxFlowForm": form2,
+        "phase2MaxFlowForm": form2,
+        "phase2AnnualFlowForm": form3,
         "yesNoUnknown": yesNoUnknown,
         "sourceTypeOptions": sourceTypeOptions,
         "unitOptions": unitOptions,
