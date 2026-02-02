@@ -173,8 +173,8 @@
                     {{phase2AnnualFlowForm.management_form}}
                     {% for form in phase2AnnualFlowForm %}
                     <tr>
-                        <td><input id="{{form.year.html_name}}" name="{{form.year.html_name}}" type="number" class="form-control label-center" value="{{form.year.value|default_if_none:''}}"></td>
-                        <td class="label-center"><input id="{{form.annual_flow_rate.html_name}}" name="{{form.annual_flow_rate.html_name}}" type="number" class="form-control" value="{{form.annual_flow_rate.html_name}}"></td>
+                        <td><input disabled id="{{form.year.html_name}}" name="{{form.year.html_name}}" type="number" class="form-control label-center" value="{{form.year.value|floatformat:'0'}}"></td>
+                        <td class="label-center"><input id="{{form.annual_flow_rate.html_name}}" name="{{form.annual_flow_rate.html_name}}" type="number" class="form-control" value="{{form.annual_flow_rate.value}}"></td>
                         <td class="label-center">
                             <select id="flow_units" name="flow_units" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
@@ -208,15 +208,6 @@
 
 
 
-
-
-<!--            {% for year in years %}
-            <div style="display:flex; justify-content:space-between;">
-                <p style="width:10%; text-align:center;">{{year}}</p>
-                <input type="text" class="form-control" value="" style="width:30%;">
-                <input type="text" class="form-control" value="" style="width:30%;">
-            </div>
-            {% endfor %}-->
 
         </div>
 
@@ -279,15 +270,15 @@
 
 
 
-        const startYear = 2013;
+<!--        const startYear = 2013;-->
 
-        for (let i = 0; i <= 10; i++) {
-          const input = document.getElementById(`form-${i}-year`);
-          if (input) {
-            input.value = startYear + i;
-            input.disabled = true;
-          }
-        }
+<!--        for (let i = 0; i <= 10; i++) {-->
+<!--          const input = document.getElementById(`form-${i}-year`);-->
+<!--          if (input) {-->
+<!--            input.value = startYear + i;-->
+<!--            input.disabled = true;-->
+<!--          }-->
+<!--        }-->
 
 
 

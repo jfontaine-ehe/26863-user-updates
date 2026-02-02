@@ -1,13 +1,13 @@
 # Custom models and forms
 from django.contrib.auth import logout
-from django.forms import formset_factory
+from django.forms import formset_factory, modelformset_factory
 from django.views.decorators.cache import never_cache
 import django_localflavor_us.us_states as us_states
 
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
                      ClaimPfasResult, paymentInfo,
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
-                     pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo)
+                     pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo, phase2AnnualFlow)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
     phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm
 
@@ -58,7 +58,6 @@ unitOptions = {("GPM", "GPM (Gallons Per Minute)"), ("GPY", "GPY (Gallons Per Ye
                ("MGD", "MGD (Million Gallons Per Day"), ("AFPY", "AFPY (Acre-feet Per Year")}
 
 years = range(2013, 2024)
-
 
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
 # class CustomLoginView(LoginView):
@@ -698,26 +697,56 @@ def formSuccess(request):
 @never_cache
 def sourceForm(request):
     if request.method == "POST":
-        form = phase2SourceInfoForm(request.POST)
-        if form.is_valid():
+
+        form1 = phase2SourceInfoForm(request.POST)
+        form2 = phase2MaxFlowForm(request.POST)
+
+        annualFlowFormset = modelformset_factory(phase2AnnualFlow,
+                                     fields=[
+                                         'year',
+                                         'annual_flow_rate',
+                                         'flow_rate_reduced',
+                                         'did_not_exist'
+                                     ])
+        form3 = annualFlowFormset(request.POST)
+
+        try:
+            form3.is_valid()
+        except Exception as e:
+            print(e)
+
+        if form1.is_valid() and form2.is_valid() and form3.is_valid():
             try:
-                form.save()
+                form3.save()
                 return render(request, 'form_success.html')
             except Exception as e:
                 print(e)
     else:
-        #x = get_object_or_404(pwsInfo, id=1, pwsid='asdf')
+
+        initial_data = []
+        for i in range(11):
+            year = {"year": 2013 + i}
+            initial_data.append(year)
+
         form1 = phase2SourceInfoForm()
-        test = form1.fields["co_owner_explained"]
         form2 = phase2MaxFlowForm()
-        form3 = formset_factory(phase2AnnualFlowForm, extra=11)
-        #form2 = formset_factory(phase2MaxFlowForm, extra=10, )
+        form3 = modelformset_factory(phase2AnnualFlow,
+                                     fields=[
+                                         'year',
+                                         'annual_flow_rate',
+                                         'flow_rate_reduced',
+                                         'did_not_exist'
+                                     ],
+                                     extra=11)
+        form4 = form3(queryset=phase2AnnualFlow.objects.filter(id=0),
+                      initial=initial_data)
+
 
     context = {
 
         "phase2SourceInfoForm": form1,
         "phase2MaxFlowForm": form2,
-        "phase2AnnualFlowForm": form3,
+        "phase2AnnualFlowForm": form4,
         "yesNoUnknown": yesNoUnknown,
         "sourceTypeOptions": sourceTypeOptions,
         "unitOptions": unitOptions,
