@@ -1,5 +1,6 @@
 # Custom models and forms
 from django.contrib.auth import logout
+from django.db import transaction
 from django.forms import formset_factory, modelformset_factory
 from django.views.decorators.cache import never_cache
 import django_localflavor_us.us_states as us_states
@@ -9,7 +10,7 @@ from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRa
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
                      pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo, phase2AnnualFlow)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
-    phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm
+    phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2AnnualConstants
 
 # Custom functions
 from .utils.handler import handle_update
@@ -57,7 +58,7 @@ sourceTypeOptions = {("GW", "Groundwater Well"), ("SW", "Surface Water"), ("Othe
 unitOptions = {("GPM", "GPM (Gallons Per Minute)"), ("GPY", "GPY (Gallons Per Year)"),
                ("MGD", "MGD (Million Gallons Per Day"), ("AFPY", "AFPY (Acre-feet Per Year")}
 
-years = range(2013, 2024)
+years = list(range(2013, 2024))
 
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
 # class CustomLoginView(LoginView):
@@ -702,25 +703,37 @@ def sourceForm(request):
         form2 = phase2MaxFlowForm(request.POST)
 
         annualFlowFormset = modelformset_factory(phase2AnnualFlow,
-                                     fields=[
-                                         'year',
-                                         'annual_flow_rate',
-                                         'flow_rate_reduced',
-                                         'did_not_exist'
-                                     ])
+                                                 fields=[
+                                                     'year',
+                                                     'source_name',
+                                                     'annual_flow_rate',
+                                                     'flow_rate_reduced',
+                                                     'did_not_exist'
+                                                 ])
         form3 = annualFlowFormset(request.POST)
+        form3Constants = phase2AnnualConstants(request.POST)
 
         try:
-            form3.is_valid()
+
+            # transaction.atomic makes sure that either all instances save or all instances fail
+            with transaction.atomic():
+                if form1.is_valid() and form2.is_valid() and form3.is_valid():
+                    form1.save()
+                    form2.save()
+                    form3Constants = form3Constants.save(commit=False)
+                    for form, year in zip(form3, years):
+                        instance = form.save(commit=False)
+                        instance.year = year
+                        instance.source_name = form3Constants.source_name
+                        #instance.file_name = form3Constants.file_name
+                        #instance.comments_annual_flow = form3Constants.comments_annual_flow
+                        form.save()
+                    return render(request, 'form_success.html')
+
+
         except Exception as e:
             print(e)
 
-        if form1.is_valid() and form2.is_valid() and form3.is_valid():
-            try:
-                form3.save()
-                return render(request, 'form_success.html')
-            except Exception as e:
-                print(e)
     else:
 
         initial_data = []
@@ -730,9 +743,11 @@ def sourceForm(request):
 
         form1 = phase2SourceInfoForm()
         form2 = phase2MaxFlowForm()
+        test = phase2AnnualConstants()
         form3 = modelformset_factory(phase2AnnualFlow,
                                      fields=[
                                          'year',
+                                         'source_name',
                                          'annual_flow_rate',
                                          'flow_rate_reduced',
                                          'did_not_exist'
@@ -741,17 +756,16 @@ def sourceForm(request):
         form4 = form3(queryset=phase2AnnualFlow.objects.filter(id=0),
                       initial=initial_data)
 
+        context = {
 
-    context = {
+            "phase2SourceInfoForm": form1,
+            "phase2MaxFlowForm": form2,
+            "phase2AnnualFlowForm": form4,
+            "yesNoUnknown": yesNoUnknown,
+            "sourceTypeOptions": sourceTypeOptions,
+            "unitOptions": unitOptions,
+            "years": years
 
-        "phase2SourceInfoForm": form1,
-        "phase2MaxFlowForm": form2,
-        "phase2AnnualFlowForm": form4,
-        "yesNoUnknown": yesNoUnknown,
-        "sourceTypeOptions": sourceTypeOptions,
-        "unitOptions": unitOptions,
-        "years": years
+        }
 
-    }
-
-    return render(request, 'source_form.html', context=context)
+        return render(request, 'source_form.html', context=context)

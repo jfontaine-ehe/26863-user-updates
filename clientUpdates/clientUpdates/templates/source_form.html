@@ -159,6 +159,7 @@
 
         <!--___________________________________Annual Flow Rates_________________________________-->
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>Annual Flow Rates</h3>
             <table>
                 <thead>
                     <tr>
@@ -173,7 +174,7 @@
                     {{phase2AnnualFlowForm.management_form}}
                     {% for form in phase2AnnualFlowForm %}
                     <tr>
-                        <td><input disabled id="{{form.year.html_name}}" name="{{form.year.html_name}}" type="number" class="form-control label-center" value="{{form.year.value|floatformat:'0'}}"></td>
+                        <td><input disabled id="{{form.year.html_name}}" name="{{form.year.html_name}}" type="number" class="form-control label-center" value="{{form.year.value|default_if_none:''}}"></td>
                         <td class="label-center"><input id="{{form.annual_flow_rate.html_name}}" name="{{form.annual_flow_rate.html_name}}" type="number" class="form-control" value="{{form.annual_flow_rate.value}}"></td>
                         <td class="label-center">
                             <select id="flow_units" name="flow_units" class="form-select">
@@ -184,7 +185,7 @@
                             </select>
                         </td>
                         <td class="label-center">
-                            <select required id="{{form.flow_rate_reduced.html_name}}" name="{{form.flow_rate_reduced.html_name}}" class="form-select">
+                            <select id="{{form.flow_rate_reduced.html_name}}" name="{{form.flow_rate_reduced.html_name}}" class="form-select">
                                 <option disabled {% if not form.flow_rate_reduced.value %} selected {% endif %} value=""></option>
                                 {% for option in yesNoUnknown %}
                                     <option {% if form.flow_rate_reduced.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
@@ -192,7 +193,7 @@
                             </select>
                         </td>
                         <td class="label-center">
-                            <select required id="{{form.did_not_exist.html_name}}" name="{{form.did_not_exist.html_name}}" class="form-select">
+                            <select id="{{form.did_not_exist.html_name}}" name="{{form.did_not_exist.html_name}}" class="form-select">
                                 <option disabled {% if not form.did_not_exist.value %} selected {% endif %} value=""></option>
                                 {% for option in yesNoUnknown %}
                                     <option {% if form.did_not_exist.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
@@ -203,6 +204,16 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <div class="mb-3" style="margin-top:16px;">
+                <label for="annualFlowFileUpload" class="form-label">This is a placeholder for the Annua Flow filename upload.</label>
+                <input type="file" class="form-control" id="annualFlowFileUpload" name="filename" accept=".pdf, .jpg, .jpeg, .png">
+<!--                <small class="text-muted">Supported file types: .pdf, .jpg, .jpeg, .png (max file size = 25MB)</small>
+                <div class="invalid-feedback" id="file-upload-error"></div>-->
+            </div>
+            <div class="form-group">
+                <label for="comments_annual_flow">Comments</label>
+                <textarea id="comments_annual_flow" name="comments_max_flow" class="form-control">{{phase2AnnualFlowForm.comments_annual_flow.value|default_if_none:''}}</textarea>
+            </div>
 
 
 
@@ -270,15 +281,14 @@
 
 
 
-<!--        const startYear = 2013;-->
+        /*        const startYear = 2013;
 
-<!--        for (let i = 0; i <= 10; i++) {-->
-<!--          const input = document.getElementById(`form-${i}-year`);-->
-<!--          if (input) {-->
-<!--            input.value = startYear + i;-->
-<!--            input.disabled = true;-->
-<!--          }-->
-<!--        }-->
+        for (let i = 0; i <= 10; i++) {
+          const input = document.getElementById(`form-${i}-year`);
+          if (input) {
+            input.value = startYear + i;
+          }
+        */
 
 
 

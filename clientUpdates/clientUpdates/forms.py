@@ -203,7 +203,18 @@ class phase2AnnualFlowForm(forms.ModelForm):
 
         fields = [
             'year',
+            'source_name',
             'annual_flow_rate',
             'flow_rate_reduced',
             'did_not_exist'
+        ]
+
+
+class phase2AnnualConstants(forms.ModelForm):
+    class Meta:
+        model = phase2AnnualFlow
+        fields = [
+            'source_name',
+            'file_name',
+            'comments_annual_flow'
         ]
