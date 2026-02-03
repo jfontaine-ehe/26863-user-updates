@@ -1,6 +1,7 @@
 from django import forms
 from django.utils import timezone
-from .models import FlowRate, PfasResult, pwsInfo, phase2SourceInfo, phase2MaxFlow, phase2AnnualFlow
+from .models import FlowRate, PfasResult, pwsInfo, phase2SourceInfo, phase2MaxFlow, phase2AnnualFlow, phase2PFASResults
+
 
 class MaxFlowRateUpdateForm(forms.ModelForm):
     """

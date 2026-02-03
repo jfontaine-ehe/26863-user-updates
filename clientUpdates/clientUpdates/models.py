@@ -898,6 +898,12 @@ class phase2SourceInfo(models.Model):
     pws_drinking_water = models.TextField(blank=True)
     is_part_of_idws = models.TextField(blank=True)
     idws_explanation = models.TextField(blank=True)
+    pfas_ever_tested = models.TextField(blank=True)
+    pfas_detected = models.TextField(blank=True)
+    detected_b4_jun2223 = models.TextField(blank=True)
+    detected_after_jun2223 = models.TextField(blank=True)
+    detected_b4_jun3023 = models.TextField(blank=True)
+    detected_after_jun3023 = models.TextField(blank=True)
 
     class Meta:
         managed = True
@@ -939,3 +945,13 @@ class phase2AnnualFlow(models.Model):
         db_table = 'phase2_source_annual_flow'
 
 
+class phase2PFASResults(models.Model):
+    id = models.AutoField(primary_key=True, null=False, blank=False)
+    pwsid = models.TextField(blank=True)
+    pws_name = models.TextField(blank=True)
+    source_name = models.TextField(blank=True)
+    analyte = models.TextField(blank=True)
+    result = models.FloatField(blank=True)
+    units = models.TextField(blank=True)
+    file_name = models.TextField(blank=True)
+    comments = models.TextField(blank=True)

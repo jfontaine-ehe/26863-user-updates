@@ -34,10 +34,10 @@
 
     <!--- Yes/No Questions -->
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
-            <h3>Yes/No Questions</h3>
+            <h3>General Yes/No Questions</h3>
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
                 <label for="pws_owns_source" class="tf-label">Does the PWS own this Water Source?</label>
-                <select required id="pws_owns_source" name="pws_owns_source" class="form-control tf-select">
+                <select required id="pws_owns_source" name="pws_owns_source" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.pws_owns_source.value %} selected {% endif %} value=""></option>
                     {% for option in yesNoUnknown %}
                         <option {% if phase2SourceInfoForm.pws_owns_source.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
@@ -47,7 +47,7 @@
 
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
                 <label for="source_co_owned" class="tf-label">Are there any co-owners to this water source?</label>
-                <select required id="source_co_owned" name="source_co_owned" class="form-control tf-select">
+                <select required id="source_co_owned" name="source_co_owned" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.source_co_owned.value %} selected {% endif %} value=""></option>
                     {% for option in yesNoUnknown %}
                         <option {% if phase2SourceInfoForm.source_co_owned.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
@@ -58,7 +58,7 @@
 
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
                 <label for="pws_operates_source" class="tf-label">Does the PWS operate this Water Source?</label>
-                <select required id="pws_operates_source" name="pws_operates_source" class="form-control tf-select">
+                <select required id="pws_operates_source" name="pws_operates_source" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.pws_operates_source.value %} selected {% endif %} value=""></option>
                     {% for option in yesNoUnknown %}
                         <option {% if phase2SourceInfoForm.pws_operates_source.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
@@ -69,7 +69,7 @@
 
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
                 <label for="pws_purchased" class="tf-label">Is this Water Source a purchased water connection?</label>
-                <select required id="pws_purchased" name="pws_purchased" class="form-control tf-select">
+                <select required id="pws_purchased" name="pws_purchased" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.pws_purchased.value %} selected {% endif %} value=""></option>
                     {% for option in yesNoUnknown %}
                         <option {% if phase2SourceInfoForm.pws_purchased.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
@@ -80,7 +80,7 @@
 
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
                 <label for="pws_drinking_water" class="tf-label">Has the water form this Water Source ever been used as Drinking Water?</label>
-                <select required id="pws_drinking_water" name="pws_drinking_water" class="form-control tf-select">
+                <select required id="pws_drinking_water" name="pws_drinking_water" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.pws_drinking_water.value %} selected {% endif %} value=""></option>
                     {% for option in yesNoUnknown %}
                         <option {% if phase2SourceInfoForm.pws_drinking_water.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
@@ -91,7 +91,7 @@
 
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
                 <label for="is_part_of_idws" class="tf-label">Is this Water Source part of an Interrelated Drinking Water System (IDWS)?</label>
-                <select required id="is_part_of_idws" name="is_part_of_idws" class="form-control tf-select">
+                <select required id="is_part_of_idws" name="is_part_of_idws" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.is_part_of_idws.value %} selected {% endif %} value=""></option>
                     {% for option in yesNoUnknown %}
                         <option {% if phase2SourceInfoForm.is_part_of_idws.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
@@ -159,7 +159,7 @@
 
         <!--___________________________________Annual Flow Rates_________________________________-->
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
-            <h3>Annual Flow Rates</h3>
+            <h3>Annual Production</h3>
             <table>
                 <thead>
                     <tr>
@@ -214,13 +214,85 @@
                 <label for="comments_annual_flow">Comments</label>
                 <textarea id="comments_annual_flow" name="comments_max_flow" class="form-control">{{phase2AnnualFlowForm.comments_annual_flow.value|default_if_none:''}}</textarea>
             </div>
+        </div>
 
 
+        <!--___________________________________PFAS Information_________________________________-->
+        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>PFAS Yes/No Questions</h3>
+
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
+                <label for="pfas_ever_tested" class="tf-label">Has this Water Source ever been tested or otherwise analyzed for PFAS?</label>
+                <select required id="pfas_ever_tested" name="pfas_ever_tested" class="form-select tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.pfas_ever_tested.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.pfas_ever_tested.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
+                <label for="pfas_detected" class="tf-label">For any testing of PFAS that has been conducted for this Water Source, has there ever been any Measureable Concentrations (detections) of PFAS?</label>
+                <select required id="pfas_detected" name="pfas_detected" class="form-select tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.pfas_detected.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.pfas_detected.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
+                <label for="detected_b4_jun2223" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS on or before June 22, 2023?</label>
+                <select required id="detected_b4_jun2223" name="detected_b4_jun2223" class="form-select tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.detected_b4_jun2223.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.detected_b4_jun2223.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
+                <label for="detected_after_jun2223" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS on or before June 22, 2023?</label>
+                <select required id="detected_after_jun2223" name="detected_after_jun2223" class="form-select tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.detected_after_jun2223.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.detected_after_jun2223.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
+                <label for="detected_b4_jun3023" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS on or before June 22, 2023?</label>
+                <select required id="detected_b4_jun3023" name="detected_b4_jun3023" class="form-select tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.detected_b4_jun3023.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.detected_b4_jun3023.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
+                <label for="detected_after_jun3023" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS on or before June 22, 2023?</label>
+                <select required id="detected_after_jun3023" name="detected_after_jun3023" class="form-select tf-select">
+                    <option disabled {% if not phase2SourceInfoForm.detected_after_jun3023.value %} selected {% endif %} value=""></option>
+                    {% for option in yesNoUnknown %}
+                        <option {% if phase2SourceInfoForm.detected_after_jun3023.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
 
 
+        <!--___________________________________PFAS Results_________________________________-->
+        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>PFAS Results</h3>
 
 
         </div>
+
+
+
+
 
 
 
