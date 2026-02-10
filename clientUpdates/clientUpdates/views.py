@@ -736,14 +736,20 @@ def sourceForm(request):
 
     else:
 
-        initial_data = []
+        yearInitialData = []
         for i in range(11):
             year = {"year": 2013 + i}
-            initial_data.append(year)
+            yearInitialData.append(year)
+
+        pfasInitialData = [{"analyte": "PFOA"},
+                           {"analyte": "PFOS"},
+                           {"analyte": "PFHxS"},
+                           {"analyte": "GenX"},
+                           {"analyte": "PFNA"},
+                           {"analyte": "PFBS"}]
 
         form1 = phase2SourceInfoForm()
         form2 = phase2MaxFlowForm()
-        test = phase2AnnualConstants()
         form3 = modelformset_factory(phase2AnnualFlow,
                                      fields=[
                                          'year',
@@ -751,16 +757,20 @@ def sourceForm(request):
                                          'annual_flow_rate',
                                          'flow_rate_reduced',
                                          'did_not_exist'
-                                     ],
-                                     extra=11)
-        form4 = form3(queryset=phase2AnnualFlow.objects.filter(id=0),
-                      initial=initial_data)
+                                     ])
+
+        form3 = form3(queryset=phase2AnnualFlow.objects.filter(id=0),
+                      initial=yearInitialData)
+
+        form4 = modelformset_factory()
+
+
 
         context = {
 
             "phase2SourceInfoForm": form1,
             "phase2MaxFlowForm": form2,
-            "phase2AnnualFlowForm": form4,
+            "phase2AnnualFlowForm": form3,
             "yesNoUnknown": yesNoUnknown,
             "sourceTypeOptions": sourceTypeOptions,
             "unitOptions": unitOptions,
