@@ -497,11 +497,17 @@ def contact_view(request, claim=None, source_name=None, message=0):
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
+
+            if claim:
+                subject = f"{subject}"
+            else:
+                subject = f"{subject} (from {pwsid})"
+
             message = form.cleaned_data['message']
             full_message = f"From: {name}\n\n{message}"
 
             email_message = EmailMessage(
-                subject=f"{subject} (from {pwsid})",
+                subject=subject,
                 body=full_message,
                 from_email=settings.EMAIL_HOST_USER,
                 to=recipients,
@@ -509,7 +515,6 @@ def contact_view(request, claim=None, source_name=None, message=0):
             )
 
             email_message.send(fail_silently=False)
-            messages.success(request, "This is a test!")
 
             # Return a JSON response for AJAX.
             # if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
