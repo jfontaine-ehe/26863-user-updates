@@ -26,6 +26,9 @@ from django.http import JsonResponse, Http404
 from itertools import chain
 from datetime import datetime
 from django.db.models import Q, Sum
+import logging
+
+logger = logging.getLogger('clientUpdates')
 
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
 # class CustomLoginView(LoginView):
