@@ -517,7 +517,10 @@ def contact_view(request, claim=None, source_name=None, message=0):
                 reply_to=[email],
             )
 
-            email_message.send(fail_silently=False)
+            try:
+                email_message.send(fail_silently=False)
+            except Exception as e:
+                logger.error(f"{e}. A user ({pwsid}, {name}, {email}) tried to send an email but failed.")
 
             # Return a JSON response for AJAX.
             # if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
