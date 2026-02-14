@@ -945,13 +945,18 @@ class phase2AnnualFlow(models.Model):
         db_table = 'phase2_source_annual_flow'
 
 
-class phase2PFASResults(models.Model):
+class phase2PfasResults(models.Model):
     id = models.AutoField(primary_key=True, null=False, blank=False)
     pwsid = models.TextField(blank=True)
     pws_name = models.TextField(blank=True)
     source_name = models.TextField(blank=True)
-    analyte = models.TextField(blank=True)
-    result = models.FloatField(blank=True)
-    units = models.TextField(blank=True)
+    analyte = models.TextField(blank=True, null=True)
+    result = models.FloatField(blank=True, null=True)
+    units = models.TextField(blank=True, null=True)
+    sample_date = models.DateField(blank=True, null=True)
     file_name = models.TextField(blank=True)
     comments = models.TextField(blank=True)
+
+    class Meta:
+        managed = True
+        db_table = 'phase2_pfas_results'

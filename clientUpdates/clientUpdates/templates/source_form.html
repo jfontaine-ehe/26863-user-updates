@@ -289,17 +289,29 @@
             <table>
                 <thead>
                     <tr>
-                        <th>""</th>
+                        <th>Analyte</th>
                         <th>Maximum Result</th>
                         <th>Units</th>
                         <th>Sampling Date</th>
-                        <th>ND (non-detect)</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {{phase2PfasResultsForm.management_form}}
+                    {% for form in phase2PfasResultsForm %}
                     <tr>
-
+                        <td><input disabled id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-control label-center" value="{{form.analyte.value|default_if_none:''}}"></td>
+                        <td><input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}"></td>
+                        <td>
+                            <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
+                                <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
+                            {% for option in pfasUnits %}
+                                <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
+                            {% endfor %}
+                            </select>
+                        </td>
+                        <td><input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control"></td>
                     </tr>
+                    {% endfor %}
                 </tbody>
             </table>
 

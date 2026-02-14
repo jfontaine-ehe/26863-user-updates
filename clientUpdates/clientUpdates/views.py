@@ -8,7 +8,7 @@ import django_localflavor_us.us_states as us_states
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
                      ClaimPfasResult, paymentInfo,
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
-                     pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo, phase2AnnualFlow)
+                     pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo, phase2AnnualFlow, phase2PfasResults)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
     phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2AnnualConstants
 
@@ -57,6 +57,11 @@ sourceTypeOptions = {("GW", "Groundwater Well"), ("SW", "Surface Water"), ("Othe
 
 unitOptions = {("GPM", "GPM (Gallons Per Minute)"), ("GPY", "GPY (Gallons Per Year)"),
                ("MGD", "MGD (Million Gallons Per Day"), ("AFPY", "AFPY (Acre-feet Per Year")}
+
+pfasAnalytes = ("PFOA", "PFOS", "PFHxS", "GenX", "PFNA", "PFBS")
+
+pfasUnits = {("ug/L", "ug/L (ppb)"),
+             ("ng/L", "ng/L (ppt)")}
 
 years = list(range(2013, 2024))
 
@@ -696,7 +701,8 @@ def formSuccess(request):
 
 
 @never_cache
-def sourceForm(request):
+def sourceFormCreate(request):
+
     if request.method == "POST":
 
         form1 = phase2SourceInfoForm(request.POST)
@@ -713,6 +719,16 @@ def sourceForm(request):
         form3 = annualFlowFormset(request.POST)
         form3Constants = phase2AnnualConstants(request.POST)
 
+        pfasResultsFormset = modelformset_factory(phase2PfasResults,
+                                     fields=[
+                                         'analyte',
+                                         'result',
+                                         'units',
+                                         'sample_date'
+                                     ])
+
+        form4 = pfasResultsFormset(request.POST)
+
         try:
 
             # transaction.atomic makes sure that either all instances save or all instances fail
@@ -728,8 +744,13 @@ def sourceForm(request):
                         #instance.file_name = form3Constants.file_name
                         #instance.comments_annual_flow = form3Constants.comments_annual_flow
                         form.save()
-                    return render(request, 'form_success.html')
+                    for form, pfas in zip(form4, pfasAnalytes):
+                        instance = form.save(commit=False)
+                        instance.analyte = pfas
+                        instance.source_name = form3Constants.source_name
+                        form.save()
 
+                    return render(request, 'form_success.html')
 
         except Exception as e:
             print(e)
@@ -757,25 +778,38 @@ def sourceForm(request):
                                          'annual_flow_rate',
                                          'flow_rate_reduced',
                                          'did_not_exist'
-                                     ])
+                                     ], extra=11)
 
         form3 = form3(queryset=phase2AnnualFlow.objects.filter(id=0),
                       initial=yearInitialData)
 
-        form4 = modelformset_factory()
+        form4 = modelformset_factory(phase2PfasResults,
+                                     fields=[
+                                         'analyte',
+                                         'result',
+                                         'units',
+                                         'sample_date'
+                                     ], extra=0)
 
+        form4 = form4(queryset=phase2PfasResults.objects.filter(source_name="asdfasdf"))
 
+            #form4(queryset=phase2PfasResults.objects.filter(source_name="asdfasdf")))
 
         context = {
 
             "phase2SourceInfoForm": form1,
             "phase2MaxFlowForm": form2,
             "phase2AnnualFlowForm": form3,
+            "phase2PfasResultsForm": form4,
             "yesNoUnknown": yesNoUnknown,
             "sourceTypeOptions": sourceTypeOptions,
             "unitOptions": unitOptions,
+            "pfasUnits": pfasUnits,
             "years": years
 
         }
 
         return render(request, 'source_form.html', context=context)
+
+# def sourceFormEdit(request, source_name):
+#     if request.method == "POST":
