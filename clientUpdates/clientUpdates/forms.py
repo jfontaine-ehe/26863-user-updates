@@ -230,3 +230,13 @@ class phase2PfasResultsForm(forms.ModelForm):
             'units',
             'sample_date'
         ]
+
+class otherPfasForm(forms.ModelForm):
+    class Meta:
+        model = phase2PfasResults
+        fields = [
+            'analyte',
+            'result',
+            'units',
+            'sample_date'
+        ]

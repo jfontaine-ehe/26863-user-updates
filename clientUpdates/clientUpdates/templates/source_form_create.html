@@ -299,7 +299,18 @@
                     {{phase2PfasResultsForm.management_form}}
                     {% for form in phase2PfasResultsForm %}
                     <tr>
-                        <td><input disabled id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-control label-center" value="{{form.analyte.value|default_if_none:''}}"></td>
+                        <td>
+                            {% if form.analyte.html_name == "pfas-6-analyte" %}
+                                <select required id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
+                                    <option disabled {% if not form.analyte.value %} selected {% endif %} value=""></option>
+                                    {% for option in otherAnalytes %}
+                                        <option {% if form.units.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <input disabled id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-control label-center" value="{{form.analyte.value|default_if_none:''}}">
+                            {% endif %}
+                        </td>
                         <td><input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}"></td>
                         <td>
                             <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">

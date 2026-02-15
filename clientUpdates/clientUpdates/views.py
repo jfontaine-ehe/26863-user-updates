@@ -10,7 +10,8 @@ from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRa
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
                      pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo, phase2AnnualFlow, phase2PfasResults)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
-    phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2AnnualConstants, phase2PfasResultsForm
+    phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2AnnualConstants, phase2PfasResultsForm, \
+    otherPfasForm
 
 # Custom functions
 from .utils.handler import handle_update
@@ -679,7 +680,7 @@ def sourceFormCreate(request):
 
         form3Constants = phase2AnnualConstants(request.POST)
 
-        pfasResultsFormset = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=6)
+        pfasResultsFormset = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=7)
         form4 = pfasResultsFormset(request.POST, prefix="pfas")
 
         try:
@@ -717,13 +718,12 @@ def sourceFormCreate(request):
         form3 = form3_factory(queryset=phase2AnnualFlow.objects.none(),
                       initial=yearInitialData, prefix="annualflow")
 
-        form4_factory = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=6)
+        form4_factory = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=7)
         form4 = form4_factory(queryset=phase2PfasResults.objects.none(),
                       initial=pfasInitialData, prefix="pfas")
 
-        #form4 = form4(queryset=phase2PfasResults.objects.filter(source_name="asdfasdf"))
 
-            #form4(queryset=phase2PfasResults.objects.filter(source_name="asdfasdf")))
+        form5 = otherPfasForm()
 
         context = {
 
@@ -731,15 +731,18 @@ def sourceFormCreate(request):
             "phase2MaxFlowForm": form2,
             "phase2AnnualFlowForm": form3,
             "phase2PfasResultsForm": form4,
+            "otherPfasForm": form5,
             "yesNoUnknown": yesNoUnknown,
             "sourceTypeOptions": sourceTypeOptions,
             "unitOptions": unitOptions,
             "pfasUnits": pfasUnits,
-            "years": years
+            "years": years,
+            "otherAnalytes": otherAnalytes
 
         }
 
-        return render(request, 'source_form.html', context=context)
+        return render(request, 'source_form_create.html', context=context)
 
-# def sourceFormEdit(request, source_name):
-#     if request.method == "POST":
+#form4 = form4(queryset=phase2PfasResults.objects.filter(source_name="asdfasdf"))
+
+#form4(queryset=phase2PfasResults.objects.filter(source_name="asdfasdf")))

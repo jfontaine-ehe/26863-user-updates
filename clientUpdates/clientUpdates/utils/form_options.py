@@ -37,9 +37,16 @@ pfasInitialData = [{"analyte": "PFOA"},
                    {"analyte": "PFHxS"},
                    {"analyte": "GenX"},
                    {"analyte": "PFNA"},
-                   {"analyte": "PFBS"}]
+                   {"analyte": "PFBS"},
+                   {"analyte": ""}]
 
 yearInitialData = []
 for i in range(11):
     year = {"year": 2013 + i}
     yearInitialData.append(year)
+
+otherAnalytes = ("11Cl-PF3OUdS", "8:2FTS", "4:2FTS", "6:2FTS", "ADONA",
+                 "9Cl-PF3ONS", "NFDHA", "PFEESA", "PFMPA", "PFMBA",
+                 "PFBA", "PFDA", "PFDoA", "PFHpS", "PFHpA",
+                 "PFHxA", "PFPeS", "PFPeA", "PFUnA", "NEtFOSAA",
+                 "NMeFOSAA", "PFTA", "PFTrDA")
