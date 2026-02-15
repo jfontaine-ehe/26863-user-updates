@@ -2,7 +2,7 @@
 
 {% block content %}
 <div>
-    <form id="sourceForm" action="/source-form/" method="post" onSubmit="return confirm('Are you sure you would like to submit this form?')">
+    <form id="sourceForm" action="/source-form-create/" method="post" onSubmit="return confirm('Are you sure you would like to submit this form?')">
         {% csrf_token %}
 
         <!--Source Name-->

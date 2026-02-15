@@ -219,3 +219,14 @@ class phase2AnnualConstants(forms.ModelForm):
             'file_name',
             'comments_annual_flow'
         ]
+
+
+class phase2PfasResultsForm(forms.ModelForm):
+    class Meta:
+        model = phase2PfasResults
+        fields = [
+            'analyte',
+            'result',
+            'units',
+            'sample_date'
+        ]

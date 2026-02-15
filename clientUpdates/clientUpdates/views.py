@@ -10,7 +10,7 @@ from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRa
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
                      pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo, phase2AnnualFlow, phase2PfasResults)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
-    phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2AnnualConstants
+    phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2AnnualConstants, phase2PfasResultsForm
 
 # Custom functions
 from .utils.handler import handle_update
@@ -30,40 +30,7 @@ from django.http import JsonResponse, Http404
 from itertools import chain
 from datetime import datetime
 from django.db.models import Q, Sum
-
-sdwisOwnerCodes = {("L", "L-Local Government"),
-                   ("M", "M-Public/Private"),
-                   ("P", "P-Private"),
-                   ("N", "N-Native American"),
-                   ("S", "S-State Government"),
-                   ("F", "F-Federal Government"),
-                   ("unknown", "Unknown")}
-
-sdwisFacilityCodes = {("cws", "Community Water System"),
-                      ("ntncws", "Non-Transient Non-Community Water System"),
-                      ("tncws", "Transient Non-Community Water System"),
-                      ("unknown", "Unknown")}
-
-sdwisActivityCodes = {("active", "Active"),
-                      ("inactive", "Inactive"),
-                      ("change", "Change from public to non-public"),
-                      ("merge", "Merged with another system"),
-                      ("potential", "Potential future system to be regulated"),
-                      ("unknown", "Unknown")}
-
-yesNoUnknown = ("Yes", "No", "Unknown")
-
-sourceTypeOptions = {("GW", "Groundwater Well"), ("SW", "Surface Water"), ("Other", "Other")}
-
-unitOptions = {("GPM", "GPM (Gallons Per Minute)"), ("GPY", "GPY (Gallons Per Year)"),
-               ("MGD", "MGD (Million Gallons Per Day"), ("AFPY", "AFPY (Acre-feet Per Year")}
-
-pfasAnalytes = ("PFOA", "PFOS", "PFHxS", "GenX", "PFNA", "PFBS")
-
-pfasUnits = {("ug/L", "ug/L (ppb)"),
-             ("ng/L", "ng/L (ppt)")}
-
-years = list(range(2013, 2024))
+from .utils.form_options import *
 
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
 # class CustomLoginView(LoginView):
@@ -699,7 +666,6 @@ def pwsInfoView(request):
 def formSuccess(request):
     return render(request, 'form_success.html')
 
-
 @never_cache
 def sourceFormCreate(request):
 
@@ -708,32 +674,19 @@ def sourceFormCreate(request):
         form1 = phase2SourceInfoForm(request.POST)
         form2 = phase2MaxFlowForm(request.POST)
 
-        annualFlowFormset = modelformset_factory(phase2AnnualFlow,
-                                                 fields=[
-                                                     'year',
-                                                     'source_name',
-                                                     'annual_flow_rate',
-                                                     'flow_rate_reduced',
-                                                     'did_not_exist'
-                                                 ])
-        form3 = annualFlowFormset(request.POST)
+        annualFlowFormset = modelformset_factory(phase2AnnualFlow, form=phase2AnnualFlowForm, extra=11)
+        form3 = annualFlowFormset(request.POST, prefix="annualflow")
+
         form3Constants = phase2AnnualConstants(request.POST)
 
-        pfasResultsFormset = modelformset_factory(phase2PfasResults,
-                                     fields=[
-                                         'analyte',
-                                         'result',
-                                         'units',
-                                         'sample_date'
-                                     ])
-
-        form4 = pfasResultsFormset(request.POST)
+        pfasResultsFormset = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=6)
+        form4 = pfasResultsFormset(request.POST, prefix="pfas")
 
         try:
 
             # transaction.atomic makes sure that either all instances save or all instances fail
             with transaction.atomic():
-                if form1.is_valid() and form2.is_valid() and form3.is_valid():
+                if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid():
                     form1.save()
                     form2.save()
                     form3Constants = form3Constants.save(commit=False)
@@ -757,41 +710,18 @@ def sourceFormCreate(request):
 
     else:
 
-        yearInitialData = []
-        for i in range(11):
-            year = {"year": 2013 + i}
-            yearInitialData.append(year)
-
-        pfasInitialData = [{"analyte": "PFOA"},
-                           {"analyte": "PFOS"},
-                           {"analyte": "PFHxS"},
-                           {"analyte": "GenX"},
-                           {"analyte": "PFNA"},
-                           {"analyte": "PFBS"}]
-
         form1 = phase2SourceInfoForm()
         form2 = phase2MaxFlowForm()
-        form3 = modelformset_factory(phase2AnnualFlow,
-                                     fields=[
-                                         'year',
-                                         'source_name',
-                                         'annual_flow_rate',
-                                         'flow_rate_reduced',
-                                         'did_not_exist'
-                                     ], extra=11)
 
-        form3 = form3(queryset=phase2AnnualFlow.objects.filter(id=0),
-                      initial=yearInitialData)
+        form3_factory = modelformset_factory(phase2AnnualFlow, form=phase2AnnualFlowForm, extra=11)
+        form3 = form3_factory(queryset=phase2AnnualFlow.objects.none(),
+                      initial=yearInitialData, prefix="annualflow")
 
-        form4 = modelformset_factory(phase2PfasResults,
-                                     fields=[
-                                         'analyte',
-                                         'result',
-                                         'units',
-                                         'sample_date'
-                                     ], extra=0)
+        form4_factory = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=6)
+        form4 = form4_factory(queryset=phase2PfasResults.objects.none(),
+                      initial=pfasInitialData, prefix="pfas")
 
-        form4 = form4(queryset=phase2PfasResults.objects.filter(source_name="asdfasdf"))
+        #form4 = form4(queryset=phase2PfasResults.objects.filter(source_name="asdfasdf"))
 
             #form4(queryset=phase2PfasResults.objects.filter(source_name="asdfasdf")))
 
