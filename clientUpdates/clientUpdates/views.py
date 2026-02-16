@@ -718,7 +718,7 @@ def sourceFormCreate(request):
         form3 = form3_factory(queryset=phase2AnnualFlow.objects.none(),
                       initial=yearInitialData, prefix="annualflow")
 
-        form4_factory = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=7)
+        form4_factory = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=8)
         form4 = form4_factory(queryset=phase2PfasResults.objects.none(),
                       initial=pfasInitialData, prefix="pfas")
 

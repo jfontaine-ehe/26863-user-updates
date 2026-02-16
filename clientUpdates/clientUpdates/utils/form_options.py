@@ -38,6 +38,7 @@ pfasInitialData = [{"analyte": "PFOA"},
                    {"analyte": "GenX"},
                    {"analyte": "PFNA"},
                    {"analyte": "PFBS"},
+                   {"analyte": ""},
                    {"analyte": ""}]
 
 yearInitialData = []

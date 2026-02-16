@@ -297,21 +297,14 @@
                 </thead>
                 <tbody>
                     {{phase2PfasResultsForm.management_form}}
-                    {% for form in phase2PfasResultsForm %}
+                    {% for form in phase2PfasResultsForm|slice:"0:6" %}
                     <tr>
                         <td>
-                            {% if form.analyte.html_name == "pfas-6-analyte" %}
-                                <select required id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
-                                    <option disabled {% if not form.analyte.value %} selected {% endif %} value=""></option>
-                                    {% for option in otherAnalytes %}
-                                        <option {% if form.units.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
-                                    {% endfor %}
-                                </select>
-                            {% else %}
-                                <input disabled id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-control label-center" value="{{form.analyte.value|default_if_none:''}}">
-                            {% endif %}
+                            <input disabled id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-control label-center" value="{{form.analyte.value|default_if_none:''}}">
                         </td>
-                        <td><input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}"></td>
+                        <td>
+                            <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
+                        </td>
                         <td>
                             <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
@@ -320,13 +313,97 @@
                             {% endfor %}
                             </select>
                         </td>
-                        <td><input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control"></td>
+                        <td>
+                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control">
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
 
+        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>Highest Other PFAS Results</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Analyte</th>
+                        <th>Maximum Result</th>
+                        <th>Units</th>
+                        <th>Sampling Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in phase2PfasResultsForm|slice:"-2:-1" %}
+                    <tr>
+                        <td>
+                            <select required id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
+                                <option disabled {% if not form.analyte.value %} selected {% endif %} value="" class="label-center">Choose Analyte</option>
+                                {% for option in otherAnalytes %}
+                                    <option {% if form.analyte.value == option %} selected {% endif %} value="{{option}}" class="label-center">{{option}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
+                        </td>
+                        <td>
+                            <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
+                                <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
+                            {% for option in pfasUnits %}
+                                <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
+                            {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
+        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>PFAS Analyte that Exceeds a State MCL</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Analyte</th>
+                        <th>Maximum Result</th>
+                        <th>Units</th>
+                        <th>Sampling Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in phase2PfasResultsForm|slice:"-1:" %}
+                    <tr>
+                        <td>
+                            <select required id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
+                                <option disabled {% if not form.analyte.value %} selected {% endif %} value="" class="label-center">Choose Analyte</option>
+                                {% for option in otherAnalytes %}
+                                    <option {% if form.analyte.value == option %} selected {% endif %} value="{{option}}" class="label-center">{{option}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
+                        </td>
+                        <td>
+                            <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
+                                <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
+                            {% for option in pfasUnits %}
+                                <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
+                            {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
 
 
