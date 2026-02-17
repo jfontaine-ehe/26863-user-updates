@@ -700,12 +700,14 @@ def sourceFormCreate(request):
                     comments_max_flow = form5.cleaned_data['comments_max_flow']
                     comments_annual_flow = form5.cleaned_data['comments_annual_flow']
                     comments_pfas = form5.cleaned_data['comments_pfas']
+                    dt = timezone.now()
 
                     # modify and save sourceinfo form
                     form1 = form1.save(commit=False)
                     form1.pwsid = pwsid
                     form1.pws_name = pws_name
                     form1.source_name = source_name
+                    form1.timestamp = dt
                     form1.save()
 
                     # modify and save max flow form
@@ -714,6 +716,7 @@ def sourceFormCreate(request):
                     form2.pws_name = pws_name
                     form2.source_name = source_name
                     form2.comments = comments_max_flow
+                    form2.timestamp = dt
                     form2.save()
 
                     # modify and save annual flow form
@@ -724,6 +727,7 @@ def sourceFormCreate(request):
                         instance.source_name = source_name
                         instance.comments = comments_annual_flow
                         instance.year = year
+                        instance.timestamp = dt
                         instance.save()
 
                     # modify and save pfas form
@@ -734,6 +738,7 @@ def sourceFormCreate(request):
                         instance.pws_name = pws_name
                         instance.source_name = source_name
                         instance.comments = comments_pfas
+                        instance.timestamp = dt
                         # iterate over pre-defined pfas analytes that aren't
                         # submitted in POST request (since they are disabled fields)
                         if instance.analyte == '' or None:
