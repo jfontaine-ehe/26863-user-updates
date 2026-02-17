@@ -8,10 +8,11 @@ import django_localflavor_us.us_states as us_states
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
                      ClaimPfasResult, paymentInfo,
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
-                     pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo, phase2AnnualFlow, phase2PfasResults)
+                     pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo, phase2AnnualFlow, phase2PfasResults,
+                     pwsCreds)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
-    phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2AnnualConstants, phase2PfasResultsForm, \
-    otherPfasForm
+    phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2PfasResultsForm, \
+    formConstants
 
 # Custom functions
 from .utils.handler import handle_update
@@ -668,41 +669,77 @@ def formSuccess(request):
     return render(request, 'form_success.html')
 
 @never_cache
+@login_required
 def sourceFormCreate(request):
 
     if request.method == "POST":
 
+        # get pwsid and associated pws name
+        pwsid = request.user.username
+        pws_name = get_object_or_404(pwsCreds, pwsid=pwsid).pws_name
+
         form1 = phase2SourceInfoForm(request.POST)
-        form2 = phase2MaxFlowForm(request.POST)
+        form2 = phase2MaxFlowForm(request.POST, request.FILES, prefix="maxflow")
 
         annualFlowFormset = modelformset_factory(phase2AnnualFlow, form=phase2AnnualFlowForm, extra=11)
         form3 = annualFlowFormset(request.POST, prefix="annualflow")
 
-        form3Constants = phase2AnnualConstants(request.POST)
-
         pfasResultsFormset = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=7)
         form4 = pfasResultsFormset(request.POST, prefix="pfas")
+
+        form5 = formConstants(request.POST)
 
         try:
 
             # transaction.atomic makes sure that either all instances save or all instances fail
             with transaction.atomic():
-                if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid():
+                if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid():
+
+                    # extract one-time / constant variables
+                    source_name = form5.cleaned_data['source_name']
+                    comments_max_flow = form5.cleaned_data['comments_max_flow']
+                    comments_annual_flow = form5.cleaned_data['comments_annual_flow']
+                    comments_pfas = form5.cleaned_data['comments_pfas']
+
+                    # modify and save sourceinfo form
+                    form1 = form1.save(commit=False)
+                    form1.pwsid = pwsid
+                    form1.pws_name = pws_name
+                    form1.source_name = source_name
                     form1.save()
+
+                    # modify and save max flow form
+                    form2 = form2.save(commit=False)
+                    form2.pwsid = pwsid
+                    form2.pws_name = pws_name
+                    form2.source_name = source_name
+                    form2.comments = comments_max_flow
                     form2.save()
-                    form3Constants = form3Constants.save(commit=False)
+
+                    # modify and save annual flow form
                     for form, year in zip(form3, years):
                         instance = form.save(commit=False)
+                        instance.pwsid = pwsid
+                        instance.pws_name = pws_name
+                        instance.source_name = source_name
+                        instance.comments = comments_annual_flow
                         instance.year = year
-                        instance.source_name = form3Constants.source_name
-                        #instance.file_name = form3Constants.file_name
-                        #instance.comments_annual_flow = form3Constants.comments_annual_flow
-                        form.save()
-                    for form, pfas in zip(form4, pfasAnalytes):
+                        instance.save()
+
+                    # modify and save pfas form
+                    counter=0
+                    for form in form4:
                         instance = form.save(commit=False)
-                        instance.analyte = pfas
-                        instance.source_name = form3Constants.source_name
-                        form.save()
+                        instance.pwsid = pwsid
+                        instance.pws_name = pws_name
+                        instance.source_name = source_name
+                        instance.comments = comments_pfas
+                        # iterate over pre-defined pfas analytes that aren't
+                        # submitted in POST request (since they are disabled fields)
+                        if instance.analyte == '' or None:
+                            instance.analyte = pfasAnalytes[counter]
+                            counter = counter + 1
+                        instance.save()
 
                     return render(request, 'form_success.html')
 
@@ -712,7 +749,7 @@ def sourceFormCreate(request):
     else:
 
         form1 = phase2SourceInfoForm()
-        form2 = phase2MaxFlowForm()
+        form2 = phase2MaxFlowForm(prefix="maxflow")
 
         form3_factory = modelformset_factory(phase2AnnualFlow, form=phase2AnnualFlowForm, extra=11)
         form3 = form3_factory(queryset=phase2AnnualFlow.objects.none(),
@@ -722,8 +759,7 @@ def sourceFormCreate(request):
         form4 = form4_factory(queryset=phase2PfasResults.objects.none(),
                       initial=pfasInitialData, prefix="pfas")
 
-
-        form5 = otherPfasForm()
+        form5 = formConstants()
 
         context = {
 
@@ -731,7 +767,7 @@ def sourceFormCreate(request):
             "phase2MaxFlowForm": form2,
             "phase2AnnualFlowForm": form3,
             "phase2PfasResultsForm": form4,
-            "otherPfasForm": form5,
+            "formConstants": form5,
             "yesNoUnknown": yesNoUnknown,
             "sourceTypeOptions": sourceTypeOptions,
             "unitOptions": unitOptions,

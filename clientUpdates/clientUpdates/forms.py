@@ -194,7 +194,10 @@ class phase2MaxFlowForm(forms.ModelForm):
         model = phase2MaxFlow
 
         exclude = [
-            ''
+            'id',
+            'pwsid',
+            'pws_name',
+            'comments'
         ]
 
 
@@ -203,6 +206,9 @@ class phase2AnnualFlowForm(forms.ModelForm):
         model = phase2AnnualFlow
 
         fields = [
+            'id',
+            'pwsid',
+            'pws_name',
             'year',
             'source_name',
             'annual_flow_rate',
@@ -211,14 +217,14 @@ class phase2AnnualFlowForm(forms.ModelForm):
         ]
 
 
-class phase2AnnualConstants(forms.ModelForm):
-    class Meta:
-        model = phase2AnnualFlow
-        fields = [
-            'source_name',
-            'file_name',
-            'comments_annual_flow'
-        ]
+# class phase2AnnualConstants(forms.ModelForm):
+#     class Meta:
+#         model = phase2AnnualFlow
+#         fields = [
+#             'source_name',
+#             'file_name',
+#             'comments_annual_flow'
+#         ]
 
 
 class phase2PfasResultsForm(forms.ModelForm):
@@ -231,12 +237,9 @@ class phase2PfasResultsForm(forms.ModelForm):
             'sample_date'
         ]
 
-class otherPfasForm(forms.ModelForm):
-    class Meta:
-        model = phase2PfasResults
-        fields = [
-            'analyte',
-            'result',
-            'units',
-            'sample_date'
-        ]
+class formConstants(forms.Form):
+    comments_max_flow = forms.CharField(widget=forms.Textarea, required=False)
+    comments_annual_flow = forms.CharField(widget=forms.Textarea, required=False)
+    comments_pfas = forms.CharField(widget=forms.Textarea, required=False)
+    source_name = forms.CharField(max_length=150)
+

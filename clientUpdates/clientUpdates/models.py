@@ -1,6 +1,7 @@
 import django_localflavor_us.us_states as us_states
 from django.db import models
 
+from .utils.handler import file_upload
 
 years = [(y, y) for y in range(2013, 2024)]
 
@@ -918,7 +919,7 @@ class phase2MaxFlow(models.Model):
     max_flow_rate = models.FloatField(blank=True, null=True)
     units = models.TextField(blank=True)
     flow_determination = models.TextField(blank=True)
-    file_name = models.TextField(blank=True)
+    file_name = models.FileField(blank=True, upload_to=file_upload)
     comments_max_flow = models.TextField(blank=True)
 
     class Meta:
