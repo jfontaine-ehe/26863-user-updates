@@ -2,7 +2,7 @@
 
 {% block content %}
 <div>
-    <form id="sourceForm" action="/source-form-create/" method="post" enctype="multipart/form-data" onSubmit="return confirm('Are you sure you would like to submit this form?')">
+    <form id="sourceForm" action="{{action}}" method="post" enctype="multipart/form-data" onSubmit="return confirm('Are you sure you would like to submit this form?')">
         {% csrf_token %}
 
         <!--Source Name-->
@@ -128,8 +128,8 @@
             <h3>Maximum Flow Rate</h3>
             <div style="display:flex; justify-content:space-between;">
                 <div class="form-group" style="width:50%;">
-                    <label for="maxflow-max_flow_rate">Verified maximum flow rate of the Water Source:</label>
-                    <input id="maxflow-max_flow_rate" name="maxflow-max_flow_rate" type="text" class="form-control" value="{{phase2MaxFlowForm.max_flow_rate.value|default_if_none:''}}">
+                    <label for="maxflow-flow_rate">Verified maximum flow rate of the Water Source:</label>
+                    <input id="maxflow-flow_rate" name="maxflow-flow_rate" type="text" class="form-control" value="{{phase2MaxFlowForm.flow_rate.value|default_if_none:''}}">
                 </div>
                 <div class="form-group" style="width:50%;">
                     <label for="maxflow-units">Units of Provided Flow Rate:</label>
@@ -175,9 +175,9 @@
                     {% for form in phase2AnnualFlowForm %}
                     <tr>
                         <td><input disabled id="{{form.year.html_name}}" name="{{form.year.html_name}}" type="number" class="form-control label-center" value="{{form.year.value|default_if_none:''}}"></td>
-                        <td class="label-center"><input id="{{form.annual_flow_rate.html_name}}" name="{{form.annual_flow_rate.html_name}}" type="number" class="form-control" value="{{form.annual_flow_rate.value}}"></td>
+                        <td class="label-center"><input id="{{form.flow_rate.html_name}}" name="{{form.flow_rate.html_name}}" type="number" class="form-control" value="{{form.flow_rate.value}}"></td>
                         <td class="label-center">
-                            <select id="flow_units" name="flow_units" class="form-select">
+                            <select id="{{form.units.html_name}}" name="{{form.units.html_name}}" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
                                     {% for option in unitOptions %}
                                         <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>

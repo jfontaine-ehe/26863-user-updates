@@ -211,7 +211,8 @@ class phase2AnnualFlowForm(forms.ModelForm):
             'pws_name',
             'year',
             'source_name',
-            'annual_flow_rate',
+            'flow_rate',
+            'units',
             'flow_rate_reduced',
             'did_not_exist'
         ]
