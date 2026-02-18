@@ -205,7 +205,6 @@ class phase2AnnualFlowForm(forms.ModelForm):
         model = phase2AnnualFlow
 
         fields = [
-            'id',
             'pwsid',
             'pws_name',
             'year',
@@ -213,8 +212,7 @@ class phase2AnnualFlowForm(forms.ModelForm):
             'flow_rate',
             'units',
             'flow_rate_reduced',
-            'did_not_exist',
-            'comments'
+            'did_not_exist'
         ]
 
 
@@ -235,8 +233,7 @@ class phase2PfasResultsForm(forms.ModelForm):
             'analyte',
             'result',
             'units',
-            'sample_date',
-            'comments'
+            'sample_date'
         ]
 
 class formConstants(forms.Form):

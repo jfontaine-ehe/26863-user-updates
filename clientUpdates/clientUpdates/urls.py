@@ -45,6 +45,6 @@ urlpatterns = [
     path('pws-info/', views.pwsInfoView, name='pws-info'),
     path('form_success/', views.formSuccess, name='form_success'),
     path('source-form-create/', views.sourceFormCreate, name='source-form-create'),
-    path('source-form-edit/<str:pwsid>/<str:source_name>/', views.sourceFormEdit, name='source-form-edit')
+    path('source-form-edit/<str:pwsid>/<path:source_name>/', views.sourceFormEdit, name='source-form-edit')
 
 ]

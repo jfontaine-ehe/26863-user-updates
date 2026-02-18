@@ -2,7 +2,7 @@
 
 {% block content %}
 <div>
-    <form id="sourceForm" action="{{action}}" method="post" enctype="multipart/form-data" onSubmit="return confirm('Are you sure you would like to submit this form?')">
+    <form id="sourceForm" action="{% if true%}{{action}}{% endif %}" method="post" enctype="multipart/form-data" onSubmit="return confirm('Are you sure you would like to submit this form?')">
         {% csrf_token %}
 
         <!--Source Name-->
@@ -173,6 +173,7 @@
                 <tbody>
                     {{phase2AnnualFlowForm.management_form}}
                     {% for form in phase2AnnualFlowForm %}
+                        {{ form.id }}
                     <tr>
                         <td><input disabled id="{{form.year.html_name}}" name="{{form.year.html_name}}" type="number" class="form-control label-center" value="{{form.year.value|default_if_none:''}}"></td>
                         <td class="label-center"><input id="{{form.flow_rate.html_name}}" name="{{form.flow_rate.html_name}}" type="number" class="form-control" value="{{form.flow_rate.value}}"></td>
@@ -298,6 +299,7 @@
                 <tbody>
                     {{phase2PfasResultsForm.management_form}}
                     {% for form in phase2PfasResultsForm|slice:"0:6" %}
+                        {{ form.id }}
                     <tr>
                         <td>
                             <input disabled id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-control label-center" value="{{form.analyte.value|default_if_none:''}}">
@@ -314,7 +316,7 @@
                             </select>
                         </td>
                         <td>
-                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control">
+                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{{form.sample_date.value|default_if_none:''}}">
                         </td>
                     </tr>
                     {% endfor %}
@@ -335,6 +337,7 @@
                 </thead>
                 <tbody>
                     {% for form in phase2PfasResultsForm|slice:"-2:-1" %}
+                        {{ form.id }}
                     <tr>
                         <td>
                             <select required id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
@@ -377,6 +380,7 @@
                 </thead>
                 <tbody>
                     {% for form in phase2PfasResultsForm|slice:"-1:" %}
+                        {{ form.id }}
                     <tr>
                         <td>
                             <select required id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">

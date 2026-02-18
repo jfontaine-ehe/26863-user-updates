@@ -791,6 +791,7 @@ def sourceFormCreate(request):
 
 # ------------------------------------------------------------------------------------------------------------------
 
+@never_cache
 def sourceFormEdit(request, pwsid, source_name):
 
     phase2SourceInfoInstance = get_object_or_404(phase2SourceInfo, pwsid=pwsid, source_name=source_name)
@@ -799,12 +800,84 @@ def sourceFormEdit(request, pwsid, source_name):
     annualFlowFactory = modelformset_factory(phase2AnnualFlow, form=phase2AnnualFlowForm, extra=0)
     phase2AnnualFlowInstances = annualFlowFactory(queryset=phase2AnnualFlow.objects.filter(pwsid=pwsid, source_name=source_name), prefix="annualflow")
 
+    y = phase2AnnualFlow.objects.filter(pwsid=pwsid, source_name=source_name)
     pfasFactory = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=0)
+    x = phase2PfasResults.objects.filter(pwsid=pwsid, source_name=source_name)
     phase2PfasInstances = pfasFactory(queryset=phase2PfasResults.objects.filter(pwsid=pwsid, source_name=source_name), prefix="pfas")
 
 
     if request.method == "POST":
-        print("post")
+
+        form1 = phase2SourceInfoForm(request.POST, instance=phase2SourceInfoInstance)
+        form2 = phase2MaxFlowForm(request.POST, request.FILES, prefix="maxflow", instance=phase2MaxFlowInstance)
+
+        form3 = annualFlowFactory(request.POST, queryset=phase2AnnualFlow.objects.filter(pwsid=pwsid, source_name=source_name), prefix="annualflow")
+        #annualFlowFormset = modelformset_factory(phase2AnnualFlow, form=phase2AnnualFlowForm, extra=0)
+        #form3 = annualFlowFormset(request.POST, prefix="annualflow", queryset=phase2AnnualFlowInstances)
+
+        #pfasResultsFormset = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=0)
+        #form4 = pfasResultsFormset(request.POST, prefix="pfas", queryset=phase2PfasInstances)
+        form4 = pfasFactory(request.POST, queryset=phase2PfasResults.objects.filter(pwsid=pwsid, source_name=source_name), prefix="pfas")
+
+        form5 = formConstants(request.POST)
+
+        form1.is_valid()
+        form2.is_valid()
+        form3.is_valid()
+        form4.is_valid()
+        form5.is_valid()
+
+        try:
+
+            # transaction.atomic makes sure that either all instances save or all instances fail
+            with transaction.atomic():
+                if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid():
+
+                    # extract one-time / constant variables
+                    source_name = form5.cleaned_data['source_name']
+                    comments_annual_flow = form5.cleaned_data['comments_annual_flow']
+                    comments_pfas = form5.cleaned_data['comments_pfas']
+                    dt = timezone.now()
+
+                    # modify and save sourceinfo form
+                    form1 = form1.save(commit=False)
+                    form1.source_name = source_name
+                    form1.timestamp = dt
+                    form1.save()
+
+                    # modify and save max flow form
+                    form2 = form2.save(commit=False)
+                    form2.source_name = source_name
+                    form2.timestamp = dt
+                    form2.save()
+
+                    # modify and save annual flow form
+                    for form, year in zip(form3, years):
+                        instance = form.save(commit=False)
+                        instance.source_name = source_name
+                        instance.year = year
+                        instance.comments = comments_annual_flow
+                        instance.timestamp = dt
+                        instance.save()
+
+                    # modify and save pfas form
+                    counter=0
+                    for form in form4:
+                        instance = form.save(commit=False)
+                        instance.source_name = source_name
+                        instance.comments = comments_pfas
+                        instance.timestamp = dt
+                        # iterate over pre-defined pfas analytes that aren't
+                        # submitted in POST request (since they are disabled fields)
+                        if instance.analyte == '' or None:
+                            instance.analyte = pfasAnalytes[counter]
+                            counter = counter + 1
+                        instance.save()
+
+                    return render(request, 'form_success.html')
+
+        except Exception as e:
+            print(e)
 
     else:
 
@@ -813,11 +886,13 @@ def sourceFormEdit(request, pwsid, source_name):
         form3 = phase2AnnualFlowInstances
         form4 = phase2PfasInstances
 
+        x = phase2AnnualFlow.objects.filter(pwsid=pwsid, source_name=source_name)[0].comments
+
         #x = phase2AnnualFlowinstances
         form5 = formConstants(
             data = {
-                "comments_annual_flow": form3.initial_forms[0].initial['comments'],
-                "comments_pfas": form4.initial_forms[0].initial['comments'],
+                "comments_annual_flow": phase2AnnualFlow.objects.filter(pwsid=pwsid, source_name=source_name)[0].comments,
+                "comments_pfas": phase2PfasResults.objects.filter(pwsid=pwsid, source_name=source_name)[0].comments,
                 "source_name": form1.initial['source_name']
             }
         )
@@ -835,7 +910,7 @@ def sourceFormEdit(request, pwsid, source_name):
             "pfasUnits": pfasUnits,
             "years": years,
             "otherAnalytes": otherAnalytes,
-            "action": "/source-form-edit/"
+            "action": f"url source-form-edit {pwsid} {source_name}"
 
         }
 
