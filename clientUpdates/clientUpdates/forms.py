@@ -196,8 +196,7 @@ class phase2MaxFlowForm(forms.ModelForm):
         exclude = [
             'id',
             'pwsid',
-            'pws_name',
-            'comments'
+            'pws_name'
         ]
 
 
@@ -214,7 +213,8 @@ class phase2AnnualFlowForm(forms.ModelForm):
             'flow_rate',
             'units',
             'flow_rate_reduced',
-            'did_not_exist'
+            'did_not_exist',
+            'comments'
         ]
 
 
@@ -235,11 +235,11 @@ class phase2PfasResultsForm(forms.ModelForm):
             'analyte',
             'result',
             'units',
-            'sample_date'
+            'sample_date',
+            'comments'
         ]
 
 class formConstants(forms.Form):
-    comments_max_flow = forms.CharField(widget=forms.Textarea, required=False)
     comments_annual_flow = forms.CharField(widget=forms.Textarea, required=False)
     comments_pfas = forms.CharField(widget=forms.Textarea, required=False)
     source_name = forms.CharField(max_length=150)

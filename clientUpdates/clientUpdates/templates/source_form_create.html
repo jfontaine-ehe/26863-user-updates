@@ -10,7 +10,7 @@
             <h3>Source Name</h3>
             <div class="form-group">
                 <label for="source_name">Please enter the source name:</label>
-                <input required id="source_name" name="source_name" type="text" class="form-control" value="{{phase2SourceInfoForm.source_name.value|default_if_none:''}}">
+                <input required id="source_name" name="source_name" type="text" class="form-control" value="{{formConstants.source_name.value|default_if_none:''}}">
             </div>
         </div>
 
@@ -152,8 +152,8 @@
                 <div class="invalid-feedback" id="file-upload-error"></div>-->
             </div>
             <div class="form-group">
-                <label for="comments_max_flow">Comments</label>
-                <textarea id="comments_max_flow" name="comments_max_flow" class="form-control">{{formConstants.comments_max_flow.value|default_if_none:''}}</textarea>
+                <label for="maxflow-comments">Comments</label>
+                <textarea id="maxflow-comments" name="maxflow-comments" class="form-control">{{phase2MaxFlowForm.comments.value|default_if_none:''}}</textarea>
             </div>
         </div>
 
