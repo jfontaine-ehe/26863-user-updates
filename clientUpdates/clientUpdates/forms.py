@@ -205,8 +205,6 @@ class phase2AnnualFlowForm(forms.ModelForm):
         model = phase2AnnualFlow
 
         fields = [
-            'pwsid',
-            'pws_name',
             'year',
             'source_name',
             'flow_rate',
