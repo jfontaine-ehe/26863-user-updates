@@ -111,6 +111,7 @@ def upload_to_dropbox(file, filetype, pwsid):
         # Return success response
         logger.info(f"{file} uploaded to Dropbox under /uploads/{pwsid}/{filetype}/ successfully.")
         return JsonResponse({'success': 'File uploaded to Dropbox successfully', 'path': dropbox_path})
+
     except dropbox.exceptions.AuthError:
         # Refresh token and retry
         dropbox_access_token = refresh_dropbox_access_token()

@@ -1,4 +1,6 @@
 # Custom models and forms
+import os
+
 from django.contrib.auth import logout
 from django.views.decorators.cache import never_cache
 
@@ -494,12 +496,31 @@ def contact_view(request, claim=None, source_name=None, message=0):
     recipients = settings.EMAIL_RECIPIENTS
 
     if request.method == 'POST':
-        form = ContactForm(request.POST)
+        form = ContactForm(request.POST, request.FILES)
 
         if form.is_valid():
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
+            ################################
+            uploaded_file = request.FILES.get('file_upload')
+
+            if uploaded_file:
+                print("pause")
+                file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
+                with open(file_path, 'wb+') as destination:
+                    try:
+                        for chunk in uploaded_file.chunks():
+                            destination.write(chunk)
+                    except Exception as e:
+                        print(e)
+
+
+
+
+
+
+            ############################
 
             if claim:
                 subject = f"{subject}"
