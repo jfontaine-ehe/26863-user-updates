@@ -201,6 +201,10 @@
                                 {% endfor %}
                             </select>
                         </td>
+                        <td>
+                            <label for="{{form.filename.html_name}}" class="form-label">This is a placeholder for the Annual Flow filename upload.</label>
+                            <input type="file" class="form-control" id="{{form.filename.html_name}}" name="{{form.filename.html_name}}" accept=".pdf, .csv, .xls, .xlsx">
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

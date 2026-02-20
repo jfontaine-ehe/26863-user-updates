@@ -785,9 +785,6 @@ def sourceFormCreate(request):
 
         return render(request, 'source_form_create.html', context=context)
 
-#form4 = form4(queryset=phase2PfasResults.objects.filter(source_name="asdfasdf"))
-
-#form4(queryset=phase2PfasResults.objects.filter(source_name="asdfasdf")))
 
 # ------------------------------------------------------------------------------------------------------------------
 

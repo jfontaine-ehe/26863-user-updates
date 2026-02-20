@@ -210,7 +210,8 @@ class phase2AnnualFlowForm(forms.ModelForm):
             'flow_rate',
             'units',
             'flow_rate_reduced',
-            'did_not_exist'
+            'did_not_exist',
+            'file_name'
         ]
 
 
