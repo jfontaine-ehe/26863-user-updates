@@ -102,6 +102,9 @@
             const form = event.target;
             const formData = new FormData(form);
 
+            var loaderContainer = document.getElementById('loader-container');
+            loaderContainer.style.display = 'flex';
+
             var loader = document.getElementById('loader');
             loader.style.display = 'block';
 
