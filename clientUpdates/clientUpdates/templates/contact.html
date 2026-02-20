@@ -28,10 +28,15 @@
         <label for="id_message">Message</label>
     </div>
 
+    <div>
+        <label for="file_upload" class="form-label">This is a placeholder for the Annua Flow filename upload.</label>
+        <input type="file" class="form-control" id="file_upload" name="file_upload" accept=".pdf, .jpg, .jpeg, .png">
+    </div>
+
+
     <div class="mb-4">
         <button type="submit" class="btn btn-outline-success" id="submit-button">Send</button>
         <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='{% url 'landing_page' %}'">Cancel</button>
-
     </div>
 
     <div id="loader-container">

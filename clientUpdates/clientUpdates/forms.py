@@ -123,4 +123,4 @@ class ContactForm(forms.Form):
     email = forms.EmailField(required=True, label="Your Email")
     subject = forms.CharField(max_length=150, required=True, label="Subject")
     message = forms.CharField(widget=forms.Textarea, required=True, label="Message")
-    
+    file_upload = forms.FileField()
