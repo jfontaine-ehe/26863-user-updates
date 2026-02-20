@@ -124,3 +124,11 @@ class ContactForm(forms.Form):
     subject = forms.CharField(max_length=150, required=True, label="Subject")
     message = forms.CharField(widget=forms.Textarea, required=True, label="Message")
     file_upload = forms.FileField(required=False)
+
+    # def clean_file_upload(self):
+    #     file = self.cleaned_data['file']
+    #
+    #     if file.size > 5 * 1024 * 1024:
+    #         raise forms.ValidationError("File must be under 5MB.")
+    #
+    #     return file

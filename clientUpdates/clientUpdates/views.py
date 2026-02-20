@@ -28,6 +28,7 @@ from django.http import JsonResponse, Http404
 from itertools import chain
 from datetime import datetime
 from django.db.models import Q, Sum
+from .utils.dropbox_utils import upload_to_dropbox
 import logging
 
 logger = logging.getLogger('clientUpdates')
@@ -502,41 +503,47 @@ def contact_view(request, claim=None, source_name=None, message=0):
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            full_message = f"From: {name}\n\n{message}"
             ################################
             uploaded_file = request.FILES.get('file_upload')
 
+
             if uploaded_file:
-                print("pause")
-                file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
-                with open(file_path, 'wb+') as destination:
-                    try:
-                        for chunk in uploaded_file.chunks():
-                            destination.write(chunk)
-                    except Exception as e:
-                        print(e)
+                file_content = uploaded_file.read()
 
+                upload_to_dropbox(file=uploaded_file, filetype="Supplemental Claim", pwsid=pwsid)
 
-
-
-
-
-            ############################
+                # write locally
+                # file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
+                # with open(file_path, 'wb+') as destination:
+                #     try:
+                #         for chunk in uploaded_file.chunks():
+                #             destination.write(chunk)
+                #     except Exception as e:
+                #         print(e)
 
             if claim:
                 subject = f"{subject}"
+                email_message = EmailMessage(
+                    subject=subject,
+                    body=full_message,
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=recipients,
+                    reply_to=[email],
+                )
+
+                email_message.attach(uploaded_file.name, file_content, uploaded_file.content_type)
+
             else:
                 subject = f"{subject} (from {pwsid})"
-
-            message = form.cleaned_data['message']
-            full_message = f"From: {name}\n\n{message}"
-
-            email_message = EmailMessage(
-                subject=subject,
-                body=full_message,
-                from_email=settings.EMAIL_HOST_USER,
-                to=recipients,
-                reply_to=[email],
-            )
+                email_message = EmailMessage(
+                    subject=subject,
+                    body=full_message,
+                    from_email=settings.EMAIL_HOST_USER,
+                    to=recipients,
+                    reply_to=[email],
+                )
 
             try:
                 if source_name:
