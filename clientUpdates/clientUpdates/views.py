@@ -2,6 +2,7 @@
 import os
 
 from django.contrib.auth import logout
+from django.core.files.storage import default_storage
 from django.views.decorators.cache import never_cache
 
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
@@ -29,6 +30,7 @@ from itertools import chain
 from datetime import datetime
 from django.db.models import Q, Sum
 from .utils.dropbox_utils import upload_to_dropbox
+from .utils.upload_file_locally import upload_to_local
 import logging
 
 logger = logging.getLogger('clientUpdates')
@@ -505,23 +507,21 @@ def contact_view(request, claim=None, source_name=None, message=0):
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
             full_message = f"From: {name}\n\n{message}"
-            ################################
             uploaded_file = request.FILES.get('file_upload')
 
-
             if uploaded_file:
+
+                # save file content to be used later
                 file_content = uploaded_file.read()
 
-                upload_to_dropbox(file=uploaded_file, filetype="Supplemental Claim", pwsid=pwsid)
+                # save file to dropbox and locally
+                try:
+                    upload_to_dropbox(file=uploaded_file, filetype="Supplemental Claim", pwsid=pwsid)
+                    upload_to_local(pwsid=pwsid, file=uploaded_file, folder="Supplemental Claim")
 
-                # write locally
-                # file_path = os.path.join(settings.MEDIA_ROOT, uploaded_file.name)
-                # with open(file_path, 'wb+') as destination:
-                #     try:
-                #         for chunk in uploaded_file.chunks():
-                #             destination.write(chunk)
-                #     except Exception as e:
-                #         print(e)
+                except Exception as e:
+                    logger.error(f"Error: {e}. Attempted to upload file to dropbox and locally but failed.")
+
 
             if claim:
                 subject = f"{subject}"
@@ -546,23 +546,24 @@ def contact_view(request, claim=None, source_name=None, message=0):
                 )
 
             try:
+
                 if source_name:
                     logger.info(f"{name} of {pwsid} (email={email}) trying to send email about {claim} supplemental claims for {source_name}...")
+
                 else:
                     logger.info(f"{name} of {pwsid} (email={email}) trying to send general contact email...")
+
                 email_message.send(fail_silently=False)
+
             except Exception as e:
                 logger.error(f"{e}. The user tried to send an email but failed.")
+
             else:
                 logger.info(f"Email sent successfully!")
 
-            # Return a JSON response for AJAX.
-            # if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            #     return JsonResponse({'message': 'Email sent successfully.'})
-
             # if this is a user filling out a regular contact form, unrelated to supplemental funds:
             if claim is None:
-                return render(request, 'dashboard.html')
+                return render(request, 'landing_page.html')
 
             # otherwise...:
             else:
@@ -579,11 +580,14 @@ def contact_view(request, claim=None, source_name=None, message=0):
                 source.sup_notif_sent = True
                 source.notif_datetime = timezone.now()
                 source.sup_status = "Claim Under Review"
+
                 try:
                     logger.info(f"Attempting to save notification information for {source_name} (PWSID: {pwsid})...")
                     source.save()
+
                 except Exception as e:
                     logger.error(f"{e}. An error occurred saving the notification information for {source_name} (PWSID: {pwsid}) to the database.")
+
                 else:
                     logger.info("Notification information for the source was saved successfully!")
 

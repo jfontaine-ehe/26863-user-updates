@@ -30,13 +30,13 @@
 
 
     <div {% if not claim %} hidden {% else %} {% endif %}>
-        <label for="file_upload" class="form-label">Please submit a file</label>
+        <label for="file_upload" class="form-label">Please attach the lab report that will be associated with your Supplemental Fund Claim for this source.</label>
         <input {% if claim %} required {% else %} {% endif %} type="file" class="form-control" id="file_upload" name="file_upload" accept=".pdf, .jpg, .jpeg, .png">
         <div class="invalid-feedback" id="file-upload-error"></div>
     </div>
 
 
-    <div class="mb-4" style="padding-bottom: 20px;">
+    <div class="mb-4" style="padding-bottom: 20px; margin-top: 20px;">
         <button type="submit" class="btn btn-outline-success" id="submit-button">Send</button>
         <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='{% url 'landing_page' %}'">Cancel</button>
     </div>
@@ -50,7 +50,6 @@
 <script>
 
     document.getElementById('contactForm').addEventListener('submit', async function(event) {
-        event.preventDefault(); // Prevent default form submission
 
         // Utility functions
         const clearValidationErrors = () => {
@@ -67,12 +66,15 @@
           inputElement.classList.add('is-invalid');
         };
 
+        event.preventDefault(); // Prevent default form submission
+
         clearValidationErrors();
 
         const fileInput = document.getElementById('file_upload');
-        const maxFileSizeBytes = 25 * 1024 * 1024; // Max file size: 25 MB
+        const fileExists = fileInput.checkVisibility();
 
         const validateFile = () => {
+          const maxFileSizeBytes = 25 * 1024 * 1024; // Max file size: 25 MB
           const allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
           const fileName = fileInput.value;
           const fileExtension = fileName.split('.').pop().toLowerCase();
@@ -90,15 +92,14 @@
           console.log('true');
           return true;
         };
-
         const isFileValid = validateFile();
-        if (!isFileValid) {
+
+        if (!isFileValid && fileExists) {
             event.preventDefault();
         }
 
         else {
 
-            // ----------------------------------------------
             const form = event.target;
             const formData = new FormData(form);
 
