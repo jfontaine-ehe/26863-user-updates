@@ -30,7 +30,7 @@ from itertools import chain
 from datetime import datetime
 from django.db.models import Q, Sum
 from .utils.dropbox_utils import upload_to_dropbox
-from .utils.upload_file_locally import upload_to_local
+from .utils.file_upload_utils import upload_to_local, validate_file
 import logging
 
 logger = logging.getLogger('clientUpdates')
@@ -516,12 +516,13 @@ def contact_view(request, claim=None, source_name=None, message=0):
 
                 # save file to dropbox and locally
                 try:
+
+                    validate_file(uploaded_file)
                     upload_to_dropbox(file=uploaded_file, filetype="Supplemental Claim", pwsid=pwsid)
                     upload_to_local(pwsid=pwsid, file=uploaded_file, folder="Supplemental Claim")
 
                 except Exception as e:
                     logger.error(f"Error: {e}. Attempted to upload file to dropbox and locally but failed.")
-
 
             if claim:
                 subject = f"{subject}"
