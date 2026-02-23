@@ -214,17 +214,6 @@ class phase2AnnualFlowForm(forms.ModelForm):
             'file_name'
         ]
 
-
-# class phase2AnnualConstants(forms.ModelForm):
-#     class Meta:
-#         model = phase2AnnualFlow
-#         fields = [
-#             'source_name',
-#             'file_name',
-#             'comments_annual_flow'
-#         ]
-
-
 class phase2PfasResultsForm(forms.ModelForm):
     class Meta:
         model = phase2PfasResults
@@ -239,4 +228,22 @@ class formConstants(forms.Form):
     comments_annual_flow = forms.CharField(widget=forms.Textarea, required=False)
     comments_pfas = forms.CharField(widget=forms.Textarea, required=False)
     source_name = forms.CharField(max_length=150)
+
+class annualFiles(forms.Form):
+    annualFile1 = forms.FileField()
+    annualFile2 = forms.FileField()
+    annualFile3 = forms.FileField()
+    annualFile4 = forms.FileField()
+    annualFile5 = forms.FileField()
+    annualFile6 = forms.FileField()
+    annualFile7 = forms.FileField()
+    annualFile8 = forms.FileField()
+    annualFile9 = forms.FileField()
+    annualFile10 = forms.FileField()
+    annualFile11 = forms.FileField()
+
+
+
+
+
 

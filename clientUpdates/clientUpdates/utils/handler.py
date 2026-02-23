@@ -91,6 +91,5 @@ def handle_update(request, form_class, extra_fields, impacted=None, calc_func=No
 
 
 def file_upload(instance, filename):
-    print("{0}/{1}".format( instance.pwsid, filename))
     return "{0}/{1}".format(instance.pwsid, filename)
 

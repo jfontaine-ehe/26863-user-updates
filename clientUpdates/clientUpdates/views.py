@@ -12,7 +12,7 @@ from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRa
                      pwsCreds, phase2SourceInfo, phase2MaxFlow)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
     phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2PfasResultsForm, \
-    formConstants
+    formConstants, annualFiles
 
 # Custom functions
 from .utils.handler import handle_update
@@ -894,6 +894,9 @@ def sourceFormEdit(request, pwsid, source_name):
             }
         )
 
+
+        form6 = annualFiles()
+
         context = {
 
             "phase2SourceInfoForm": form1,
@@ -901,6 +904,7 @@ def sourceFormEdit(request, pwsid, source_name):
             "phase2AnnualFlowForm": form3,
             "phase2PfasResultsForm": form4,
             "formConstants": form5,
+            "annualFilesForm": form6,
             "yesNoUnknown": yesNoUnknown,
             "sourceTypeOptions": sourceTypeOptions,
             "unitOptions": unitOptions,

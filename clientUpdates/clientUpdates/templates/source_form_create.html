@@ -1,5 +1,6 @@
 {% extends 'base_generic.html' %}
 
+
 {% block content %}
 <div>
     <form id="sourceForm" action="{% if true%}{{action}}{% endif %}" method="post" enctype="multipart/form-data" onSubmit="return confirm('Are you sure you would like to submit this form?')">
@@ -37,7 +38,7 @@
             <h3>General Yes/No Questions</h3>
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
                 <label for="pws_owns_source" class="tf-label">Does the PWS own this Water Source?</label>
-                <select required id="pws_owns_source" name="pws_owns_source" class="form-select tf-select">
+                <select required id="pws_owns_source" name="pws_owns_source" class="form-select tf-select" style>
                     <option disabled {% if not phase2SourceInfoForm.pws_owns_source.value %} selected {% endif %} value=""></option>
                     {% for option in yesNoUnknown %}
                         <option {% if phase2SourceInfoForm.pws_owns_source.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
@@ -168,6 +169,7 @@
                         <th>Units</th>
                         <th>Flow Rate Reduced?</th>
                         <th>Existed?</th>
+                        <th>File Name</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -201,23 +203,34 @@
                                 {% endfor %}
                             </select>
                         </td>
-                        <td>
-                            <label for="{{form.filename.html_name}}" class="form-label">This is a placeholder for the Annual Flow filename upload.</label>
-                            <input type="file" class="form-control" id="{{form.filename.html_name}}" name="{{form.filename.html_name}}" accept=".pdf, .csv, .xls, .xlsx">
+                        <td class="label-center">
+                            <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}"class="form-select">
+                                <option value=""></option>
+                            </select>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            <div class="mb-3" style="margin-top:16px;">
-                <label for="annualFlowFileUpload" class="form-label">This is a placeholder for the Annua Flow filename upload.</label>
-                <input type="file" class="form-control" id="annualFlowFileUpload" name="filename" accept=".pdf, .jpg, .jpeg, .png">
-<!--                <small class="text-muted">Supported file types: .pdf, .jpg, .jpeg, .png (max file size = 25MB)</small>
-                <div class="invalid-feedback" id="file-upload-error"></div>-->
-            </div>
+<!--            <div class="mb-3" style="margin-top:16px;">-->
+<!--                <label for="annualFlowFileUpload" class="form-label">This is a placeholder for the Annua Flow filename upload.</label>-->
+<!--                <input type="file" class="form-control" id="annualFlowFileUpload" name="filename" accept=".pdf, .jpg, .jpeg, .png">-->
+<!--&lt;!&ndash;                <small class="text-muted">Supported file types: .pdf, .jpg, .jpeg, .png (max file size = 25MB)</small>-->
+<!--                <div class="invalid-feedback" id="file-upload-error"></div>&ndash;&gt;-->
+<!--            </div>-->
             <div class="form-group">
                 <label for="comments_annual_flow">Comments</label>
                 <textarea id="comments_annual_flow" name="comments_annual_flow" class="form-control">{{formConstants.comments_annual_flow.value|default_if_none:''}}</textarea>
+            </div>
+
+            <div class="form-group">
+                {% for field in annualFilesForm %}
+                    <label for="{{field.html_name}}" class="form-label {% if 'annualFile1' == field.html_name %} {% else %} hidden {% endif %}">This is a placeholder for the filename upload.</label>
+                    <input type="file" class="form-control form-label {% if 'annualFile1' == field.html_name %} {% else %} hidden {% endif %}" id="{{field.html_name}}" name="{{field.html_name}}" accept=".pdf, .jpg, .jpeg, .png">
+                {% endfor %}
+            </div>
+            <div style="display:flex; justify-content:flex-end;">
+                <button id='annualFilesButton' type="button" class="btn btn-primary">Add another file</button>
             </div>
         </div>
 
@@ -435,6 +448,18 @@
 
 
 <script>
+
+    let annualCounter = 1;
+
+    document.getElementById('annualFilesButton').addEventListener("click", function () {
+
+        const annualFiles = document.querySelectorAll('[id^="annualFile"]');
+
+        if (annualCounter < annualFiles.length) {
+            annualFiles[annualCounter].classList.remove("hidden");
+            annualCounter++;
+        }
+    });
 
 
     document.addEventListener("DOMContentLoaded", function () {
