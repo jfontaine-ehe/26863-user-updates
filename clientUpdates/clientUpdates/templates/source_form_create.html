@@ -230,7 +230,7 @@
                 {% endfor %}
             </div>
             <div style="display:flex; justify-content:flex-end;">
-                <button id='annualFilesButton' type="button" class="btn btn-primary">Add another file</button>
+                <button id='annualButton' type="button" class="btn btn-primary">Add another file</button>
             </div>
         </div>
 
@@ -450,8 +450,7 @@
 <script>
 
     let annualCounter = 1;
-
-    document.getElementById('annualFilesButton').addEventListener("click", function () {
+    document.getElementById('annualButton').addEventListener("click", function () {
 
         const annualFiles = document.querySelectorAll('[id^="annualFile"]');
 
@@ -461,6 +460,44 @@
         }
     });
 
+    const annualFileSelector = document.getElementById('annualflow-10-file_name');
+    const annualFiles = document.querySelectorAll('[id^="annualFile"]');
+    let fileNameList = []
+
+    function renderFileNames() {
+
+       annualFileSelector.options.length = 0;
+       fileNameList.forEach(file => {
+            const option = document.createElement("option");
+            option.value = file;
+            option.textContent = file;
+            annualFileSelector.appendChild(option);
+       });
+    };
+
+    annualFiles.forEach(file => {
+
+        file.addEventListener("change", function () {
+            fileDetails = file.files[0];
+
+        });
+
+        file.addEventListener("change", function () {
+
+            fileNameList = [];
+            annualFiles.forEach(elem => {
+
+                if (elem.checkVisibility() && elem.files.length > 0) {
+                    fileNameList.push(elem.files[0].name);
+                    console.log(fileNameList);
+                };
+
+            });
+
+            renderFileNames();
+
+        });
+    });
 
     document.addEventListener("DOMContentLoaded", function () {
         const sourceTypeSelect = document.getElementById('source_type');
