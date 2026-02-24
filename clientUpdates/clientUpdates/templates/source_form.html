@@ -454,26 +454,14 @@
 
 <script>
 
-    let annualCounter = 1;
-    document.getElementById('annualAddFileButton').addEventListener("click", function () {
-
-        const annualFiles = document.querySelectorAll('[id^="div_annualFile"]');
-
-        if (annualCounter < annualFiles.length) {
-            annualFiles[annualCounter].classList.remove("hidden");
-            annualFiles[annualCounter].classList.add("d-flex");
-            annualFiles[annualCounter].classList.add("justify-content-between");
-            annualCounter++;
-        }
-    });
-
     const annualFileSelectors = document.querySelectorAll('[id^="annualflow-"][id$="-file_name"]');
-    console.log(annualFileSelectors)
+    const annualDeleteButtons = document.querySelectorAll('[data-target^="annualFile')
     const annualFiles = document.querySelectorAll('[id^="annualFile"]');
-    let fileNameList = []
+    let fileNameList = [];
+
 
     function renderFileNames() {
-
+       console.log("here in renderFileNames");
        annualFileSelectors.forEach(elem => {
             elem.options.length = 0;
             fileNameList.forEach(file => {
@@ -494,6 +482,43 @@
        });
     };
 
+    let annualCounter = 1;
+    document.getElementById('annualAddFileButton').addEventListener("click", function () {
+
+        const annualFiles = document.querySelectorAll('[id^="div_annualFile"]');
+
+        if (annualCounter < annualFiles.length) {
+            annualFiles[annualCounter].classList.remove("hidden");
+            annualFiles[annualCounter].classList.add("d-flex");
+            annualFiles[annualCounter].classList.add("justify-content-between");
+            annualCounter++;
+        }
+    });
+
+    annualDeleteButtons.forEach(elem => {
+
+        elem.addEventListener("click", function () {
+
+            // get associated fileInput
+            const fileInput = document.getElementById(this.dataset.target);
+
+            // remove value from fileNameList
+            fileNameList = fileNameList.filter(x => x !== fileInput.files[0].name);
+
+            // remove file value and hide
+            fileInput.value = "";
+            fileInput.classList.add('hidden');
+
+            // hide the delete button as well
+            elem.classList.add('hidden');
+
+            // re-render filenames
+            renderFileNames();
+
+        });
+
+
+    });
 
     annualFiles.forEach(file => {
 
