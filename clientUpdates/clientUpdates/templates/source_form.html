@@ -226,11 +226,16 @@
             <div class="form-group">
                 {% for field in annualFilesForm %}
                     <label for="{{field.html_name}}" class="form-label {% if 'annualFile1' == field.html_name %} {% else %} hidden {% endif %}">This is a placeholder for the filename upload.</label>
-                    <input type="file" class="form-control form-label {% if 'annualFile1' == field.html_name %} {% else %} hidden {% endif %}" id="{{field.html_name}}" name="{{field.html_name}}" accept=".pdf, .jpg, .jpeg, .png">
+                    <div class="{% if 'annualFile1' == field.html_name %}d-flex{% else %}hidden{% endif %}" id="{{'div_'|add:field.html_name}}">
+                        <input style="width:80%;" type="file" class="form-control form-label" id="{{field.html_name}}" name="{{field.html_name}}" accept=".pdf, .jpg, .jpeg, .png">
+                        {% if 'annualFile1' != field.html_name %}
+                            <button style="width:10%; height:50%;" type="button" class="delete-button btn btn-danger" data-target="{{field.html_name}}">Delete</button>
+                        {% endif %}
+                    </div>
                 {% endfor %}
             </div>
             <div style="display:flex; justify-content:flex-end;">
-                <button id='annualButton' type="button" class="btn btn-primary">Add another file</button>
+                <button id='annualAddFileButton' type="button" class="btn btn-primary">Add another file</button>
             </div>
         </div>
 
@@ -450,30 +455,45 @@
 <script>
 
     let annualCounter = 1;
-    document.getElementById('annualButton').addEventListener("click", function () {
+    document.getElementById('annualAddFileButton').addEventListener("click", function () {
 
-        const annualFiles = document.querySelectorAll('[id^="annualFile"]');
+        const annualFiles = document.querySelectorAll('[id^="div_annualFile"]');
 
         if (annualCounter < annualFiles.length) {
             annualFiles[annualCounter].classList.remove("hidden");
+            annualFiles[annualCounter].classList.add("d-flex");
+            annualFiles[annualCounter].classList.add("justify-content-between");
             annualCounter++;
         }
     });
 
-    const annualFileSelector = document.getElementById('annualflow-10-file_name');
+    const annualFileSelectors = document.querySelectorAll('[id^="annualflow-"][id$="-file_name"]');
+    console.log(annualFileSelectors)
     const annualFiles = document.querySelectorAll('[id^="annualFile"]');
     let fileNameList = []
 
     function renderFileNames() {
 
-       annualFileSelector.options.length = 0;
-       fileNameList.forEach(file => {
-            const option = document.createElement("option");
-            option.value = file;
-            option.textContent = file;
-            annualFileSelector.appendChild(option);
+       annualFileSelectors.forEach(elem => {
+            elem.options.length = 0;
+            fileNameList.forEach(file => {
+                const option = document.createElement("option");
+                option.value = file;
+                option.textContent = file;
+                elem.appendChild(option);
+            });
+
+            const defaultOption = document.createElement("option");
+            defaultOption.value = "";
+            defaultOption.textContent = "Select a file";
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+
+            elem.appendChild(defaultOption);
+
        });
     };
+
 
     annualFiles.forEach(file => {
 

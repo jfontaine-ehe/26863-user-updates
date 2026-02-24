@@ -765,6 +765,7 @@ def sourceFormCreate(request):
                       initial=pfasInitialData, prefix="pfas")
 
         form5 = formConstants()
+        form6 = annualFiles()
 
         context = {
 
@@ -773,6 +774,7 @@ def sourceFormCreate(request):
             "phase2AnnualFlowForm": form3,
             "phase2PfasResultsForm": form4,
             "formConstants": form5,
+            "annualFilesForm": form6,
             "yesNoUnknown": yesNoUnknown,
             "sourceTypeOptions": sourceTypeOptions,
             "unitOptions": unitOptions,
@@ -783,7 +785,7 @@ def sourceFormCreate(request):
 
         }
 
-        return render(request, 'source_form_create.html', context=context)
+        return render(request, 'source_form.html', context=context)
 
 
 # ------------------------------------------------------------------------------------------------------------------
@@ -915,4 +917,4 @@ def sourceFormEdit(request, pwsid, source_name):
 
         }
 
-        return render(request, 'source_form_create.html', context=context)
+        return render(request, 'source_form.html', context=context)
