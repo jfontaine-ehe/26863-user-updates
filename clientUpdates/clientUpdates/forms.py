@@ -221,7 +221,8 @@ class phase2PfasResultsForm(forms.ModelForm):
             'analyte',
             'result',
             'units',
-            'sample_date'
+            'sample_date',
+            'file_name'
         ]
 
 class formConstants(forms.Form):
@@ -241,6 +242,16 @@ class annualFiles(forms.Form):
     annualFile9 = forms.FileField()
     annualFile10 = forms.FileField()
     annualFile11 = forms.FileField()
+
+class pfasFiles(forms.Form):
+    pfasFile1 = forms.FileField()
+    pfasFile2 = forms.FileField()
+    pfasFile3 = forms.FileField()
+    pfasFile4 = forms.FileField()
+    pfasFile5 = forms.FileField()
+    pfasFile6 = forms.FileField()
+    pfasFile7 = forms.FileField()
+    pfasFile8 = forms.FileField()
 
 
 

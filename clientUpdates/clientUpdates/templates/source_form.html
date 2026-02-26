@@ -316,6 +316,7 @@
                         <th>Maximum Result</th>
                         <th>Units</th>
                         <th>Sampling Date</th>
+                        <th>File Name</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -340,10 +341,30 @@
                         <td>
                             <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{{form.sample_date.value|default_if_none:''}}">
                         </td>
+                        <td class="label-center">
+                            <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
+                                <option value=""></option>
+                            </select>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+
+            <div class="form-group">
+                {% for field in pfasFilesForm %}
+                    <label for="{{field.html_name}}" class="form-label {% if 'pfasFile1' == field.html_name %} {% else %} hidden {% endif %}">This is a placeholder for the filename upload.</label>
+                    <div class="{% if 'pfasFile1' == field.html_name %}d-flex{% else %}hidden{% endif %}" id="{{'div_'|add:field.html_name}}">
+                        <input style="width:80%;" type="file" class="form-control form-label" id="{{field.html_name}}" name="{{field.html_name}}" accept=".pdf, .jpg, .jpeg, .png">
+                        {% if 'pfasFile1' != field.html_name %}
+                            <button style="width:10%; height:50%;" type="button" class="delete-button btn btn-danger" data-target="{{field.html_name}}">Delete</button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div style="display:flex; justify-content:flex-end;">
+                <button id='pfasAddFileButton' type="button" class="btn btn-primary">Add another file</button>
+            </div>
         </div>
 
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
@@ -454,15 +475,25 @@
 
 <script>
 
+    // left off likely needing to separate out divs and inpujts from annual files and pfasfiles objects
+
     const annualFileSelectors = document.querySelectorAll('[id^="annualflow-"][id$="-file_name"]');
-    const annualDeleteButtons = document.querySelectorAll('[data-target^="annualFile')
+    const annualDeleteButtons = document.querySelectorAll('[data-target^="annualFile"]');
+    const annualFileDivs = document.querySelectorAll('[id^="div_annualFile"]');
     const annualFiles = document.querySelectorAll('[id^="annualFile"]');
-    let fileNameList = [];
+    const annualAddFileButton = document.getElementById('annualAddFileButton');
+    let annualFileNameList = [];
+
+    const pfasFileSelectors = document.querySelectorAll('[id^="pfas-"][id$="-file_name"]');
+    const pfasDeleteButtons = document.querySelectorAll('[data-target^="pfasFile"]');
+    const pfasFiles = document.querySelectorAll('[id^="pfasFile"]');
+    const pfasFileDivs = document.querySelectorAll('[id^="div_pfasFile"]');
+    const pfasAddFileButton = document.getElementById('pfasAddFileButton');
+    let pfasFileNameList = [];
 
 
-    function renderFileNames() {
-       console.log("here in renderFileNames");
-       annualFileSelectors.forEach(elem => {
+    function renderFileNames(selectorList, fileNameList) {
+       selectorList.forEach(elem => {
             elem.options.length = 0;
             fileNameList.forEach(file => {
                 const option = document.createElement("option");
@@ -482,6 +513,24 @@
        });
     };
 
+
+    function addFiles(button, nodeList) {
+        let counter = 1;
+        button.addEventListener("click", function () {
+            if (counter < nodeList.length) {
+                console.log(nodeList[counter]);
+                nodeList[counter].classList.remove("hidden");
+                nodeList[counter].classList.add("d-flex");
+                nodeList[counter].classList.add("justify-content-between");
+                counter++;
+            }
+        });
+    }
+
+    addFiles(annualAddFileButton, annualFileDivs);
+    addFiles(pfasAddFileButton, pfasFileDivs);
+
+    /*
     let annualCounter = 1;
     document.getElementById('annualAddFileButton').addEventListener("click", function () {
 
@@ -494,7 +543,46 @@
             annualCounter++;
         }
     });
+    */
 
+
+    function deleteButtons(deleteButtonList, fileNameList, selectorList){
+        deleteButtonList.forEach(elem => {
+            elem.addEventListener("click", function () {
+                // get associated fileInput
+                const fileInput = document.getElementById(this.dataset.target);
+                console.log(fileInput)
+
+                // remove value from fileNameList
+                if (fileInput.files.length > 0) {
+
+                    // get index of where value is found in array
+                    const index = fileNameList.indexOf(fileInput.files[0].name);
+
+                    // remove value
+                    if (index !== -1) {
+                        fileNameList.splice(index, 1);
+                    }
+                }
+
+                // remove file value and hide
+                fileInput.value = "";
+                fileInput.classList.add('hidden');
+
+                // hide the delete button as well
+                elem.classList.add('hidden');
+
+                // re-render filenames
+                renderFileNames(selectorList, fileNameList);
+
+            });
+        });
+    };
+
+    deleteButtons(annualDeleteButtons, annualFileNameList, annualFileSelectors);
+    deleteButtons(pfasDeleteButtons, pfasFileNameList, pfasFileSelectors);
+
+    /*
     annualDeleteButtons.forEach(elem => {
 
         elem.addEventListener("click", function () {
@@ -503,7 +591,7 @@
             const fileInput = document.getElementById(this.dataset.target);
 
             // remove value from fileNameList
-            fileNameList = fileNameList.filter(x => x !== fileInput.files[0].name);
+            annualFileNameList = annualFileNameList.filter(x => x !== fileInput.files[0].name);
 
             // remove file value and hide
             fileInput.value = "";
@@ -513,13 +601,35 @@
             elem.classList.add('hidden');
 
             // re-render filenames
-            renderFileNames();
+            renderFileNames(annualFiles, annualFileList);
 
         });
 
 
     });
+    */
 
+    function updateFilesOnChange(inputList, fileNameList, selectorList) {
+
+        inputList.forEach(file => {
+            file.addEventListener("change", function () {
+                // clear the array
+                fileNameList.length = 0;
+                inputList.forEach(elem => {
+                    console.log(elem.files.length);
+                    if (elem.checkVisibility() && elem.files.length > 0) {
+                        fileNameList.push(elem.files[0].name);
+                    };
+                });
+                renderFileNames(selectorList, fileNameList);
+            });
+        });
+    };
+
+    updateFilesOnChange(annualFiles, annualFileNameList, annualFileSelectors);
+    updateFilesOnChange(pfasFiles, pfasFileNameList, pfasFileSelectors);
+
+    /*
     annualFiles.forEach(file => {
 
         file.addEventListener("change", function () {
@@ -529,20 +639,20 @@
 
         file.addEventListener("change", function () {
 
-            fileNameList = [];
+            annualFileNameList = [];
             annualFiles.forEach(elem => {
 
                 if (elem.checkVisibility() && elem.files.length > 0) {
-                    fileNameList.push(elem.files[0].name);
-                    console.log(fileNameList);
+                    annualFileNameList.push(elem.files[0].name);
                 };
 
             });
 
-            renderFileNames();
+            renderFileNames(annualFiles, annualFileNameList);
 
         });
-    });
+    }); */
+
 
     document.addEventListener("DOMContentLoaded", function () {
         const sourceTypeSelect = document.getElementById('source_type');
