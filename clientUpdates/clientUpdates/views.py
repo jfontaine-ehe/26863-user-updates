@@ -13,6 +13,7 @@ from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRa
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
     phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2PfasResultsForm, \
     formConstants, annualFiles, pfasFiles
+from .utils.dropbox_utils import upload_to_dropbox
 
 # Custom functions
 from .utils.handler import handle_update
@@ -695,27 +696,12 @@ def sourceFormCreate(request):
 
         try:
 
-            try:
-                form6.is_valid()
-                for file in form6.files:
-                    print(file)
-
-                form7.is_valid()
-                for file in form7.files:
-                    print(file)
-                    if "pfasFile" in file:
-                        print("true")
-
-            except Exception as e:
-                print(e)
-
             # transaction.atomic makes sure that either all instances save or all instances fail
             with transaction.atomic():
-                if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid():
+                if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid() and form6.is_valid() and form7.is_valid():
 
                     # extract one-time / constant variables
                     source_name = form5.cleaned_data['source_name']
-                    #comments_max_flow = form5.cleaned_data['comments_max_flow']
                     comments_annual_flow = form5.cleaned_data['comments_annual_flow']
                     comments_pfas = form5.cleaned_data['comments_pfas']
                     dt = timezone.now()
@@ -733,7 +719,6 @@ def sourceFormCreate(request):
                     form2.pwsid = pwsid
                     form2.pws_name = pws_name
                     form2.source_name = source_name
-                    #form2.comments = comments_max_flow
                     form2.timestamp = dt
                     form2.save()
 
@@ -764,8 +749,13 @@ def sourceFormCreate(request):
                             counter = counter + 1
                         instance.save()
 
-
-
+                    for file in request.FILES:
+                        if "annualFile" in file:
+                            upload_to_dropbox(file=request.FILES[file], filetype="Phase2/Annual-Flow", pwsid=pwsid)
+                        elif "pfasFile" in file:
+                            upload_to_dropbox(file=request.FILES[file], filetype="Phase2/PFAS", pwsid=pwsid)
+                        elif "maxflow" in file:
+                            upload_to_dropbox(file=request.FILES[file], filetype="Phase2/Max-Flow", pwsid=pwsid)
 
             return render(request, 'form_success.html')
 
@@ -788,7 +778,6 @@ def sourceFormCreate(request):
         form5 = formConstants()
         form6 = annualFiles()
         form7 = pfasFiles()
-        #this is a test
 
         context = {
 
@@ -832,11 +821,7 @@ def sourceFormEdit(request, pwsid, source_name):
         form2 = phase2MaxFlowForm(request.POST, request.FILES, prefix="maxflow", instance=phase2MaxFlowInstance)
 
         form3 = annualFlowFactory(request.POST, queryset=phase2AnnualFlow.objects.filter(pwsid=pwsid, source_name=source_name), prefix="annualflow")
-        #annualFlowFormset = modelformset_factory(phase2AnnualFlow, form=phase2AnnualFlowForm, extra=0)
-        #form3 = annualFlowFormset(request.POST, prefix="annualflow", queryset=phase2AnnualFlowInstances)
 
-        #pfasResultsFormset = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=0)
-        #form4 = pfasResultsFormset(request.POST, prefix="pfas", queryset=phase2PfasInstances)
         form4 = pfasFactory(request.POST, queryset=phase2PfasResults.objects.filter(pwsid=pwsid, source_name=source_name), prefix="pfas")
 
         form5 = formConstants(request.POST)
@@ -894,7 +879,15 @@ def sourceFormEdit(request, pwsid, source_name):
                             counter = counter + 1
                         instance.save()
 
-                    return render(request, 'form_success.html')
+                    for file in request.FILES:
+                        if "annualFile" in file:
+                            upload_to_dropbox(file=request.FILES[file], filetype="Phase2/Annual-Flow", pwsid=pwsid)
+                        elif "pfasFile" in file:
+                            upload_to_dropbox(file=request.FILES[file], filetype="Phase2/PFAS", pwsid=pwsid)
+                        elif "maxflow" in file:
+                            upload_to_dropbox(file=request.FILES[file], filetype="Phase2/Max-Flow", pwsid=pwsid)
+
+            return render(request, 'form_success.html')
 
         except Exception as e:
             print(e)
@@ -920,8 +913,9 @@ def sourceFormEdit(request, pwsid, source_name):
             }
         )
 
-
         form6 = annualFiles()
+
+        form7 = pfasFiles()
 
         context = {
 
@@ -931,6 +925,7 @@ def sourceFormEdit(request, pwsid, source_name):
             "phase2PfasResultsForm": form4,
             "formConstants": form5,
             "annualFilesForm": form6,
+            "pfasFilesForm": form7,
             "yesNoUnknown": yesNoUnknown,
             "sourceTypeOptions": sourceTypeOptions,
             "unitOptions": unitOptions,

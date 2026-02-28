@@ -1,6 +1,7 @@
 import django_localflavor_us.us_states as us_states
 from django.db import models
 
+from .utils.dropbox_utils import upload_to_dropbox
 from .utils.handler import file_upload
 
 years = [(y, y) for y in range(2013, 2024)]
@@ -920,7 +921,7 @@ class phase2MaxFlow(models.Model):
     flow_rate = models.FloatField(blank=True, null=True)
     units = models.TextField(blank=True)
     flow_determination = models.TextField(blank=True)
-    file_name = models.FileField(blank=True, upload_to=file_upload)
+    file_name = models.FileField(blank=True, null=True)
     comments = models.TextField(blank=True)
     timestamp = models.DateTimeField(blank=True, null=True)
 

@@ -206,6 +206,9 @@
                         <td class="label-center">
                             <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}"class="form-select">
                                 <option value=""></option>
+                                {% if form.file_name.value %}
+                                <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
+                                {% endif %}
                             </select>
                         </td>
                     </tr>
@@ -340,11 +343,14 @@
                             </select>
                         </td>
                         <td>
-                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{{form.sample_date.value|default_if_none:''}}">
+                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
                         </td>
                         <td class="label-center">
                             <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
                                 <option value=""></option>
+                                {% if form.file_name.value %}
+                                <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
+                                {% endif %}
                             </select>
                         </td>
                     </tr>
@@ -387,11 +393,14 @@
                             </select>
                         </td>
                         <td>
-                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control">
+                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
                         </td>
                         <td class="label-center">
                             <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
                                 <option value=""></option>
+                                {% if form.file_name.value %}
+                                <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
+                                {% endif %}
                             </select>
                         </td>
                     </tr>
@@ -435,11 +444,14 @@
                             </select>
                         </td>
                         <td>
-                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control">
+                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
                         </td>
                         <td class="label-center">
                             <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
                                 <option value=""></option>
+                                {% if form.file_name.value %}
+                                <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
+                                {% endif %}
                             </select>
                         </td>
                     </tr>
