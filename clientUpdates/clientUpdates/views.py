@@ -689,7 +689,25 @@ def sourceFormCreate(request):
 
         form5 = formConstants(request.POST)
 
+        form6 = annualFiles(request.POST, request.FILES)
+
+        form7 = pfasFiles(request.POST, request.FILES)
+
         try:
+
+            try:
+                form6.is_valid()
+                for file in form6.files:
+                    print(file)
+
+                form7.is_valid()
+                for file in form7.files:
+                    print(file)
+                    if "pfasFile" in file:
+                        print("true")
+
+            except Exception as e:
+                print(e)
 
             # transaction.atomic makes sure that either all instances save or all instances fail
             with transaction.atomic():
@@ -697,7 +715,7 @@ def sourceFormCreate(request):
 
                     # extract one-time / constant variables
                     source_name = form5.cleaned_data['source_name']
-                    comments_max_flow = form5.cleaned_data['comments_max_flow']
+                    #comments_max_flow = form5.cleaned_data['comments_max_flow']
                     comments_annual_flow = form5.cleaned_data['comments_annual_flow']
                     comments_pfas = form5.cleaned_data['comments_pfas']
                     dt = timezone.now()
@@ -715,7 +733,7 @@ def sourceFormCreate(request):
                     form2.pwsid = pwsid
                     form2.pws_name = pws_name
                     form2.source_name = source_name
-                    form2.comments = comments_max_flow
+                    #form2.comments = comments_max_flow
                     form2.timestamp = dt
                     form2.save()
 
@@ -746,7 +764,10 @@ def sourceFormCreate(request):
                             counter = counter + 1
                         instance.save()
 
-                    return render(request, 'form_success.html')
+
+
+
+            return render(request, 'form_success.html')
 
         except Exception as e:
             print(e)
@@ -767,6 +788,7 @@ def sourceFormCreate(request):
         form5 = formConstants()
         form6 = annualFiles()
         form7 = pfasFiles()
+        #this is a test
 
         context = {
 

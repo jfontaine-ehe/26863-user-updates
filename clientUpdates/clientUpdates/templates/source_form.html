@@ -309,6 +309,7 @@
         <!--___________________________________PFAS Results_________________________________-->
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>PFAS Results</h3>
+            <h4>Proposed Federal MCL Analytes (March, 2023)</h4>
             <table>
                 <thead>
                     <tr>
@@ -351,6 +352,101 @@
                 </tbody>
             </table>
 
+            <h4>Highest Other PFAS Results</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Analyte</th>
+                        <th>Maximum Result</th>
+                        <th>Units</th>
+                        <th>Sampling Date</th>
+                        <th>File Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in phase2PfasResultsForm|slice:"-2:-1" %}
+                        {{ form.id }}
+                    <tr>
+                        <td>
+                            <select required id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
+                                <option disabled {% if not form.analyte.value %} selected {% endif %} value="" class="label-center">Choose Analyte</option>
+                                {% for option in otherAnalytes %}
+                                    <option {% if form.analyte.value == option %} selected {% endif %} value="{{option}}" class="label-center">{{option}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
+                        </td>
+                        <td>
+                            <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
+                                <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
+                            {% for option in pfasUnits %}
+                                <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
+                            {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control">
+                        </td>
+                        <td class="label-center">
+                            <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
+                                <option value=""></option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+            <h4>PFAS Analyte that Exceeds a State MCL</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Analyte</th>
+                        <th>Maximum Result</th>
+                        <th>Units</th>
+                        <th>Sampling Date</th>
+                        <th>File Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in phase2PfasResultsForm|slice:"-1:" %}
+                        {{ form.id }}
+                    <tr>
+                        <td>
+                            <select required id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
+                                <option disabled {% if not form.analyte.value %} selected {% endif %} value="" class="label-center">Choose Analyte</option>
+                                {% for option in otherAnalytes %}
+                                    <option {% if form.analyte.value == option %} selected {% endif %} value="{{option}}" class="label-center">{{option}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
+                        </td>
+                        <td>
+                            <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
+                                <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
+                            {% for option in pfasUnits %}
+                                <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
+                            {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control">
+                        </td>
+                        <td class="label-center">
+                            <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
+                                <option value=""></option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
             <div class="form-group">
                 {% for field in pfasFilesForm %}
                     <label for="{{field.html_name}}" class="form-label {% if 'pfasFile1' == field.html_name %} {% else %} hidden {% endif %}">This is a placeholder for the filename upload.</label>
@@ -362,12 +458,14 @@
                     </div>
                 {% endfor %}
             </div>
+
             <div style="display:flex; justify-content:flex-end;">
                 <button id='pfasAddFileButton' type="button" class="btn btn-primary">Add another file</button>
             </div>
+
         </div>
 
-        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+        <!--<div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>Highest Other PFAS Results</h3>
             <table>
                 <thead>
@@ -451,7 +549,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-        </div>
+        </div>-->
 
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>PFAS Comments</h3>
@@ -460,8 +558,6 @@
                 <textarea id="comments_pfas" name="comments_pfas" class="form-control">{{formConstants.comments_pfas.value|default_if_none:''}}</textarea>
             </div>
         </div>
-
-
 
 
         <!--Submit Button-->
@@ -474,8 +570,6 @@
 
 
 <script>
-
-    // left off likely needing to separate out divs and inpujts from annual files and pfasfiles objects
 
     const annualFileSelectors = document.querySelectorAll('[id^="annualflow-"][id$="-file_name"]');
     const annualDeleteButtons = document.querySelectorAll('[data-target^="annualFile"]');

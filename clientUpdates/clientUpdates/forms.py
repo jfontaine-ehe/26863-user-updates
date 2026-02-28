@@ -232,26 +232,26 @@ class formConstants(forms.Form):
 
 class annualFiles(forms.Form):
     annualFile1 = forms.FileField()
-    annualFile2 = forms.FileField()
-    annualFile3 = forms.FileField()
-    annualFile4 = forms.FileField()
-    annualFile5 = forms.FileField()
-    annualFile6 = forms.FileField()
-    annualFile7 = forms.FileField()
-    annualFile8 = forms.FileField()
-    annualFile9 = forms.FileField()
-    annualFile10 = forms.FileField()
-    annualFile11 = forms.FileField()
+    annualFile2 = forms.FileField(required=False)
+    annualFile3 = forms.FileField(required=False)
+    annualFile4 = forms.FileField(required=False)
+    annualFile5 = forms.FileField(required=False)
+    annualFile6 = forms.FileField(required=False)
+    annualFile7 = forms.FileField(required=False)
+    annualFile8 = forms.FileField(required=False)
+    annualFile9 = forms.FileField(required=False)
+    annualFile10 = forms.FileField(required=False)
+    annualFile11 = forms.FileField(required=False)
 
 class pfasFiles(forms.Form):
     pfasFile1 = forms.FileField()
-    pfasFile2 = forms.FileField()
-    pfasFile3 = forms.FileField()
-    pfasFile4 = forms.FileField()
-    pfasFile5 = forms.FileField()
-    pfasFile6 = forms.FileField()
-    pfasFile7 = forms.FileField()
-    pfasFile8 = forms.FileField()
+    pfasFile2 = forms.FileField(required=False)
+    pfasFile3 = forms.FileField(required=False)
+    pfasFile4 = forms.FileField(required=False)
+    pfasFile5 = forms.FileField(required=False)
+    pfasFile6 = forms.FileField(required=False)
+    pfasFile7 = forms.FileField(required=False)
+    pfasFile8 = forms.FileField(required=False)
 
 
 
