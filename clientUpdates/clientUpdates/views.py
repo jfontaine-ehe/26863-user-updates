@@ -757,7 +757,7 @@ def sourceFormCreate(request):
                         elif "maxflow" in file:
                             upload_to_dropbox(file=request.FILES[file], filetype="Phase2/Max-Flow", pwsid=pwsid)
 
-            return render(request, 'form_success.html')
+                    return render(request, 'form_success.html')
 
         except Exception as e:
             print(e)
@@ -826,17 +826,23 @@ def sourceFormEdit(request, pwsid, source_name):
 
         form5 = formConstants(request.POST)
 
-        form1.is_valid()
-        form2.is_valid()
-        form3.is_valid()
-        form4.is_valid()
-        form5.is_valid()
+        form6 = annualFiles(request.POST, request.FILES)
+
+        form7 = pfasFiles(request.POST, request.FILES)
+
+        # form1.is_valid()
+        # form2.is_valid()
+        # form3.is_valid()
+        # form4.is_valid()
+        # form5.is_valid()
+        # form6.is_valid()
+        # form7.is_valid()
 
         try:
 
             # transaction.atomic makes sure that either all instances save or all instances fail
             with transaction.atomic():
-                if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid():
+                if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid() and form6.is_valid() and form7.is_valid():
 
                     # extract one-time / constant variables
                     source_name = form5.cleaned_data['source_name']
@@ -887,7 +893,7 @@ def sourceFormEdit(request, pwsid, source_name):
                         elif "maxflow" in file:
                             upload_to_dropbox(file=request.FILES[file], filetype="Phase2/Max-Flow", pwsid=pwsid)
 
-            return render(request, 'form_success.html')
+                    return render(request, 'form_success.html')
 
         except Exception as e:
             print(e)

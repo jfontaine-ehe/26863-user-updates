@@ -231,7 +231,7 @@ class formConstants(forms.Form):
     source_name = forms.CharField(max_length=150)
 
 class annualFiles(forms.Form):
-    annualFile1 = forms.FileField()
+    annualFile1 = forms.FileField(required=False)
     annualFile2 = forms.FileField(required=False)
     annualFile3 = forms.FileField(required=False)
     annualFile4 = forms.FileField(required=False)
@@ -244,7 +244,7 @@ class annualFiles(forms.Form):
     annualFile11 = forms.FileField(required=False)
 
 class pfasFiles(forms.Form):
-    pfasFile1 = forms.FileField()
+    pfasFile1 = forms.FileField(required=False)
     pfasFile2 = forms.FileField(required=False)
     pfasFile3 = forms.FileField(required=False)
     pfasFile4 = forms.FileField(required=False)
