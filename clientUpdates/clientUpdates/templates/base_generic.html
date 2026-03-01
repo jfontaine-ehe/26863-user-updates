@@ -83,7 +83,7 @@
 
     <!-- Main content -->
     <div class="container" style="padding-top: 80px;">
-        {% include 'info_bar.html' %}
+        {% block infobar %} {% include 'info_bar.html' %} {% endblock %}
         {% block content %}{% endblock %}
     </div>
     

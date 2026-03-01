@@ -209,11 +209,13 @@ def payment_details(request):
 
 @login_required
 def landing_page(request):
+
+    pwsid = request.user.username
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     try:
 
-        pws_submitted_claim = ClaimSubmission.objects.get(pwsid=request.user.username)
-        pws_record = Pws.objects.get(form_userid=request.user.username)
+        pws_submitted_claim = ClaimSubmission.objects.get(pwsid=pwsid)
+        pws_record = Pws.objects.get(form_userid=pwsid)
 
         context = {
             'pws': pws_record,
@@ -223,11 +225,17 @@ def landing_page(request):
     # exception handling for if the query in the above try statement returns nothing.
     except ClaimSubmission.DoesNotExist:
 
+        pwsGenInfo = pwsInfo.objects.filter(pwsid=pwsid)
+        sourceGenInfo = phase2SourceInfo.objects.filter(pwsid=pwsid)
+
         context = {
-            'pws': request.user.username,
+            'pws': pwsid,
+            'pwsGenInfo': pwsGenInfo,
+            'sourceGenInfo': sourceGenInfo
         }
 
-        return render(request, 'no_data_landing_page.html', context)
+        #return render(request, 'no_data_landing_page.html', context)
+        return render(request, 'phase2_landing_page.html', context)
 
 
 @login_required
