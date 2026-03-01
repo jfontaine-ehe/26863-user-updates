@@ -434,4 +434,15 @@ td::before {
 
 }
 
+.flex-center{
 
+    display:flex;
+    justify-content:space-between;
+
+}
+
+.td-no-border {
+
+    border :none;
+
+}

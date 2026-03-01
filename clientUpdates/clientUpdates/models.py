@@ -878,6 +878,7 @@ class pwsInfo(models.Model):
     pfas_detected_05152024 = models.TextField(blank=True, null=True)
     eurofins_auth = models.TextField(blank=True, null=True)
     comments = models.TextField(blank=True, null=True)
+    timestamp = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = True

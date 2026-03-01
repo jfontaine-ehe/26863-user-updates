@@ -208,6 +208,7 @@ def payment_details(request):
 
 
 @login_required
+@never_cache
 def landing_page(request):
 
     pwsid = request.user.username
@@ -665,6 +666,7 @@ def pwsInfoCreate(request):
                 instance = form.save(commit=False)
                 instance.pwsid = pwsid
                 instance.pws_name = pws_name
+                instance.timestamp = timezone.now()
                 instance.save()
                 return render(request, 'form_success.html')
             except Exception as e:
@@ -691,6 +693,7 @@ def pwsInfoEdit(request, pwsid):
                 instance = form.save(commit=False)
                 instance.pwsid = pwsid
                 instance.pws_name = pws_name
+                instance.timestamp = timezone.now()
                 instance.save()
                 return render(request, 'form_success.html')
             except Exception as e:

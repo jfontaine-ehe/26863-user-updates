@@ -33,46 +33,76 @@
 
 {% block content %}
 
-<div>
+<div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
     <h3>PWS Info Forms</h3>
     <table>
         <thead>
             <tr>
-                <th>PWS ID</th>
-                <th></th>
-                <th></th>
+                <th class="text-center">PWSID</th>
+                <th class="text-center">Last Modified</th>
+                <th class="text-center"></th>
+                <th class="text-center"></th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>{{pwsGenInfo.pwsid}}</td>
-                <td>View/Edit</td>
-                <td>Delete</td>
+            {% for record in pwsGenInfo %}
+            <tr style="border-bottom: 1px solid #eaeaea;">
+                <td class="text-center td-no-border" style="display:flex; font-size:1.25rem; align-items:center;">
+                    <i style="width:100%;">{{record.pwsid}}</i>
+                </td>
+                <td class="text-center td-no-border">
+                    {{record.timestamp}}
+                </td>
+                <td class="text-center td-no-border">
+                    <a type="button" class="btn btn-warning" href="{% url 'pws-info-edit' pwsid=record.pwsid %}">
+                        <b class="bi bi-pencil">
+                            View or Edit Form
+                        </b>
+                    </a>
+                </td>
+                <td class="text-center td-no-border">
+                    <button type="button" class="btn btn-danger">
+                        <b class="bi bi-trash" style="color:#e3d8d8;">  Delete Form</b>
+                    </button>
+                </td>
             </tr>
+            {% endfor %}
         </tbody>
     </table>
+    <div style="display:flex; justify-content:flex-end;">
+        <a type="button" class="btn btn-primary" style="border-color:#50a34b; background-color:#50a34b; margin-top:30px;" href="{% url 'pws-info-create' %}">
+            <p class="bi bi-plus-circle" style="margin:0;">  Add Form</p>
+        </a>
+    </div>
 </div>
 
-<div>
+<div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
     <h3>Source Forms</h3>
     <table>
         <thead>
             <tr>
-                <th>PWS ID</th>
-                <th></th>
-                <th></th>
+                <th class="text-center">Source Name</th>
+                <th class="text-center">Last Modified</th>
+                <th class="text-center"></th>
+                <th class="text-center"></th>
             </tr>
         </thead>
         <tbody>
         {% for record in sourceGenInfo %}
             <tr>
-                <td>{{sourceGenInfo.source_name}}</td>
-                <td>View/Edit</td>
+                <td>{{record.source_name}}</td>
+                <td><p>{{record.timestamp}}</p></td>
+                <td><i class="bi bi-pencil">Edit</i></td>
                 <td>Delete</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    <div style="display:flex; justify-content:flex-end;">
+        <a type="button" class="btn btn-primary" style="border-color:#50a34b; background-color:#50a34b; margin-top:30px;" href="{% url 'source-form-create' %}">
+            <p class="bi bi-plus-circle" style="margin:0;">  Add Form</p>
+        </a>
+    </div>
 </div>
 
 
