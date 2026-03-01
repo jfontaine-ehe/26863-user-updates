@@ -2,7 +2,7 @@
 
 {% block content %}
 <div>
-    <form id="pwsInfoForm" action="/pws-info/" method="post" onSubmit="return confirm('Are you sure you would like to submit this form?')">
+    <form id="pwsInfoForm" action="{% if true %}{{action}}{% endif %}" method="post" onSubmit="return confirm('Are you sure you would like to submit this form?')">
         {% csrf_token %}
 
         <!--Basic PWS Info and Facility Address-->

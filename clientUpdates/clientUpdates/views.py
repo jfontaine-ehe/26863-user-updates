@@ -651,25 +651,59 @@ def logout_view(request):
         return redirect(f"{settings.LOGIN_URL}")
 
 
+@login_required
 @never_cache
-def pwsInfoView(request):
+def pwsInfoCreate(request):
+
+    pwsid = request.user.username
+    pws_name = get_object_or_404(pwsCreds, pwsid=pwsid).pws_name
+
     if request.method == "POST":
         form = pwsInfoForm(request.POST)
         if form.is_valid():
             try:
-                form.save()
+                instance = form.save(commit=False)
+                instance.pwsid = pwsid
+                instance.pws_name = pws_name
+                instance.save()
                 return render(request, 'form_success.html')
             except Exception as e:
                 print(e)
     else:
-        x = get_object_or_404(pwsInfo, id=1, pwsid='asdf')
-        form = pwsInfoForm(instance=x)
+        form = pwsInfoForm()
 
     return render(request, "pws_info_form.html", {"form": form,
                                                   "stateOptions": us_states.STATE_CHOICES,
                                                   "sdwisOwnerCodes": sdwisOwnerCodes,
                                                   "sdwisFacilityCodes": sdwisFacilityCodes,
-                                                  "sdwisActivityCodes": sdwisActivityCodes})
+                                                  "sdwisActivityCodes": sdwisActivityCodes,
+                                                  "action": "/pws-info-create/"})
+
+
+@never_cache
+def pwsInfoEdit(request, pwsid):
+    pwsInfoInstance = get_object_or_404(pwsInfo, pwsid=pwsid)
+    pws_name = get_object_or_404(pwsCreds, pwsid=pwsid).pws_name
+    if request.method == "POST":
+        form = pwsInfoForm(request.POST, instance=pwsInfoInstance)
+        if form.is_valid():
+            try:
+                instance = form.save(commit=False)
+                instance.pwsid = pwsid
+                instance.pws_name = pws_name
+                instance.save()
+                return render(request, 'form_success.html')
+            except Exception as e:
+                print(e)
+    else:
+        form = pwsInfoForm(instance=pwsInfoInstance)
+
+    return render(request, "pws_info_form.html", {"form": form,
+                                                  "stateOptions": us_states.STATE_CHOICES,
+                                                  "sdwisOwnerCodes": sdwisOwnerCodes,
+                                                  "sdwisFacilityCodes": sdwisFacilityCodes,
+                                                  "sdwisActivityCodes": sdwisActivityCodes,
+                                                  "action": f"url pws-info-edit {pwsid}"})
 
 
 @never_cache
