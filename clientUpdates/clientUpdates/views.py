@@ -210,7 +210,6 @@ def payment_details(request):
 @login_required
 @never_cache
 def landing_page(request):
-
     pwsid = request.user.username
     # Retrieve the PWS associated with the logged-in user; otherwise, throw an error.
     try:
@@ -655,7 +654,6 @@ def logout_view(request):
 @login_required
 @never_cache
 def pwsInfoCreate(request):
-
     pwsid = request.user.username
     pws_name = get_object_or_404(pwsCreds, pwsid=pwsid).pws_name
 
@@ -709,15 +707,22 @@ def pwsInfoEdit(request, pwsid):
                                                   "action": f"url pws-info-edit {pwsid}"})
 
 
+def pwsInfoDelete(request, pwsid):
+    if request.method == "POST":
+        instance = get_object_or_404(pwsInfo, pwsid=pwsid)
+        instance.delete()
+        return redirect('landing_page')
+
+
 @never_cache
 @login_required
 def formSuccess(request):
     return render(request, 'form_success.html')
 
+
 @never_cache
 @login_required
 def sourceFormCreate(request):
-
     if request.method == "POST":
 
         # get pwsid and associated pws name
@@ -779,7 +784,7 @@ def sourceFormCreate(request):
                         instance.save()
 
                     # modify and save pfas form
-                    counter=0
+                    counter = 0
                     for form in form4:
                         instance = form.save(commit=False)
                         instance.pwsid = pwsid
@@ -814,11 +819,11 @@ def sourceFormCreate(request):
 
         form3_factory = modelformset_factory(phase2AnnualFlow, form=phase2AnnualFlowForm, extra=11)
         form3 = form3_factory(queryset=phase2AnnualFlow.objects.none(),
-                      initial=yearInitialData, prefix="annualflow")
+                              initial=yearInitialData, prefix="annualflow")
 
         form4_factory = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=8)
         form4 = form4_factory(queryset=phase2PfasResults.objects.none(),
-                      initial=pfasInitialData, prefix="pfas")
+                              initial=pfasInitialData, prefix="pfas")
 
         form5 = formConstants()
         form6 = annualFiles()
@@ -850,7 +855,6 @@ def sourceFormCreate(request):
 
 @never_cache
 def sourceFormEdit(request, pwsid, source_name):
-
     phase2SourceInfoInstance = get_object_or_404(phase2SourceInfo, pwsid=pwsid, source_name=source_name)
     phase2MaxFlowInstance = get_object_or_404(phase2MaxFlow, pwsid=pwsid, source_name=source_name)
 
@@ -865,9 +869,13 @@ def sourceFormEdit(request, pwsid, source_name):
         form1 = phase2SourceInfoForm(request.POST, instance=phase2SourceInfoInstance)
         form2 = phase2MaxFlowForm(request.POST, request.FILES, prefix="maxflow", instance=phase2MaxFlowInstance)
 
-        form3 = annualFlowFactory(request.POST, queryset=phase2AnnualFlow.objects.filter(pwsid=pwsid, source_name=source_name), prefix="annualflow")
+        form3 = annualFlowFactory(request.POST,
+                                  queryset=phase2AnnualFlow.objects.filter(pwsid=pwsid, source_name=source_name),
+                                  prefix="annualflow")
 
-        form4 = pfasFactory(request.POST, queryset=phase2PfasResults.objects.filter(pwsid=pwsid, source_name=source_name), prefix="pfas")
+        form4 = pfasFactory(request.POST,
+                            queryset=phase2PfasResults.objects.filter(pwsid=pwsid, source_name=source_name),
+                            prefix="pfas")
 
         form5 = formConstants(request.POST)
 
@@ -917,7 +925,7 @@ def sourceFormEdit(request, pwsid, source_name):
                         instance.save()
 
                     # modify and save pfas form
-                    counter=0
+                    counter = 0
                     for form in form4:
                         instance = form.save(commit=False)
                         instance.source_name = source_name
@@ -957,8 +965,9 @@ def sourceFormEdit(request, pwsid, source_name):
         form4 = phase2PfasInstances
 
         form5 = formConstants(
-            data = {
-                "comments_annual_flow": phase2AnnualFlow.objects.filter(pwsid=pwsid, source_name=source_name)[0].comments,
+            data={
+                "comments_annual_flow": phase2AnnualFlow.objects.filter(pwsid=pwsid, source_name=source_name)[
+                    0].comments,
                 "comments_pfas": phase2PfasResults.objects.filter(pwsid=pwsid, source_name=source_name)[0].comments,
                 "source_name": form1.initial['source_name']
             }

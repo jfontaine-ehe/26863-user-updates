@@ -44,6 +44,7 @@ urlpatterns = [
     path('no_data_contact/', views.no_data_contact_view, name='no_data_contact'),
     path('pws-info-create/', views.pwsInfoCreate, name='pws-info-create'),
     path('pws-info-edit/<str:pwsid>/', views.pwsInfoEdit, name='pws-info-edit'),
+    path('pws-info-delete/<str:pwsid>/', views.pwsInfoDelete, name='pws-info-delete'),
     path('form_success/', views.formSuccess, name='form_success'),
     path('source-form-create/', views.sourceFormCreate, name='source-form-create'),
     path('source-form-edit/<str:pwsid>/<path:source_name>/', views.sourceFormEdit, name='source-form-edit')
