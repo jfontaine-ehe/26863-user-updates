@@ -48,6 +48,7 @@ urlpatterns = [
     path('form_success/', views.formSuccess, name='form_success'),
     path('source-form-create/', views.sourceFormCreate, name='source-form-create'),
     path('source-form-edit/<str:pwsid>/<path:source_name>/', views.sourceFormEdit, name='source-form-edit'),
-    path('source-form-delete/<str:pwsid>/<path:source_name>/', views.sourceInfoDelete, name='source-info-delete')
+    path('source-form-delete/<str:pwsid>/<path:source_name>/', views.sourceInfoDelete, name='source-info-delete'),
+    path('phase2-helpful-info', views.phase2HelpInfo, name='phase2-helpful-info')
 
 ]

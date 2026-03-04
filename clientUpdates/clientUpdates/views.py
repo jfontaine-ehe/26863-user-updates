@@ -1026,3 +1026,5 @@ def sourceInfoDelete(request, pwsid, source_name):
             raise
 
 
+def phase2HelpInfo(request):
+    return render(request, template_name='phase2_helpful_info.html')
