@@ -18,7 +18,7 @@
     </p>
     <p>
         <b>
-            Please refer to the "Helpful Information" section at the bottom of this page
+            Please refer to the the <a href="{% url 'phase2-helpful-info' %}">Helpful Information</a> page
             for additional details related to filing a 3M/DuPont Phase 2 Action Fund Claim.
         </b>
     </p>
@@ -49,7 +49,7 @@
         <tbody>
             {% for record in pwsGenInfo %}
             <tr style="border-bottom: 1px solid #eaeaea;">
-                <td class="text-center td-no-border" style="display:flex; font-size:1.25rem; align-items:center;">
+                <td class="text-center td-no-border">
                     <i style="width:100%;">{{record.pwsid}}</i>
                 </td>
                 <td class="text-center td-no-border">
@@ -82,13 +82,13 @@
 </div>
 
 <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+    <h3>Source Forms</h3>
     <p>
         Please complete a "Source Data" form for <span style="font-weight:bold; font-style:italic">each</span> of your
         Sources. This includes any active or inactive source that was used now, or in the past, for drinking water.
         This form is meant to collect information including (but not limited to) the source's maximum flow rate,
         annual production data, and PFAS data.
     </p>
-    <h3>Source Forms</h3>
     <table>
         <thead>
             <tr>
@@ -101,7 +101,7 @@
         <tbody>
         {% for record in sourceGenInfo %}
             <tr style="border-bottom: 1px solid #eaeaea;">
-                <td class="text-center td-no-border" style="display:flex; font-size:1.25rem; align-items:center;">
+                <td class="text-center td-no-border">
                     <i style="width:100%;">{{record.source_name}}</i>
                 </td>
                 <td class="text-center td-no-border">{{record.timestamp}}</td>
