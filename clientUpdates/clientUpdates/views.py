@@ -34,6 +34,9 @@ from itertools import chain
 from datetime import datetime
 from django.db.models import Q, Sum
 from .utils.form_options import *
+import logging
+
+logger = logging.getLogger('clientUpdates')
 
 """JF commented out on 07/01/2025 to focus on payment dashboard, rather than update dashboard. """
 # class CustomLoginView(LoginView):
@@ -668,7 +671,7 @@ def pwsInfoCreate(request):
                 instance.save()
                 return render(request, 'form_success.html')
             except Exception as e:
-                print(e)
+                logger.exception(f"Error creating new PWS instance: {e}")
     else:
         form = pwsInfoForm()
 
@@ -695,7 +698,7 @@ def pwsInfoEdit(request, pwsid):
                 instance.save()
                 return render(request, 'form_success.html')
             except Exception as e:
-                print(e)
+                logger.exception(f"Error updating PWS instance: {e}")
     else:
         form = pwsInfoForm(instance=pwsInfoInstance)
 
@@ -709,13 +712,12 @@ def pwsInfoEdit(request, pwsid):
 
 def pwsInfoDelete(request, pwsid):
     if request.method == "POST":
-        instance = get_object_or_404(pwsInfo, pwsid=pwsid)
-        instance.delete()
-        return redirect('landing_page')
-
-
-def sourceInfoDelete(request, pwsid, source_name):
-    if request.method == "POST":
+        try:
+            instance = get_object_or_404(pwsInfo, pwsid=pwsid)
+            instance.delete()
+            return redirect('landing_page')
+        except Exception as e:
+            logger.exception(f"Error deleting PWS instance: {e}")
 
 
 
@@ -1002,3 +1004,25 @@ def sourceFormEdit(request, pwsid, source_name):
         }
 
         return render(request, 'source_form.html', context=context)
+
+def sourceInfoDelete(request, pwsid, source_name):
+    if request.method == "POST":
+        try:
+            with transaction.atomic():
+                srcInfo = phase2SourceInfo.objects.get(pwsid=pwsid, source_name=source_name)
+                srcInfo.delete()
+
+                srcMaxFlow = phase2MaxFlow.objects.get(pwsid=pwsid, source_name=source_name)
+                srcMaxFlow.delete()
+
+                srcAnnualFlow = phase2AnnualFlow.objects.filter(pwsid=pwsid, source_name=source_name)
+                srcAnnualFlow.delete()
+
+                srcPfasResults = phase2PfasResults.objects.filter(pwsid=pwsid, source_name=source_name)
+                srcPfasResults.delete()
+                return redirect('landing_page')
+        except Exception as e:
+            logger.exception(f"Error deleting data related to this source: {e}")
+            raise
+
+

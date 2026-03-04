@@ -47,6 +47,7 @@ urlpatterns = [
     path('pws-info-delete/<str:pwsid>/', views.pwsInfoDelete, name='pws-info-delete'),
     path('form_success/', views.formSuccess, name='form_success'),
     path('source-form-create/', views.sourceFormCreate, name='source-form-create'),
-    path('source-form-edit/<str:pwsid>/<path:source_name>/', views.sourceFormEdit, name='source-form-edit')
+    path('source-form-edit/<str:pwsid>/<path:source_name>/', views.sourceFormEdit, name='source-form-edit'),
+    path('source-form-delete/<str:pwsid>/<path:source_name>/', views.sourceInfoDelete, name='source-info-delete')
 
 ]
