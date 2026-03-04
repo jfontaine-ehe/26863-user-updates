@@ -61,10 +61,10 @@
                     </a>
                 </td>
                 <td class="text-center td-no-border">
-                    <form action="{% url 'pws-info-delete' pwsid=record.pwsid %}" method="POST" onsubmit="return confirm('Are you sure you'd like to delete this form?')">
+                    <form action="{% url 'pws-info-delete' pwsid=record.pwsid %}" method="post">
                         {% csrf_token %}
                         <button id="pwsFormDeleteButton" type="submit" value="submit" class="btn btn-danger">
-                            <b style="color:#e3d8d8;">  Delete Form</b>
+                            <b class="bi bi-trash" style="color:#e3d8d8;">  Delete Form</b>
                         </button>
                     </form>
                 </td>
@@ -105,9 +105,12 @@
                     </a>
                 </td>
                 <td class="text-center td-no-border">
-                    <a type="button" class="btn btn-danger">
-                        <b class="bi bi-trash" style="color:#e3d8d8;">  Delete Form</b>
-                    </a>
+                    <form action="{% url 'source-form-delete' pwsid=record.pwsid source_name=record.source_name %}" method="post">
+                        {% csrf_token %}
+                        <a id="sourceFormDeleteButton" type="submit" value="submit" class="btn btn-danger">
+                            <b class="bi bi-trash" style="color:#e3d8d8;">  Delete Form</b>
+                        </a>
+                    </form>
                 </td>
             </tr>
         {% endfor %}
@@ -120,4 +123,27 @@
     </div>
 </div>
 
+
+
+<script>
+    document.getElementById('pwsFormDeleteButton').addEventListener("submit", function(elem) {
+        if (!confirm("Are you sure you'd like to delete this form?")) {
+            elem.preventDefault();
+        }
+    }
+
+
+    document.getElementById('sourceFormDeleteButton').addEventListener("submit", function(elem) {
+        if (!confirm("Are you sure you'd like to delete this form?")) {
+            elem.preventDefault();
+        }
+    }
+</script>
+
+
+
+
+
+
 {% endblock %}
+

@@ -706,11 +706,17 @@ def pwsInfoEdit(request, pwsid):
                                                   "sdwisActivityCodes": sdwisActivityCodes,
                                                   "action": f"url pws-info-edit {pwsid}"})
 
+
 def pwsInfoDelete(request, pwsid):
     if request.method == "POST":
         instance = get_object_or_404(pwsInfo, pwsid=pwsid)
         instance.delete()
         return redirect('landing_page')
+
+
+def sourceInfoDelete(request, pwsid, source_name):
+    if request.method == "POST":
+
 
 
 @never_cache
