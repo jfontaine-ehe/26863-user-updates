@@ -13,9 +13,3 @@ document.getElementById('sourceFormDelete').addEventListener("submit", function(
         elem.preventDefault();
     }
 });
-
-// -------------- source form --------------------------
-
-
-
-

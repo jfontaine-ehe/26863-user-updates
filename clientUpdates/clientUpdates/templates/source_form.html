@@ -164,12 +164,12 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Year</th>
-                        <th>Flow Rate</th>
-                        <th>Units</th>
-                        <th>Flow Rate Reduced?</th>
-                        <th>Existed?</th>
-                        <th>File Name</th>
+                        <th class="text-center">Year</th>
+                        <th class="text-center">Flow Rate</th>
+                        <th class="text-center">Units</th>
+                        <th class="text-center">Flow Rate Reduced?</th>
+                        <th class="text-center">Existed?</th>
+                        <th class="text-center">File Name</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -310,7 +310,7 @@
 
 
         <!--___________________________________PFAS Results_________________________________-->
-        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+        <div id="pfasResultsDiv" class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>PFAS Results</h3>
             <h4>Proposed Federal MCL Analytes (March, 2023)</h4>
             <div class="alert alert-primary" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:100%; margin:20px auto;">
@@ -319,19 +319,19 @@
                     </i>
                     <p style="margin-bottom:0px;">
                         Please provide the <span style="font-weight:bold; font-style:italic">highest</span>
-                        concentrations of each analyte. If there are no detections of a given analyte, please
-                        report a result of zero (0).
+                        concentrations of each analyte. If there are no detections of a given analyte, or if the
+                        analyte has not been analyzed for, please report a result of zero (0).
                     </p>
                 </div>
             </div>
             <table>
                 <thead>
                     <tr>
-                        <th>Analyte</th>
-                        <th>Maximum Result</th>
-                        <th>Units</th>
-                        <th>Sampling Date</th>
-                        <th>File Name</th>
+                        <th class="text-center">Analyte</th>
+                        <th class="text-center">Maximum Result</th>
+                        <th class="text-center">Units</th>
+                        <th class="text-center">Sampling Date</th>
+                        <th class="text-center">File Name</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -385,11 +385,11 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Analyte</th>
-                        <th>Maximum Result</th>
-                        <th>Units</th>
-                        <th>Sampling Date</th>
-                        <th>File Name</th>
+                        <th class="text-center">Analyte</th>
+                        <th class="text-center">Maximum Result</th>
+                        <th class="text-center">Units</th>
+                        <th class="text-center">Sampling Date</th>
+                        <th class="text-center">File Name</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -397,7 +397,7 @@
                         {{ form.id }}
                     <tr>
                         <td>
-                            <select required id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
+                            <select id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
                                 <option disabled {% if not form.analyte.value %} selected {% endif %} value="" class="label-center">Choose Analyte</option>
                                 {% for option in otherAnalytes %}
                                     <option {% if form.analyte.value == option %} selected {% endif %} value="{{option}}" class="label-center">{{option}}</option>
@@ -405,10 +405,10 @@
                             </select>
                         </td>
                         <td>
-                            <input required id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
+                            <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
                         </td>
                         <td>
-                            <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
+                            <select id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
                             {% for option in pfasUnits %}
                                 <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
@@ -416,10 +416,10 @@
                             </select>
                         </td>
                         <td>
-                            <input required id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
+                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
                         </td>
                         <td class="label-center">
-                            <select required id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
+                            <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
                                 <option value="">Select a file</option>
                                 {% if form.file_name.value %}
                                 <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
@@ -436,11 +436,11 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Analyte</th>
-                        <th>Maximum Result</th>
-                        <th>Units</th>
-                        <th>Sampling Date</th>
-                        <th>File Name</th>
+                        <th class="text-center">Analyte</th>
+                        <th class="text-center">Maximum Result</th>
+                        <th class="text-center">Units</th>
+                        <th class="text-center">Sampling Date</th>
+                        <th class="text-center">File Name</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -448,7 +448,7 @@
                         {{ form.id }}
                     <tr>
                         <td>
-                            <select required id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
+                            <select id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
                                 <option disabled {% if not form.analyte.value %} selected {% endif %} value="" class="label-center">Choose Analyte</option>
                                 {% for option in otherAnalytes %}
                                     <option {% if form.analyte.value == option %} selected {% endif %} value="{{option}}" class="label-center">{{option}}</option>
@@ -456,10 +456,10 @@
                             </select>
                         </td>
                         <td>
-                            <input required id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
+                            <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
                         </td>
                         <td>
-                            <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
+                            <select id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
                             {% for option in pfasUnits %}
                                 <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
@@ -467,10 +467,10 @@
                             </select>
                         </td>
                         <td>
-                            <input required id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
+                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
                         </td>
                         <td class="label-center">
-                            <select required id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
+                            <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
                                 <option value="">Select a file</option>
                                 {% if form.file_name.value %}
                                 <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
@@ -501,7 +501,7 @@
         </div>
 
 
-        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+        <div id="pfasCommentsDiv" class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>PFAS Comments</h3>
             <div class="form-group">
                 <label for="comments_pfas">Comments</label>
@@ -517,178 +517,10 @@
     </form>
 </div>
 
+{% endblock %}
 
+{% block extra_scripts %}
 
-<script>
-
-    const annualFileSelectors = document.querySelectorAll('[id^="annualflow-"][id$="-file_name"]');
-    const annualDeleteButtons = document.querySelectorAll('[data-target^="annualFile"]');
-    const annualFileDivs = document.querySelectorAll('[id^="div_annualFile"]');
-    const annualFiles = document.querySelectorAll('[id^="annualFile"]');
-    const annualAddFileButton = document.getElementById('annualAddFileButton');
-    let annualFileNameList = [];
-
-    const pfasFileSelectors = document.querySelectorAll('[id^="pfas-"][id$="-file_name"]');
-    const pfasDeleteButtons = document.querySelectorAll('[data-target^="pfasFile"]');
-    const pfasFiles = document.querySelectorAll('[id^="pfasFile"]');
-    const pfasFileDivs = document.querySelectorAll('[id^="div_pfasFile"]');
-    const pfasAddFileButton = document.getElementById('pfasAddFileButton');
-    let pfasFileNameList = [];
-
-
-    function renderFileNames(selectorList, fileNameList) {
-       selectorList.forEach(elem => {
-
-            // save previous value, if any
-            let selected = elem.value
-            // clear list of options
-            elem.options.length = 0;
-
-            // re-implement default option
-            const defaultOption = document.createElement("option");
-            defaultOption.value = "";
-            defaultOption.textContent = "Select a file";
-            defaultOption.disabled = true;
-            // set default option only if there is no pre-selected value
-            defaultOption.selected = !selected;
-            elem.appendChild(defaultOption);
-
-            fileNameList.forEach(file => {
-                const option = document.createElement("option");
-                option.value = file;
-                option.textContent = file;
-                if (selected === file){
-                    option.selected = true;
-                };
-                elem.appendChild(option);
-            });
-
-       });
-    };
-
-
-    function addFiles(button, nodeList) {
-        let counter = 1;
-        button.addEventListener("click", function () {
-            if (counter < nodeList.length) {
-                console.log(nodeList[counter]);
-                nodeList[counter].classList.remove("hidden");
-                nodeList[counter].classList.add("d-flex");
-                nodeList[counter].classList.add("justify-content-between");
-                counter++;
-            }
-        });
-    }
-
-    addFiles(annualAddFileButton, annualFileDivs);
-    addFiles(pfasAddFileButton, pfasFileDivs);
-
-
-    function deleteButtons(deleteButtonList, fileNameList, selectorList){
-        deleteButtonList.forEach(elem => {
-            elem.addEventListener("click", function () {
-                // get associated fileInput
-                const fileInput = document.getElementById(this.dataset.target);
-                console.log(fileInput)
-
-                // remove value from fileNameList
-                if (fileInput.files.length > 0) {
-
-                    // get index of where value is found in array
-                    const index = fileNameList.indexOf(fileInput.files[0].name);
-
-                    // remove value
-                    if (index !== -1) {
-                        fileNameList.splice(index, 1);
-                    }
-                }
-
-                // remove file value and hide
-                fileInput.value = "";
-                fileInput.classList.add('hidden');
-
-                // hide the delete button as well
-                elem.classList.add('hidden');
-
-                // re-render filenames
-                renderFileNames(selectorList, fileNameList);
-
-            });
-        });
-    };
-
-    deleteButtons(annualDeleteButtons, annualFileNameList, annualFileSelectors);
-    deleteButtons(pfasDeleteButtons, pfasFileNameList, pfasFileSelectors);
-
-
-    function updateFilesOnChange(inputList, fileNameList, selectorList) {
-
-        inputList.forEach(file => {
-            file.addEventListener("change", function () {
-                // clear the array
-                fileNameList.length = 0;
-                inputList.forEach(elem => {
-                    // if the input is visible and has a file loaded
-                    if (elem.checkVisibility() && elem.files.length > 0) {
-                        fileNameList.push(elem.files[0].name);
-                    };
-                });
-                renderFileNames(selectorList, fileNameList);
-            });
-        });
-    };
-
-    updateFilesOnChange(annualFiles, annualFileNameList, annualFileSelectors);
-    updateFilesOnChange(pfasFiles, pfasFileNameList, pfasFileSelectors);
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const sourceTypeSelect = document.getElementById('source_type');
-        const sourceTypeOtherDiv = document.getElementById('sourceTypeOther');
-        const sourceTypeOther = document.getElementById('source_type_other');
-        const sourceCoOwned = document.getElementById('source_co_owned');
-        const coOwnerInfoDiv = document.getElementById('coOwnerInfo');
-        const coOwnerPWSID = document.getElementById('co_owner_pwsid')
-        const coOwnerExplained = document.getElementById('co_owner_explained')
-        const isPartOfIDWS = document.getElementById('is_part_of_idws')
-        const idwsExplanationDiv = document.getElementById('idwsExplanation')
-        const idwsExplanation = document.getElementById('idws_explanation')
-
-
-        // create function that toggles whether the 'hidden' class is applied
-        function toggleHiddenRequired() {
-            console.log("here");
-
-            // True/False Statements
-            tf1 = sourceTypeSelect.value === "Other";
-            tf2 = sourceCoOwned.value === "Yes"
-            tf3 = isPartOfIDWS.value === "Yes"
-
-            // toggle whether the elements are hidden or not
-            sourceTypeOtherDiv.classList.toggle("hidden", !tf1);
-            coOwnerInfoDiv.classList.toggle("hidden", !tf2);
-            idwsExplanationDiv.classList.toggle("hidden", !tf3);
-
-            // toggle whether they are required.
-            sourceTypeOther.required = tf1;
-            coOwnerPWSID.required = tf2;
-            coOwnerExplained.required = tf2;
-            idwsExplanation.required = tf3;
-
-        };
-
-        // once the page is loaded, trigger the function to hide/show based on value
-        toggleHiddenRequired();
-
-        // apply function any time there are changes
-        sourceTypeSelect.addEventListener("change", toggleHiddenRequired);
-        sourceCoOwned.addEventListener("change", toggleHiddenRequired);
-        isPartOfIDWS.addEventListener("change", toggleHiddenRequired);
-
-
-    });
-
-
-</script>
-
+    <script src="{% static 'js/sourceForm.js' %}"></script>
 
 {% endblock %}
