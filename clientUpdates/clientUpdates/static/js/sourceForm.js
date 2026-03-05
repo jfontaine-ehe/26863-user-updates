@@ -55,15 +55,12 @@ function renderFileNames(selectorList, fileNameList) {
 
 
 function addFiles(button, nodeList) {
-    let counter = 1;
     button.addEventListener("click", function () {
-        if (counter < nodeList.length) {
-            console.log(nodeList[counter]);
-            nodeList[counter].classList.remove("hidden");
-            nodeList[counter].classList.add("d-flex");
-            nodeList[counter].classList.add("justify-content-between");
-            counter++;
-        }
+        let nearest = Array.from(nodeList).find(elem => elem.classList.contains('hidden'));
+        console.log(nearest);
+        nearest.classList.remove("hidden");
+        nearest.classList.add("d-flex");
+        nearest.classList.add("justify-content-between");
     });
 }
 
@@ -76,7 +73,7 @@ function deleteButtons(deleteButtonList, fileNameList, selectorList){
         elem.addEventListener("click", function () {
             // get associated fileInput
             const fileInput = document.getElementById(this.dataset.target);
-            console.log(fileInput)
+            let parentDiv = elem.parentElement;
 
             // remove value from fileNameList
             if (fileInput.files.length > 0) {
@@ -92,10 +89,12 @@ function deleteButtons(deleteButtonList, fileNameList, selectorList){
 
             // remove file value and hide
             fileInput.value = "";
-            fileInput.classList.add('hidden');
+            //fileInput.classList.add('hidden');
 
             // hide the delete button as well
-            elem.classList.add('hidden');
+            //elem.classList.add('hidden');
+            parentDiv.classList.add('hidden');
+            parentDiv.classList.remove('d-flex')
 
             // re-render filenames
             renderFileNames(selectorList, fileNameList);
