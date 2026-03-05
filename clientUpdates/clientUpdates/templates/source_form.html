@@ -312,6 +312,19 @@
         <!--___________________________________PFAS Results_________________________________-->
         <div id="pfasResultsDiv" class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>PFAS Results</h3>
+            <p>
+                Below you will provide all relevant information about PFAS detections within this source. You will
+                be asked if the source has had any detections of PFOA, PFOS, PFHxS, GenX, PFNA, or PFBS, since these
+                are the six analytes that are part of the "Proposed Federal MCLs" referenced in the 3m/DuPont and Tyco/BASF
+                settlements. You will also be asked to provide the highest other PFAS analyte concentration recorded for this
+                source, in addition to any PFAS concentration that is above your state's MCL (if applicable).
+                <br>
+                <br>
+                <b>
+                    Please upload lab reports at the bottom of this section that correspond to the PFAS results entered
+                    into the tables below.
+                </b>
+            </p>
             <h4>Proposed Federal MCL Analytes (March, 2023)</h4>
             <div class="alert alert-primary" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:100%; margin:20px auto;">
                 <div  style="display:flex; align-items:center;">
@@ -433,6 +446,16 @@
 
 
             <h4>PFAS Analyte that Exceeds a State MCL</h4>
+            <div class="alert alert-primary" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:100%; margin:20px auto;">
+                <div  style="display:flex; align-items:center;">
+                    <i class="bi bi-info-circle h5" style="padding-right:5px; margin-right:5px; color:blue; width:5%">
+                    </i>
+                    <p style="margin-bottom:0px;">
+                        If there is a PFAS analyte that exhibited concentrations above your state's relevant
+                        MCL, please provide this information below.
+                    </p>
+                </div>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -482,9 +505,12 @@
                 </tbody>
             </table>
 
+
+            <h4>PFAS File Uploads</h4>
             <div class="form-group">
                 {% for field in pfasFilesForm %}
-                    <label for="{{field.html_name}}" class="form-label {% if 'pfasFile1' == field.html_name %} {% else %} hidden {% endif %}">This is a placeholder for the filename upload.</label>
+                    <label for="{{field.html_name}}" class="form-label {% if 'pfasFile1' == field.html_name %} {% else %} hidden {% endif %}">
+                        Please upload all relevant lab reports. Once uploaded, the file name will populate within the tables above. </label>
                     <div class="{% if 'pfasFile1' == field.html_name %}d-flex{% else %}hidden{% endif %}" id="{{'div_'|add:field.html_name}}">
                         <input style="width:80%;" type="file" class="form-control form-label" id="{{field.html_name}}" name="{{field.html_name}}" accept=".pdf, .jpg, .jpeg, .png">
                         {% if 'pfasFile1' != field.html_name %}
