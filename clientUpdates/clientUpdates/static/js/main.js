@@ -14,5 +14,5 @@ document.getElementById('sourceFormDelete').addEventListener("submit", function(
     }
 });
 
-console.log(document.getElementById('pwsFormDeleteButton'))
+
 

@@ -1,11 +1,11 @@
-{% extends 'base_generic.html' %}
+{% extends 'base_generic_alt.html' %}
+{% load static %}
 
 
 {% block content %}
 <div>
     <form id="sourceForm" action="{% if true%}{{action}}{% endif %}" method="post" enctype="multipart/form-data" onSubmit="return confirm('Are you sure you would like to submit this form?')">
         {% csrf_token %}
-
         <!--Source Name-->
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>Source Name</h3>
@@ -20,7 +20,7 @@
             <h3>Source Type</h3>
             <div class="form-group">
                 <label for="source_type">Please provide the source type:</label>
-                <select required id="source_type" name="source_type" type="text" class="form-control">
+                <select required id="source_type" name="source_type" type="text" class="form-select">
                     <option disabled {% if not phase2SourceInfoForm.source_type_other.value %} selected {% endif %} value=""></option>
                     {% for option in sourceTypeOptions %}
                         <option {% if phase2SourceInfoForm.source_type.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
@@ -180,7 +180,7 @@
                         <td><input disabled id="{{form.year.html_name}}" name="{{form.year.html_name}}" type="number" class="form-control label-center" value="{{form.year.value|default_if_none:''}}"></td>
                         <td class="label-center"><input id="{{form.flow_rate.html_name}}" name="{{form.flow_rate.html_name}}" type="number" class="form-control" value="{{form.flow_rate.value}}"></td>
                         <td class="label-center">
-                            <select id="{{form.units.html_name}}" name="{{form.units.html_name}}" class="form-select">
+                            <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
                                     {% for option in unitOptions %}
                                         <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
@@ -188,7 +188,7 @@
                             </select>
                         </td>
                         <td class="label-center">
-                            <select id="{{form.flow_rate_reduced.html_name}}" name="{{form.flow_rate_reduced.html_name}}" class="form-select">
+                            <select required id="{{form.flow_rate_reduced.html_name}}" name="{{form.flow_rate_reduced.html_name}}" class="form-select">
                                 <option disabled {% if not form.flow_rate_reduced.value %} selected {% endif %} value=""></option>
                                 {% for option in yesNoUnknown %}
                                     <option {% if form.flow_rate_reduced.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
@@ -196,7 +196,7 @@
                             </select>
                         </td>
                         <td class="label-center">
-                            <select id="{{form.did_not_exist.html_name}}" name="{{form.did_not_exist.html_name}}" class="form-select">
+                            <select required id="{{form.did_not_exist.html_name}}" name="{{form.did_not_exist.html_name}}" class="form-select">
                                 <option disabled {% if not form.did_not_exist.value %} selected {% endif %} value=""></option>
                                 {% for option in yesNoUnknown %}
                                     <option {% if form.did_not_exist.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
@@ -204,8 +204,8 @@
                             </select>
                         </td>
                         <td class="label-center">
-                            <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}"class="form-select">
-                                <option value=""></option>
+                            <select required id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}"class="form-select">
+                                <option value="">Select a file</option>
                                 {% if form.file_name.value %}
                                 <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
                                 {% endif %}
@@ -332,7 +332,7 @@
                             <input disabled id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-control label-center" value="{{form.analyte.value|default_if_none:''}}">
                         </td>
                         <td>
-                            <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
+                            <input required id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
                         </td>
                         <td>
                             <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
@@ -343,10 +343,10 @@
                             </select>
                         </td>
                         <td>
-                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
+                            <input required id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
                         </td>
                         <td class="label-center">
-                            <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
+                            <select required id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
                                 <option value=""></option>
                                 {% if form.file_name.value %}
                                 <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
@@ -382,7 +382,7 @@
                             </select>
                         </td>
                         <td>
-                            <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
+                            <input required id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
                         </td>
                         <td>
                             <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
@@ -393,10 +393,10 @@
                             </select>
                         </td>
                         <td>
-                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
+                            <input required id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
                         </td>
                         <td class="label-center">
-                            <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
+                            <select required id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
                                 <option value=""></option>
                                 {% if form.file_name.value %}
                                 <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
@@ -433,7 +433,7 @@
                             </select>
                         </td>
                         <td>
-                            <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
+                            <input required id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
                         </td>
                         <td>
                             <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
@@ -444,10 +444,10 @@
                             </select>
                         </td>
                         <td>
-                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
+                            <input required id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
                         </td>
                         <td class="label-center">
-                            <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
+                            <select required id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
                                 <option value=""></option>
                                 {% if form.file_name.value %}
                                 <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
@@ -477,91 +477,6 @@
 
         </div>
 
-        <!--<div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
-            <h3>Highest Other PFAS Results</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Analyte</th>
-                        <th>Maximum Result</th>
-                        <th>Units</th>
-                        <th>Sampling Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for form in phase2PfasResultsForm|slice:"-2:-1" %}
-                        {{ form.id }}
-                    <tr>
-                        <td>
-                            <select required id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
-                                <option disabled {% if not form.analyte.value %} selected {% endif %} value="" class="label-center">Choose Analyte</option>
-                                {% for option in otherAnalytes %}
-                                    <option {% if form.analyte.value == option %} selected {% endif %} value="{{option}}" class="label-center">{{option}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td>
-                            <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
-                        </td>
-                        <td>
-                            <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
-                                <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
-                            {% for option in pfasUnits %}
-                                <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
-                            {% endfor %}
-                            </select>
-                        </td>
-                        <td>
-                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control">
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
-            <h3>PFAS Analyte that Exceeds a State MCL</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Analyte</th>
-                        <th>Maximum Result</th>
-                        <th>Units</th>
-                        <th>Sampling Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for form in phase2PfasResultsForm|slice:"-1:" %}
-                        {{ form.id }}
-                    <tr>
-                        <td>
-                            <select required id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
-                                <option disabled {% if not form.analyte.value %} selected {% endif %} value="" class="label-center">Choose Analyte</option>
-                                {% for option in otherAnalytes %}
-                                    <option {% if form.analyte.value == option %} selected {% endif %} value="{{option}}" class="label-center">{{option}}</option>
-                                {% endfor %}
-                            </select>
-                        </td>
-                        <td>
-                            <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
-                        </td>
-                        <td>
-                            <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
-                                <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
-                            {% for option in pfasUnits %}
-                                <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
-                            {% endfor %}
-                            </select>
-                        </td>
-                        <td>
-                            <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control">
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>-->
 
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>PFAS Comments</h3>
@@ -600,21 +515,30 @@
 
     function renderFileNames(selectorList, fileNameList) {
        selectorList.forEach(elem => {
-            elem.options.length = 0;
-            fileNameList.forEach(file => {
-                const option = document.createElement("option");
-                option.value = file;
-                option.textContent = file;
-                elem.appendChild(option);
-            });
 
+            // save previous value, if any
+            let selected = elem.value
+            // clear list of options
+            elem.options.length = 0;
+
+            // re-implement default option
             const defaultOption = document.createElement("option");
             defaultOption.value = "";
             defaultOption.textContent = "Select a file";
             defaultOption.disabled = true;
-            defaultOption.selected = true;
-
+            // set default option only if there is no pre-selected value
+            defaultOption.selected = !selected;
             elem.appendChild(defaultOption);
+
+            fileNameList.forEach(file => {
+                const option = document.createElement("option");
+                option.value = file;
+                option.textContent = file;
+                if (selected === file){
+                    option.selected = true;
+                };
+                elem.appendChild(option);
+            });
 
        });
     };
@@ -722,7 +646,7 @@
                 // clear the array
                 fileNameList.length = 0;
                 inputList.forEach(elem => {
-                    console.log(elem.files.length);
+                    // if the input is visible and has a file loaded
                     if (elem.checkVisibility() && elem.files.length > 0) {
                         fileNameList.push(elem.files[0].name);
                     };
