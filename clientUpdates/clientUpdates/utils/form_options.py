@@ -18,12 +18,12 @@ sdwisActivityCodes = {("active", "Active"),
                       ("potential", "Potential future system to be regulated"),
                       ("unknown", "Unknown")}
 
-yesNoUnknown = ("Yes", "No", "Unknown")
+yesNo = ("Yes", "No")
 
 sourceTypeOptions = {("GW", "Groundwater Well"), ("SW", "Surface Water"), ("Other", "Other")}
 
 unitOptions = {("GPM", "GPM (Gallons Per Minute)"), ("GPY", "GPY (Gallons Per Year)"),
-               ("MGD", "MGD (Million Gallons Per Day"), ("AFPY", "AFPY (Acre-feet Per Year")}
+               ("MGD", "MGD (Million Gallons Per Day)"), ("AFPY", "AFPY (Acre-feet Per Year)")}
 
 pfasAnalytes = ("PFOA", "PFOS", "PFHxS", "GenX", "PFNA", "PFBS")
 

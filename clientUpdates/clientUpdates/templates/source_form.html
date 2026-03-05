@@ -40,7 +40,7 @@
                 <label for="pws_owns_source" class="tf-label">Does the PWS own this Water Source?</label>
                 <select required id="pws_owns_source" name="pws_owns_source" class="form-select tf-select" style>
                     <option disabled {% if not phase2SourceInfoForm.pws_owns_source.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
+                    {% for option in yesNo %}
                         <option {% if phase2SourceInfoForm.pws_owns_source.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
@@ -50,7 +50,7 @@
                 <label for="source_co_owned" class="tf-label">Are there any co-owners to this water source?</label>
                 <select required id="source_co_owned" name="source_co_owned" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.source_co_owned.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
+                    {% for option in yesNo %}
                         <option {% if phase2SourceInfoForm.source_co_owned.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
@@ -61,7 +61,7 @@
                 <label for="pws_operates_source" class="tf-label">Does the PWS operate this Water Source?</label>
                 <select required id="pws_operates_source" name="pws_operates_source" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.pws_operates_source.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
+                    {% for option in yesNo %}
                         <option {% if phase2SourceInfoForm.pws_operates_source.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
@@ -72,7 +72,7 @@
                 <label for="pws_purchased" class="tf-label">Is this Water Source a purchased water connection?</label>
                 <select required id="pws_purchased" name="pws_purchased" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.pws_purchased.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
+                    {% for option in yesNo %}
                         <option {% if phase2SourceInfoForm.pws_purchased.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
@@ -83,7 +83,7 @@
                 <label for="pws_drinking_water" class="tf-label">Has the water form this Water Source ever been used as Drinking Water?</label>
                 <select required id="pws_drinking_water" name="pws_drinking_water" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.pws_drinking_water.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
+                    {% for option in yesNo %}
                         <option {% if phase2SourceInfoForm.pws_drinking_water.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
@@ -94,7 +94,7 @@
                 <label for="is_part_of_idws" class="tf-label">Is this Water Source part of an Interrelated Drinking Water System (IDWS)?</label>
                 <select required id="is_part_of_idws" name="is_part_of_idws" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.is_part_of_idws.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
+                    {% for option in yesNo %}
                         <option {% if phase2SourceInfoForm.is_part_of_idws.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
@@ -190,7 +190,7 @@
                         <td class="label-center">
                             <select required id="{{form.flow_rate_reduced.html_name}}" name="{{form.flow_rate_reduced.html_name}}" class="form-select">
                                 <option disabled {% if not form.flow_rate_reduced.value %} selected {% endif %} value=""></option>
-                                {% for option in yesNoUnknown %}
+                                {% for option in yesNo %}
                                     <option {% if form.flow_rate_reduced.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                                 {% endfor %}
                             </select>
@@ -198,7 +198,7 @@
                         <td class="label-center">
                             <select required id="{{form.did_not_exist.html_name}}" name="{{form.did_not_exist.html_name}}" class="form-select">
                                 <option disabled {% if not form.did_not_exist.value %} selected {% endif %} value=""></option>
-                                {% for option in yesNoUnknown %}
+                                {% for option in yesNo %}
                                     <option {% if form.did_not_exist.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                                 {% endfor %}
                             </select>
@@ -251,7 +251,7 @@
                 <label for="pfas_ever_tested" class="tf-label">Has this Water Source ever been tested or otherwise analyzed for PFAS?</label>
                 <select required id="pfas_ever_tested" name="pfas_ever_tested" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.pfas_ever_tested.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
+                    {% for option in yesNo %}
                         <option {% if phase2SourceInfoForm.pfas_ever_tested.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
@@ -261,7 +261,7 @@
                 <label for="pfas_detected" class="tf-label">For any testing of PFAS that has been conducted for this Water Source, has there ever been any Measureable Concentrations (detections) of PFAS?</label>
                 <select required id="pfas_detected" name="pfas_detected" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.pfas_detected.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
+                    {% for option in yesNo %}
                         <option {% if phase2SourceInfoForm.pfas_detected.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
@@ -271,7 +271,7 @@
                 <label for="detected_b4_jun2223" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS on or before June 22, 2023?</label>
                 <select required id="detected_b4_jun2223" name="detected_b4_jun2223" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.detected_b4_jun2223.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
+                    {% for option in yesNo %}
                         <option {% if phase2SourceInfoForm.detected_b4_jun2223.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
@@ -281,7 +281,7 @@
                 <label for="detected_after_jun2223" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS on or before June 22, 2023?</label>
                 <select required id="detected_after_jun2223" name="detected_after_jun2223" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.detected_after_jun2223.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
+                    {% for option in yesNo %}
                         <option {% if phase2SourceInfoForm.detected_after_jun2223.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
@@ -291,7 +291,7 @@
                 <label for="detected_b4_jun3023" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS on or before June 22, 2023?</label>
                 <select required id="detected_b4_jun3023" name="detected_b4_jun3023" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.detected_b4_jun3023.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
+                    {% for option in yesNo %}
                         <option {% if phase2SourceInfoForm.detected_b4_jun3023.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
@@ -301,7 +301,7 @@
                 <label for="detected_after_jun3023" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS on or before June 22, 2023?</label>
                 <select required id="detected_after_jun3023" name="detected_after_jun3023" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.detected_after_jun3023.value %} selected {% endif %} value=""></option>
-                    {% for option in yesNoUnknown %}
+                    {% for option in yesNo %}
                         <option {% if phase2SourceInfoForm.detected_after_jun3023.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
                     {% endfor %}
                 </select>
@@ -313,6 +313,17 @@
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>PFAS Results</h3>
             <h4>Proposed Federal MCL Analytes (March, 2023)</h4>
+            <div class="alert alert-primary" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:100%; margin:20px auto;">
+                <div  style="display:flex; align-items:center;">
+                    <i class="bi bi-info-circle h5" style="padding-right:5px; color:blue; width:5%">
+                    </i>
+                    <p style="margin-bottom:0px;">
+                        Please provide the <span style="font-weight:bold; font-style:italic">highest</span>
+                        concentrations of each analyte. If there are no detections of a given analyte, please
+                        report a result of zero (0).
+                    </p>
+                </div>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -347,7 +358,7 @@
                         </td>
                         <td class="label-center">
                             <select required id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
-                                <option value=""></option>
+                                <option value="">Select a file</option>
                                 {% if form.file_name.value %}
                                 <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
                                 {% endif %}
@@ -359,6 +370,18 @@
             </table>
 
             <h4>Highest Other PFAS Results</h4>
+            <div class="alert alert-primary" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:100%; margin:20px auto;">
+                <div  style="display:flex; align-items:center;">
+                    <i class="bi bi-info-circle h5" style="padding-right:5px; margin-right:5px; color:blue; width:5%">
+                    </i>
+                    <p style="margin-bottom:0px;">
+                        Other than the six (6) PFAS analytes shown above, please select one more analyte within the dropdown
+                        that has the <span style="font-weight:bold; font-style:italic">highest</span> concentration. If
+                        there are no detections of PFAS analytes other than PFOA, PFOS, PFHxS, GenX, PFNA, and PFBS, please
+                        indicate this below.
+                    </p>
+                </div>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -397,7 +420,7 @@
                         </td>
                         <td class="label-center">
                             <select required id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
-                                <option value=""></option>
+                                <option value="">Select a file</option>
                                 {% if form.file_name.value %}
                                 <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
                                 {% endif %}
@@ -448,7 +471,7 @@
                         </td>
                         <td class="label-center">
                             <select required id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
-                                <option value=""></option>
+                                <option value="">Select a file</option>
                                 {% if form.file_name.value %}
                                 <option value="{{form.file_name.value}}" selected>{{form.file_name.value}}</option>
                                 {% endif %}
@@ -560,21 +583,6 @@
     addFiles(annualAddFileButton, annualFileDivs);
     addFiles(pfasAddFileButton, pfasFileDivs);
 
-    /*
-    let annualCounter = 1;
-    document.getElementById('annualAddFileButton').addEventListener("click", function () {
-
-        const annualFiles = document.querySelectorAll('[id^="div_annualFile"]');
-
-        if (annualCounter < annualFiles.length) {
-            annualFiles[annualCounter].classList.remove("hidden");
-            annualFiles[annualCounter].classList.add("d-flex");
-            annualFiles[annualCounter].classList.add("justify-content-between");
-            annualCounter++;
-        }
-    });
-    */
-
 
     function deleteButtons(deleteButtonList, fileNameList, selectorList){
         deleteButtonList.forEach(elem => {
@@ -612,32 +620,6 @@
     deleteButtons(annualDeleteButtons, annualFileNameList, annualFileSelectors);
     deleteButtons(pfasDeleteButtons, pfasFileNameList, pfasFileSelectors);
 
-    /*
-    annualDeleteButtons.forEach(elem => {
-
-        elem.addEventListener("click", function () {
-
-            // get associated fileInput
-            const fileInput = document.getElementById(this.dataset.target);
-
-            // remove value from fileNameList
-            annualFileNameList = annualFileNameList.filter(x => x !== fileInput.files[0].name);
-
-            // remove file value and hide
-            fileInput.value = "";
-            fileInput.classList.add('hidden');
-
-            // hide the delete button as well
-            elem.classList.add('hidden');
-
-            // re-render filenames
-            renderFileNames(annualFiles, annualFileList);
-
-        });
-
-
-    });
-    */
 
     function updateFilesOnChange(inputList, fileNameList, selectorList) {
 
@@ -658,31 +640,6 @@
 
     updateFilesOnChange(annualFiles, annualFileNameList, annualFileSelectors);
     updateFilesOnChange(pfasFiles, pfasFileNameList, pfasFileSelectors);
-
-    /*
-    annualFiles.forEach(file => {
-
-        file.addEventListener("change", function () {
-            fileDetails = file.files[0];
-
-        });
-
-        file.addEventListener("change", function () {
-
-            annualFileNameList = [];
-            annualFiles.forEach(elem => {
-
-                if (elem.checkVisibility() && elem.files.length > 0) {
-                    annualFileNameList.push(elem.files[0].name);
-                };
-
-            });
-
-            renderFileNames(annualFiles, annualFileNameList);
-
-        });
-    }); */
-
 
     document.addEventListener("DOMContentLoaded", function () {
         const sourceTypeSelect = document.getElementById('source_type');
@@ -726,18 +683,6 @@
         sourceTypeSelect.addEventListener("change", toggleHiddenRequired);
         sourceCoOwned.addEventListener("change", toggleHiddenRequired);
         isPartOfIDWS.addEventListener("change", toggleHiddenRequired);
-
-
-
-        /*        const startYear = 2013;
-
-        for (let i = 0; i <= 10; i++) {
-          const input = document.getElementById(`form-${i}-year`);
-          if (input) {
-            input.value = startYear + i;
-          }
-        */
-
 
 
     });
