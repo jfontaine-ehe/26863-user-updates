@@ -20,7 +20,7 @@ const pfasCommentsDiv = document.getElementById('pfasCommentsDiv')
 const pfasDetected = document.getElementById('pfas_detected')
 
 const pfasResults = document.querySelectorAll('[id^="pfas-"][id$="-result"]');
-
+const maxFlowFile = document.getElementById('maxflow-file_name');
 
 
 function renderFileNames(selectorList, fileNameList) {
@@ -218,3 +218,95 @@ pfasResults.forEach(elem => {
     });
 
 });
+
+let annualErrorDiv = document.getElementById('annualErrorDiv');
+let pfasErrorDiv = document.getElementById('pfasErrorDiv');
+let maxFlowErrorDiv = document.getElementById('maxFlowErrorDiv');
+
+// validation
+document.getElementById('sourceForm').addEventListener('submit', function(event) {
+
+    const clearValidationErrors = () => {
+        annualErrorDiv.classList.add('hidden');
+        annualFiles.forEach(el => el.classList.remove('is-invalid'));
+
+        pfasErrorDiv.classList.add('hidden');
+        pfasFiles.forEach(el => el.classList.remove('is-invalid'));
+
+        maxFlowErrorDiv.classList.add('hidden');
+        maxFlowFile.classList.remove('is-invalid');
+    };
+
+    const showValidationError = (inputElement, errorElement) => {
+        if (errorElement) {
+            errorElement.classList.remove('hidden')
+        }
+        inputElement.classList.add('is-invalid');
+    };
+
+    const validateFile = (type, fileInput) => {
+        const maxFileSizeBytes = 25 * 1024 * 1024; // Max file size: 25 MB
+        let allowedExtensions = []
+        if (type === "annual" || type === "maxflow"){
+            allowedExtensions = ['pdf', 'csv', 'xlsx', 'jpg', 'jpeg', 'png']
+        } else if (type === "pfas") {
+            allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png']
+        }
+        const fileName = fileInput.value;
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+        const file = fileInput.files[0];
+        const errorElement = fileInput.closest('div.form-group').nextElementSibling;
+
+        if (!allowedExtensions.includes(fileExtension) || (file && file.size > maxFileSizeBytes)) {
+            showValidationError(fileInput, errorElement);
+            return false;
+        } else {
+            return true;
+        }
+
+    };
+
+    clearValidationErrors();
+
+    let annualValid = true;
+    annualFiles.forEach(elem => {
+        if (elem.checkVisibility() && elem.files.length > 0){
+            if(!validateFile("annual", elem)){
+                annualValid = false;
+            }
+        }
+    })
+
+    let pfasValid = true;
+    pfasFiles.forEach(elem => {
+        if (elem.checkVisibility() && elem.files.length > 0){
+            if(!validateFile("pfas", elem)){
+                pfasValid = false;
+            }
+        }
+    })
+
+    let maxFlowValid = true;
+    if (maxFlowFile.checkVisibility() && maxFlowFile.files.length > 0) {
+    if (!validateFile("maxflow", maxFlowFile)) {
+        maxFlowValid = false;
+    }
+}
+
+    if (!annualValid || !pfasValid || !maxFlowValid) {
+        event.preventDefault();
+        alert("Please fix validation errors that exist in the form.")
+    }
+
+
+});
+
+
+
+
+
+
+
+
+
+

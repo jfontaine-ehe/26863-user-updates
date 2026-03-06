@@ -455,3 +455,10 @@ td::before {
 .mt30{
     margin-top:30px;
 }
+
+.custom-invalid{
+    width:100%;
+    margin: 10px;
+    font-size:0.88rem;
+    color:red;
+}
