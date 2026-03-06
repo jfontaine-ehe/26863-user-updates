@@ -446,3 +446,12 @@ td::before {
     border :none;
 
 }
+
+.add-form {
+    border-color:#50a34b;
+    background-color:#50a34b;
+}
+
+.mt30{
+    margin-top:30px;
+}

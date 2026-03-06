@@ -3,11 +3,7 @@
 
 {% block content %}
 <div class="alert alert-primary" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
-    <div  style="display:flex; align-items:center;">
-        <i class="bi bi-info-circle h5" style="padding-right:5px; color:blue; width:5%"></i>
-        <h3 style="margin: 0px; text-align:center; border-bottom:none; font-weight:bold; color: rgb(8, 66, 152); width: 100%;">Hello, {{pws}}!</h3>
-    </div>
-    <br>
+    <h3 style="margin: 0px; text-align:center; border-bottom:none; font-weight:bold; color: rgb(8, 66, 152); width: 100%;">Hello, {{pws}}!</h3>
     <br>
     <p>
         {{ pws }} is potentially eligible for the 3M/DuPont Phase 2 Action Fund Claim.
@@ -63,7 +59,7 @@
                     </a>
                 </td>
                 <td class="text-center td-no-border">
-                    <form id="pwsFormDelete" action="{% url 'pws-info-delete' pwsid=record.pwsid %}" method="post">
+                    <form action="{% url 'pws-info-delete' pwsid=record.pwsid %}" method="post">
                         {% csrf_token %}
                         <button type="submit" value="submit" class="btn btn-danger">
                             <b class="bi bi-trash" style="color:#e3d8d8;">  Delete Form</b>
@@ -75,7 +71,7 @@
         </tbody>
     </table>
     <div style="display:flex; justify-content:flex-end;">
-        <a type="button" class="btn btn-primary" style="border-color:#50a34b; background-color:#50a34b; margin-top:30px;" href="{% url 'pws-info-create' %}">
+        <a type="button" class="btn btn-primary mt30 {% if sourceGenInfo %}no-click{% else %}add-form{% endif %}" href="{% url 'pws-info-create' %}">
             <p class="bi bi-plus-circle" style="margin:0;">  Add Form</p>
         </a>
     </div>
@@ -113,7 +109,7 @@
                     </a>
                 </td>
                 <td class="text-center td-no-border">
-                    <form id="sourceFormDelete" action="{% url 'source-info-delete' pwsid=record.pwsid source_name=record.source_name %}" method="post">
+                    <form action="{% url 'source-info-delete' pwsid=record.pwsid source_name=record.source_name %}" method="post">
                         {% csrf_token %}
                         <button type="submit" value="submit" class="btn btn-danger">
                             <b class="bi bi-trash" style="color:#e3d8d8;">  Delete Form</b>
@@ -125,7 +121,7 @@
         </tbody>
     </table>
     <div style="display:flex; justify-content:flex-end;">
-        <a type="button" class="btn btn-primary" style="border-color:#50a34b; background-color:#50a34b; margin-top:30px;" href="{% url 'source-form-create' %}">
+        <a type="button" class="btn btn-primary add-form mt30" href="{% url 'source-form-create' %}">
             <p class="bi bi-plus-circle" style="margin:0;">  Add Form</p>
         </a>
     </div>

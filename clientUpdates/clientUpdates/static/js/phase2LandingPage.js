@@ -1,15 +1,13 @@
 
 // ---------- phase2_landing_page -------------------
 
-document.getElementById('pwsFormDelete').addEventListener("submit", function(elem) {
-    console.log("in delete button");
-    if (!confirm("Are you sure you'd like to delete this form?")) {
-        elem.preventDefault();
-    }
-});
+let deleteButtons = Array.from(document.querySelectorAll('form'))
+    .filter(form => form.querySelector('button.btn.btn-danger'));
+console.log(deleteButtons)
 
-document.getElementById('sourceFormDelete').addEventListener("submit", function(elem) {
-    if (!confirm("Are you sure you'd like to delete this form?")) {
-        elem.preventDefault();
-    }
-});
+deleteButtons.forEach(node =>node.addEventListener("click", function (elem) {
+        if (!confirm("Are you sure you'd like to delete this form?")) {
+            elem.preventDefault();
+        }
+    })
+);
