@@ -22,6 +22,10 @@ const pfasDetected = document.getElementById('pfas_detected')
 const pfasResults = document.querySelectorAll('[id^="pfas-"][id$="-result"]');
 const maxFlowFile = document.getElementById('maxflow-file_name');
 
+const submitButton = document.getElementById('submit');
+const loaderContainer = document.getElementById('loader-container');
+const loader = document.getElementById('loader');
+
 
 function renderFileNames(selectorList, fileNameList) {
    selectorList.forEach(elem => {
@@ -219,11 +223,13 @@ pfasResults.forEach(elem => {
 
 });
 
+
+// --------- file validation --------------------------
+
 let annualErrorDiv = document.getElementById('annualErrorDiv');
 let pfasErrorDiv = document.getElementById('pfasErrorDiv');
 let maxFlowErrorDiv = document.getElementById('maxFlowErrorDiv');
 
-// validation
 document.getElementById('sourceForm').addEventListener('submit', function(event) {
 
     const clearValidationErrors = () => {
@@ -296,10 +302,20 @@ document.getElementById('sourceForm').addEventListener('submit', function(event)
     if (!annualValid || !pfasValid || !maxFlowValid) {
         event.preventDefault();
         alert("Please fix validation errors that exist in the form.")
+    } else {
+
+        submitButton.disabled = true;
+        loaderContainer.style.display = 'flex';
+        loader.style.display = 'block';
+
     }
 
 
 });
+
+// ------ conditionally require pfas data based on questions ------------------------
+
+console.log(document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]'));
 
 
 
