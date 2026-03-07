@@ -25,7 +25,7 @@ const maxFlowFile = document.getElementById('maxflow-file_name');
 const submitButton = document.getElementById('submit');
 const loaderContainer = document.getElementById('loader-container');
 const loader = document.getElementById('loader');
-
+const pfasFormElem = Array.from(document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]')).filter(el => !el.id.startsWith("pfas-6") && !el.id.startsWith("pfas-7"));
 
 function renderFileNames(selectorList, fileNameList) {
    selectorList.forEach(elem => {
@@ -131,6 +131,24 @@ function updateFilesOnChange(inputList, fileNameList, selectorList) {
 updateFilesOnChange(annualFiles, annualFileNameList, annualFileSelectors);
 updateFilesOnChange(pfasFiles, pfasFileNameList, pfasFileSelectors);
 
+// function that acts on each pfas result input.
+// if zero is entered, all other inputs in that row are rendered disabled
+function zeroPfasResults(elem){
+
+    let row = elem.closest('tr')
+    let inputsSelects =
+        Array.
+        from(row.querySelectorAll('input, select')).
+        filter(elem => !elem.name.endsWith("result") && !/pfas-[0-5]-analyte$/.test(elem.id));
+
+    if (Number(elem.value) === 0){
+        inputsSelects.forEach(e => e.disabled = true)
+    } else {
+        inputsSelects.forEach(e => e.disabled = false)
+    }
+}
+
+// functions to run when page is loaded
 document.addEventListener("DOMContentLoaded", function () {
     const sourceTypeSelect = document.getElementById('source_type');
     const sourceTypeOtherDiv = document.getElementById('sourceTypeOther');
@@ -174,54 +192,74 @@ document.addEventListener("DOMContentLoaded", function () {
     sourceCoOwned.addEventListener("change", toggleHiddenRequired);
     isPartOfIDWS.addEventListener("change", toggleHiddenRequired);
 
+    // when page is first loaded, hide pfas section if necessary based on results
+    if (pfasEverTested.value === "No" || pfasDetected.value === "No") {
+        pfasResultsDiv.classList.add('hidden');
+        pfasCommentsDiv.classList.add('hidden');
+        pfasFormElem.forEach(elem => elem.required = false);
+    }
+
+    pfasFormElem.forEach(elem => zeroPfasResults(elem));
+
 
 });
 
+// conditionally hide pfas section, and whether the pfas section is required, based on
+// the pfas detection question
 pfasEverTested.addEventListener("change", function (e) {
 
     if(pfasEverTested.value === "No"){
         pfasResultsDiv.classList.add('hidden');
         pfasCommentsDiv.classList.add('hidden');
+        pfasFormElem.forEach(elem => elem.required = false);
     } else{
-        pfasResultsDiv.classList.remove('hidden')
-        pfasCommentsDiv.classList.remove('hidden')
+        pfasResultsDiv.classList.remove('hidden');
+        pfasCommentsDiv.classList.remove('hidden');
+        pfasFormElem.forEach(elem => elem.required = true);
     }
 
 })
 
+// conditionally hide pfas section, and whether the pfas section is required, based on
+// the pfas detection question
 pfasDetected.addEventListener("change", function (e) {
 
     if(pfasDetected.value === "No"){
         pfasResultsDiv.classList.add('hidden');
         pfasCommentsDiv.classList.add('hidden');
+        pfasFormElem.forEach(elem => elem.required = false)
     } else{
-        pfasResultsDiv.classList.remove('hidden')
-        pfasCommentsDiv.classList.remove('hidden')
+        pfasResultsDiv.classList.remove('hidden');
+        pfasCommentsDiv.classList.remove('hidden');
+        pfasFormElem.forEach(elem => elem.required = true);
     }
 
 })
 
-// function that acts on each pfas result input.
-// if zero is entered, all other inputs in that row are rendered disabled
-pfasResults.forEach(elem => {
+// attach zeroPfasResults function to pfasResults on change
+pfasResults.forEach(elem => addEventListener("change", function () {
+    zeroPfasResults(elem);
+}))
 
-    elem.addEventListener("change", function (e) {
-
-        let row = elem.closest('tr')
-        let inputsSelects =
-            Array.
-            from(row.querySelectorAll('input, select')).
-            filter(elem => !elem.name.endsWith("result") && !elem.name.endsWith("analyte"))
-
-        if (Number(elem.value) === 0){
-            inputsSelects.forEach(e => e.disabled = true);
-        } else {
-            inputsSelects.forEach(e => e.disabled = false);
-        }
-
-    });
-
-});
+// pfasResults.forEach(elem => {
+//
+//     elem.addEventListener("change", function (e) {
+//
+//         let row = elem.closest('tr')
+//         let inputsSelects =
+//             Array.
+//             from(row.querySelectorAll('input, select')).
+//             filter(elem => !elem.name.endsWith("result") && !/pfas-[0-5]-analyte$/.test(elem.id));
+//
+//         if (Number(elem.value) === 0){
+//             inputsSelects.forEach(e => e.disabled = true)
+//         } else {
+//             inputsSelects.forEach(e => e.disabled = false)
+//         }
+//
+//     });
+//
+// });
 
 
 // --------- file validation --------------------------
@@ -315,7 +353,6 @@ document.getElementById('sourceForm').addEventListener('submit', function(event)
 
 // ------ conditionally require pfas data based on questions ------------------------
 
-console.log(document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]'));
 
 
 

@@ -259,7 +259,7 @@ td::before {
 .no-click {
 
     pointer-events: none;
-    background-color:#e6e1e1;
+    background-color:#e9ecef;
     border: none;
     color: black;
     cursor: not-allowed;
