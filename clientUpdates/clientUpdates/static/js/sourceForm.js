@@ -26,6 +26,8 @@ const submitButton = document.getElementById('submit');
 const loaderContainer = document.getElementById('loader-container');
 const loader = document.getElementById('loader');
 const pfasFormElem = Array.from(document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]')).filter(el => !el.id.startsWith("pfas-6") && !el.id.startsWith("pfas-7"));
+const otherMCLResults = Array.from(document.querySelectorAll('[id^="pfas-6"], [id^="pfas-7"]')).filter(el => el.id.endsWith("result"));
+const allPfasFormElem = document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]');
 
 function renderFileNames(selectorList, fileNameList) {
    selectorList.forEach(elem => {
@@ -196,10 +198,12 @@ document.addEventListener("DOMContentLoaded", function () {
     if (pfasEverTested.value === "No" || pfasDetected.value === "No") {
         pfasResultsDiv.classList.add('hidden');
         pfasCommentsDiv.classList.add('hidden');
-        pfasFormElem.forEach(elem => elem.required = false);
+        allPfasFormElem.forEach(elem => elem.required = false);
     }
 
     pfasFormElem.forEach(elem => zeroPfasResults(elem));
+
+    otherMCLResults.forEach(el => checkNonZero(el));
 
 
 });
@@ -208,11 +212,17 @@ document.addEventListener("DOMContentLoaded", function () {
 // the pfas detection question
 pfasEverTested.addEventListener("change", function (e) {
 
-    if(pfasEverTested.value === "No"){
+    if(pfasEverTested.value === "No" || (pfasEverTested.value === "Yes" && pfasDetected.value === "No")){
         pfasResultsDiv.classList.add('hidden');
         pfasCommentsDiv.classList.add('hidden');
-        pfasFormElem.forEach(elem => elem.required = false);
-    } else{
+        allPfasFormElem.forEach(elem => elem.required = false);
+        allPfasFormElem.forEach(el => {
+            if (!/pfas-[0-5]-analyte$/.test(el.id)) {
+                clearValues(el);
+            }
+        });
+
+    } else {
         pfasResultsDiv.classList.remove('hidden');
         pfasCommentsDiv.classList.remove('hidden');
         pfasFormElem.forEach(elem => elem.required = true);
@@ -224,11 +234,16 @@ pfasEverTested.addEventListener("change", function (e) {
 // the pfas detection question
 pfasDetected.addEventListener("change", function (e) {
 
-    if(pfasDetected.value === "No"){
+    if(pfasDetected.value === "No" || (pfasDetected.value === "Yes" && pfasEverTested.value === "No")){
         pfasResultsDiv.classList.add('hidden');
         pfasCommentsDiv.classList.add('hidden');
-        pfasFormElem.forEach(elem => elem.required = false)
-    } else{
+        allPfasFormElem.forEach(elem => elem.required = false);
+        allPfasFormElem.forEach(el => {
+            if (!/pfas-[0-5]-analyte$/.test(el.id)) {
+                clearValues(el);
+            }
+        });
+    } else {
         pfasResultsDiv.classList.remove('hidden');
         pfasCommentsDiv.classList.remove('hidden');
         pfasFormElem.forEach(elem => elem.required = true);
@@ -331,11 +346,46 @@ document.getElementById('sourceForm').addEventListener('submit', function(event)
 
 });
 
-// ------ conditionally require pfas data based on questions ------------------------
+// if a non-zero value is provided for the "other analyte" and the "above state MCL" section, make all other parts
+// of that form submission required
+
+function checkNonZero(node) {
+
+    let arr = Array.from(node.closest('tr').querySelectorAll('input, select')).filter(el => !el.id.endsWith("result"));
+
+    if (Number(node.value) !== 0 && node.value !== "") {
+        arr.forEach(otherEl => otherEl.required = true);
+    } else{
+        arr.forEach(otherEl => otherEl.required = false);
+    }
 
 
+}
+
+otherMCLResults.forEach(el => addEventListener("change", () => checkNonZero(el)));
+
+// determine if there any hidden required fileds when hitting submit ... this is only possible if the user first
+// enters a non-zero number for the "other" pfas section or the "MCL" pfas section, then indicates that there are
+// no pfas detections (this wouldn't make sense anyways).
+
+// document.getElementById('sourceForm').addEventListener('submit', function(event) {
+//
+//     let form = document.getElementById('sourceForm');
+//     let requiredFields = form.querySelectorAll('[required]')
+//
+// });
 
 
+// clear values
+function clearValues(el){
+
+    if (el.tagName === "SELECT") {
+        el.selectedIndex = 0;
+    } else{
+        el.value = '';
+    }
+
+}
 
 
 

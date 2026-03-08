@@ -160,8 +160,6 @@
             <div class="form-group">
                 <label for="maxflow-file_name" class="form-label">This is a placeholder for the filename upload.</label>
                 <input {% if action == "/source-form-create/"%}required{% endif %} type="file" class="form-control" id="maxflow-file_name" name="maxflow-file_name" accept=".pdf, .jpg, .jpeg, .png, .csv, .xlsx">
-<!--                <small class="text-muted">Supported file types: .pdf, .jpg, .jpeg, .png (max file size = 25MB)</small>
-                <div class="invalid-feedback" id="file-upload-error"></div>-->
             </div>
 
             <div id="maxFlowErrorDiv" class="custom-invalid hidden">
@@ -254,12 +252,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-<!--            <div class="mb-3" style="margin-top:16px;">-->
-<!--                <label for="annualFlowFileUpload" class="form-label">This is a placeholder for the Annua Flow filename upload.</label>-->
-<!--                <input type="file" class="form-control" id="annualFlowFileUpload" name="filename" accept=".pdf, .jpg, .jpeg, .png">-->
-<!--&lt;!&ndash;                <small class="text-muted">Supported file types: .pdf, .jpg, .jpeg, .png (max file size = 25MB)</small>-->
-<!--                <div class="invalid-feedback" id="file-upload-error"></div>&ndash;&gt;-->
-<!--            </div>-->
+
             <div class="form-group">
                 <label for="comments_annual_flow">Comments</label>
                 <textarea id="comments_annual_flow" name="comments_annual_flow" class="form-control">{{formConstants.comments_annual_flow.value|default_if_none:''}}</textarea>
