@@ -141,7 +141,7 @@ function zeroPfasResults(elem){
         from(row.querySelectorAll('input, select')).
         filter(elem => !elem.name.endsWith("result") && !/pfas-[0-5]-analyte$/.test(elem.id));
 
-    if (Number(elem.value) === 0){
+    if (elem.value !== "" && Number(elem.value) === 0){
         inputsSelects.forEach(e => e.disabled = true)
     } else {
         inputsSelects.forEach(e => e.disabled = false)
@@ -240,26 +240,6 @@ pfasDetected.addEventListener("change", function (e) {
 pfasResults.forEach(elem => addEventListener("change", function () {
     zeroPfasResults(elem);
 }))
-
-// pfasResults.forEach(elem => {
-//
-//     elem.addEventListener("change", function (e) {
-//
-//         let row = elem.closest('tr')
-//         let inputsSelects =
-//             Array.
-//             from(row.querySelectorAll('input, select')).
-//             filter(elem => !elem.name.endsWith("result") && !/pfas-[0-5]-analyte$/.test(elem.id));
-//
-//         if (Number(elem.value) === 0){
-//             inputsSelects.forEach(e => e.disabled = true)
-//         } else {
-//             inputsSelects.forEach(e => e.disabled = false)
-//         }
-//
-//     });
-//
-// });
 
 
 // --------- file validation --------------------------

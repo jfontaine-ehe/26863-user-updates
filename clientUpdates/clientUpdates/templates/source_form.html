@@ -127,6 +127,17 @@
 
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>Maximum Flow Rate</h3>
+            <div class="alert alert-primary" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:100%; margin:20px auto;">
+                <div  style="display:flex; align-items:stretch;">
+                    <i class="bi bi-info-circle h5" style="padding-right:10px; color:blue; width:5%">
+                    </i>
+                    <p style="margin-bottom:0px;">
+                        This section is about gathering information about the maximum flow rate of the source.
+                        The maximum flow rate is typically documented by pump test records or pump design specifications.
+                        Regardless, please provide the <span style="font-weight:bold; font-style:italic">highest</span> documented maximum flow rate.
+                    </p>
+                </div>
+            </div>
             <div style="display:flex; justify-content:space-between;">
                 <div class="form-group" style="width:50%;">
                     <label for="maxflow-flow_rate">Verified maximum flow rate of the Water Source:</label>
@@ -148,7 +159,7 @@
             </div>
             <div class="form-group">
                 <label for="maxflow-file_name" class="form-label">This is a placeholder for the filename upload.</label>
-                <input required type="file" class="form-control" id="maxflow-file_name" name="maxflow-file_name" accept=".pdf, .jpg, .jpeg, .png, .csv, .xlsx">
+                <input {% if action == "/source-form-create/"%}required{% endif %} type="file" class="form-control" id="maxflow-file_name" name="maxflow-file_name" accept=".pdf, .jpg, .jpeg, .png, .csv, .xlsx">
 <!--                <small class="text-muted">Supported file types: .pdf, .jpg, .jpeg, .png (max file size = 25MB)</small>
                 <div class="invalid-feedback" id="file-upload-error"></div>-->
             </div>
@@ -168,6 +179,23 @@
         <!--___________________________________Annual Flow Rates_________________________________-->
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>Annual Production</h3>
+            <div class="alert alert-primary" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:100%; margin:20px auto;">
+                <div  style="display:flex; align-items:stretch;">
+                    <i class="bi bi-info-circle h5" style="padding-right:10px; color:blue; width:5%">
+                    </i>
+                    <p style="margin-bottom:0px;">
+                        Please provide annual production data of the source from 2013 through 2023. If the source
+                        did not exist during a given year, or if the source's flow rate was
+                        reduced due to PFAS contamination, please make this indication.
+                        <br>
+                        <br>
+                        At the bottom of this section, you will upload files that prove the annual production numbers
+                        you enter into the table below. Once the files are uploaded, the file names will generate in
+                        the "File Name" column; for each year's production data, please select the correct file name that
+                        proves said production data.
+                    </p>
+                </div>
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -184,9 +212,13 @@
                     {% for form in phase2AnnualFlowForm %}
                         {{ form.id }}
                     <tr>
-                        <td><input disabled id="{{form.year.html_name}}" name="{{form.year.html_name}}" type="number" class="form-control label-center" value="{{form.year.value|default_if_none:''}}"></td>
-                        <td class="label-center"><input id="{{form.flow_rate.html_name}}" name="{{form.flow_rate.html_name}}" type="number" class="form-control" value="{{form.flow_rate.value}}"></td>
-                        <td class="label-center">
+                        <td class="label-center" style="width:15%">
+                            <input disabled id="{{form.year.html_name}}" name="{{form.year.html_name}}" type="number" class="form-control label-center" value="{{form.year.value|floatformat:'0'|default_if_none:''}}">
+                        </td>
+                        <td class="label-center" style="width:15%">
+                            <input id="{{form.flow_rate.html_name}}" name="{{form.flow_rate.html_name}}" type="number" class="form-control label-center" value="{{form.flow_rate.value}}">
+                        </td>
+                        <td class="label-center" style="width:15%">
                             <select id="{{form.units.html_name}}" name="{{form.units.html_name}}" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
                                     {% for option in unitOptions %}
@@ -194,7 +226,7 @@
                                     {% endfor %}
                             </select>
                         </td>
-                        <td class="label-center">
+                        <td class="label-center" style="width:15%">
                             <select id="{{form.flow_rate_reduced.html_name}}" name="{{form.flow_rate_reduced.html_name}}" class="form-select">
                                 <option disabled {% if not form.flow_rate_reduced.value %} selected {% endif %} value=""></option>
                                 {% for option in yesNo %}
@@ -202,7 +234,7 @@
                                 {% endfor %}
                             </select>
                         </td>
-                        <td class="label-center">
+                        <td class="label-center" style="width:15%">
                             <select id="{{form.did_not_exist.html_name}}" name="{{form.did_not_exist.html_name}}" class="form-select">
                                 <option disabled {% if not form.did_not_exist.value %} selected {% endif %} value=""></option>
                                 {% for option in yesNo %}
@@ -326,7 +358,7 @@
             <p>
                 Below you will provide all relevant information about PFAS detections within this source. You will
                 be asked if the source has had any detections of PFOA, PFOS, PFHxS, GenX, PFNA, or PFBS, since these
-                are the six analytes that are part of the "Proposed Federal MCLs" referenced in the 3m/DuPont and Tyco/BASF
+                are the six analytes that are part of the "Proposed Federal MCLs" referenced in the 3M/DuPont and Tyco/BASF
                 settlements. You will also be asked to provide the highest other PFAS analyte concentration recorded for this
                 source, in addition to any PFAS concentration that is above your state's MCL (if applicable).
                 <br>
@@ -338,7 +370,7 @@
             </p>
             <h4>Proposed Federal MCL Analytes (March, 2023)</h4>
             <div class="alert alert-primary" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:100%; margin:20px auto;">
-                <div  style="display:flex; align-items:center;">
+                <div  style="display:flex; align-items:stretch;">
                     <i class="bi bi-info-circle h5" style="padding-right:5px; color:blue; width:5%">
                     </i>
                     <p style="margin-bottom:0px;">
@@ -395,7 +427,7 @@
 
             <h4>Highest Other PFAS Results</h4>
             <div class="alert alert-primary" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:100%; margin:20px auto;">
-                <div  style="display:flex; align-items:center;">
+                <div  style="display:flex; align-items:stretch;">
                     <i class="bi bi-info-circle h5" style="padding-right:5px; margin-right:5px; color:blue; width:5%">
                     </i>
                     <p style="margin-bottom:0px;">
@@ -458,7 +490,7 @@
 
             <h4>PFAS Analyte that Exceeds a State MCL</h4>
             <div class="alert alert-primary" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:100%; margin:20px auto;">
-                <div  style="display:flex; align-items:center;">
+                <div  style="display:flex; align-items:stretch;">
                     <i class="bi bi-info-circle h5" style="padding-right:5px; margin-right:5px; color:blue; width:5%">
                     </i>
                     <p style="margin-bottom:0px;">
