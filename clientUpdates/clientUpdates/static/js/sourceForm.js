@@ -137,12 +137,15 @@ updateFilesOnChange(pfasFiles, pfasFileNameList, pfasFileSelectors);
 // if zero is entered, all other inputs in that row are rendered disabled
 function zeroPfasResults(elem){
 
+    // get closest row
     let row = elem.closest('tr')
+    // get input and select tags, exclude all "result" fields and pfas-[0-5]-analyte fields
     let inputsSelects =
         Array.
         from(row.querySelectorAll('input, select')).
         filter(elem => !elem.name.endsWith("result") && !/pfas-[0-5]-analyte$/.test(elem.id));
 
+    // if the value is zero, disable fields
     if (elem.value !== "" && Number(elem.value) === 0){
         inputsSelects.forEach(e => e.disabled = true)
     } else {
@@ -363,18 +366,6 @@ function checkNonZero(node) {
 }
 
 otherMCLResults.forEach(el => addEventListener("change", () => checkNonZero(el)));
-
-// determine if there any hidden required fileds when hitting submit ... this is only possible if the user first
-// enters a non-zero number for the "other" pfas section or the "MCL" pfas section, then indicates that there are
-// no pfas detections (this wouldn't make sense anyways).
-
-// document.getElementById('sourceForm').addEventListener('submit', function(event) {
-//
-//     let form = document.getElementById('sourceForm');
-//     let requiredFields = form.querySelectorAll('[required]')
-//
-// });
-
 
 // clear values
 function clearValues(el){
