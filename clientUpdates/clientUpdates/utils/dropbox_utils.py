@@ -99,19 +99,24 @@ def upload_to_dropbox(file, filetype, pwsid):
             upload_to_local(pwsid=pwsid, file=file, folder="Supplemental Claim")
 
         # Return success response
-        logger.info(f"{file} uploaded to Dropbox under /uploads/{pwsid}/{filetype}/ successfully.")
+        logger.info(f"{file} uploaded to Dropbox and local storage successfully for {pwsid}.")
         return JsonResponse({'success': 'File uploaded to Dropbox successfully', 'path': dropbox_path})
 
     except dropbox.exceptions.AuthError:
         # Refresh token and retry
+        logger.info("Need to refresh dropbox access token...")
         dropbox_access_token = refresh_dropbox_access_token()
         if dropbox_access_token:
             dbx = dropbox.Dropbox(dropbox_access_token)
             with file.open('rb') as f:
                 dbx.files_upload(f.read(), dropbox_path, mode=dropbox.files.WriteMode.overwrite)
+                upload_to_local(pwsid=pwsid, file=file, folder="Supplemental Claim")
+            logger.info(f"{file} uploaded to Dropbox and local storage successfully for {pwsid}.")
             return JsonResponse({'success': 'File uploaded to Dropbox successfully', 'path': dropbox_path})
         return JsonResponse({'error': 'Dropbox authentication failed'}, status=401)
     except dropbox.exceptions.ApiError as e:
+        logger.error(f"{e}: Error while loading file {file.name} to Dropbox and local storage for {pwsid}.")
         return JsonResponse({'error': f'Dropbox API error: {str(e)}'}, status=500)
     except Exception as e:
+        logger.error(f"{e}: Error while loading file {file.name} to Dropbox and local storage for {pwsid}.")
         return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=500)

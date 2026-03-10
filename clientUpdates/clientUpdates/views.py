@@ -522,7 +522,7 @@ def contact_view(request, claim=None, source_name=None, message=0):
                     upload_to_dropbox(file=uploaded_file, filetype="Supplemental Claim", pwsid=pwsid)
 
                 except Exception as e:
-                    logger.error(f"Error: {e}. Attempted to upload file to dropbox and locally but failed.")
+                    logger.error(f"Error: {e}. Attempted to upload file to dropbox and local storage but failed.")
 
             if claim:
                 subject = f"{subject}"
