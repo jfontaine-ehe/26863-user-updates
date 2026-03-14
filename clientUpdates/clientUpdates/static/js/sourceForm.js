@@ -25,8 +25,8 @@ const maxFlowFile = document.getElementById('maxflow-file_name');
 const submitButton = document.getElementById('submit');
 const loaderContainer = document.getElementById('loader-container');
 const loader = document.getElementById('loader');
-const pfasFormElem = Array.from(document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]')).filter(el => !el.id.startsWith("pfas-6") && !el.id.startsWith("pfas-7"));
-const otherMCLResults = Array.from(document.querySelectorAll('[id^="pfas-6"], [id^="pfas-7"]')).filter(el => el.id.endsWith("result"));
+const pfasFormElem = Array.from(document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]')).filter(el => !el.id.startsWith("pfas-6"));
+const otherMCLResults = Array.from(document.querySelectorAll('[id^="pfas-6"]')).filter(el => el.id.endsWith("result"));
 const allPfasFormElem = document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]');
 
 function renderFileNames(selectorList, fileNameList) {

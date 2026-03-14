@@ -253,7 +253,6 @@ class pfasFiles(forms.Form):
     pfasFile5 = forms.FileField(required=False)
     pfasFile6 = forms.FileField(required=False)
     pfasFile7 = forms.FileField(required=False)
-    pfasFile8 = forms.FileField(required=False)
 
 
 
