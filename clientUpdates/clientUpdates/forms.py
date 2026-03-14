@@ -242,6 +242,8 @@ class annualFiles(forms.Form):
     annualFile9 = forms.FileField(required=False)
     annualFile10 = forms.FileField(required=False)
     annualFile11 = forms.FileField(required=False)
+    annualFile12 = forms.FileField(required=False)
+    annualFile13 = forms.FileField(required=False)
 
 class pfasFiles(forms.Form):
     pfasFile1 = forms.FileField(required=False)

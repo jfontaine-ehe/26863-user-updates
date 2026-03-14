@@ -361,7 +361,7 @@
                     into the tables below.
                 </b>
             </p>
-            <h4>Proposed Federal MCL Analytes (March, 2023)</h4>
+            <h4>Proposed Federal MCL Analytes</h4>
             <div class="alert alert-primary" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:100%; margin:20px auto;">
                 <div  style="display:flex; align-items:stretch;">
                     <i class="bi bi-info-circle h5" style="padding-right:5px; color:blue; width:5%">
@@ -388,13 +388,13 @@
                     {% for form in phase2PfasResultsForm|slice:"0:6" %}
                         {{ form.id }}
                     <tr>
-                        <td>
+                        <td style="width:15%;">
                             <input id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-control label-center no-click" value="{{form.analyte.value|default_if_none:''}}">
                         </td>
-                        <td>
+                        <td style="width:15%;">
                             <input required id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
                         </td>
-                        <td>
+                        <td style="width:20%;">
                             <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
                             {% for option in pfasUnits %}
@@ -402,10 +402,10 @@
                             {% endfor %}
                             </select>
                         </td>
-                        <td>
+                        <td style="width:20%;">
                             <input required id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
                         </td>
-                        <td class="label-center">
+                        <td class="label-center" style="width:30%;">
                             <select required id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
                                 <option value="">Select a file</option>
                                 {% if form.file_name.value %}
@@ -445,7 +445,7 @@
                     {% for form in phase2PfasResultsForm|slice:"-2:-1" %}
                         {{ form.id }}
                     <tr>
-                        <td>
+                        <td style="width:15%;">
                             <select id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
                                 <option disabled {% if not form.analyte.value %} selected {% endif %} value="" class="label-center">Choose Analyte</option>
                                 {% for option in otherAnalytes %}
@@ -453,10 +453,10 @@
                                 {% endfor %}
                             </select>
                         </td>
-                        <td>
+                        <td style="width:15%;">
                             <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
                         </td>
-                        <td>
+                        <td style="width:20%;">
                             <select id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
                             {% for option in pfasUnits %}
@@ -464,10 +464,10 @@
                             {% endfor %}
                             </select>
                         </td>
-                        <td>
+                        <td style="width:20%;">
                             <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
                         </td>
-                        <td class="label-center">
+                        <td class="label-center" style="width:30%;">
                             <select id="{{form.file_name.html_name}}" name="{{form.file_name.html_name}}" class="form-select">
                                 <option value="">Select a file</option>
                                 {% if form.file_name.value %}

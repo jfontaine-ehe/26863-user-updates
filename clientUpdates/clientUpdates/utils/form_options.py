@@ -42,7 +42,7 @@ pfasInitialData = [{"analyte": "PFOA"},
                    {"analyte": ""}]
 
 yearInitialData = []
-for i in range(11):
+for i in range(13):
     year = {"year": 2013 + i}
     yearInitialData.append(year)
 

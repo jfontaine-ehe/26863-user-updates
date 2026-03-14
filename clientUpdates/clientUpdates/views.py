@@ -739,7 +739,7 @@ def sourceFormCreate(request):
         form1 = phase2SourceInfoForm(request.POST)
         form2 = phase2MaxFlowForm(request.POST, request.FILES, prefix="maxflow")
 
-        annualFlowFormset = modelformset_factory(phase2AnnualFlow, form=phase2AnnualFlowForm, extra=11)
+        annualFlowFormset = modelformset_factory(phase2AnnualFlow, form=phase2AnnualFlowForm, extra=13)
         form3 = annualFlowFormset(request.POST, prefix="annualflow")
 
         pfasResultsFormset = modelformset_factory(phase2PfasResults, form=phase2PfasResultsForm, extra=7)
@@ -832,7 +832,7 @@ def sourceFormCreate(request):
         form1 = phase2SourceInfoForm()
         form2 = phase2MaxFlowForm(prefix="maxflow")
 
-        form3_factory = modelformset_factory(phase2AnnualFlow, form=phase2AnnualFlowForm, extra=11)
+        form3_factory = modelformset_factory(phase2AnnualFlow, form=phase2AnnualFlowForm, extra=13)
         form3 = form3_factory(queryset=phase2AnnualFlow.objects.none(),
                               initial=yearInitialData, prefix="annualflow")
 
