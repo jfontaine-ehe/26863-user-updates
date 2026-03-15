@@ -751,14 +751,6 @@ def sourceFormCreate(request):
 
         form7 = pfasFiles(request.POST, request.FILES)
 
-        form1.is_valid()
-        form2.is_valid()
-        form3.is_valid()
-        form4.is_valid()
-        form5.is_valid()
-        form6.is_valid()
-        form7.is_valid()
-
         try:
 
             # transaction.atomic makes sure that either all instances save or all instances fail
