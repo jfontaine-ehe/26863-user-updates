@@ -25,7 +25,7 @@ const submitButton = document.getElementById('submit');
 const loaderContainer = document.getElementById('loader-container');
 const loader = document.getElementById('loader');
 const pfasFormElem = Array.from(document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]')).filter(el => !el.id.startsWith("pfas-6"));
-const otherMCLResults = Array.from(document.querySelectorAll('[id^="pfas-6"]')).filter(el => el.id.endsWith("result"));
+const otherResult = document.getElementById('pfas-6-result');
 const allPfasFormElem = document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]');
 
 // Functions --------------------------------------------------------------------------------------------------------
@@ -208,7 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // when page first loads, determine whether form field is required based on
     // whether a non zero result was entered
-    otherMCLResults.forEach(el => checkNonZero(el));
+    checkNonZero(otherResult);
 
     // when editing an existing form, make the fileList variable load file names that are
     // present in the selectors when page is first loaded. Populate the file list in the
@@ -395,7 +395,7 @@ function checkNonZero(node) {
 
 }
 
-otherMCLResults.forEach(el => addEventListener("change", () => checkNonZero(el)));
+otherResult.addEventListener("change", () => checkNonZero(otherResult));
 
 // clear values
 function clearValues(el){
