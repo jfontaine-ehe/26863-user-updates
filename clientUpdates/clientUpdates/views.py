@@ -13,7 +13,7 @@ from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRa
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
     phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2PfasResultsForm, \
     formConstants, annualFiles, pfasFiles
-from .utils.dropbox_utils import upload_to_dropbox
+from .utils.dropbox_utils import upload_to_dropbox, dropboxLink
 
 # Custom functions
 from .utils.handler import handle_update
@@ -991,7 +991,8 @@ def sourceFormEdit(request, pwsid, source_name):
             "pfasUnits": pfasUnits,
             "years": years,
             "otherAnalytes": otherAnalytes,
-            "action": f"url source-form-edit {pwsid} {source_name}"
+            "action": f"url source-form-edit {pwsid} {source_name}",
+            "dropboxLink": dropboxLink(pwsid)
 
         }
 

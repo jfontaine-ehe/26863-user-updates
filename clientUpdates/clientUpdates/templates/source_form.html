@@ -509,6 +509,12 @@
                 <button id='pfasAddFileButton' type="button" class="btn btn-primary">Add another file</button>
             </div>
 
+            {% if action != "/source-form-create/" %}
+                <div style="display:flex; justify-content: center; height:60px; align-items:center;">
+                    <a href="{{ dropboxLink }}" class="btn btn-primary" style="width:40%; text-align:center; background-color:cadetblue; border: black 2px solid;" target="_blank">View Files Previously Uploaded</a>
+                </div>
+            {% endif %}
+
         </div>
 
 

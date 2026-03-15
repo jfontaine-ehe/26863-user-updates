@@ -1,3 +1,5 @@
+import datetime
+
 import dropbox
 import logging
 import os
@@ -5,6 +7,8 @@ import requests
 from django.conf import settings
 from django.core.files.storage import default_storage
 from django.http import JsonResponse
+from dropbox.exceptions import ApiError
+from dropbox.sharing import SharedLinkSettings
 
 logger = logging.getLogger('clientUpdates')
 DROPBOX_TOKEN_URL = "https://api.dropbox.com/oauth2/token"
@@ -38,6 +42,35 @@ def refresh_dropbox_access_token():
     except requests.exceptions.RequestException as e:
         print(f"Error refreshing Dropbox access token: {e}")
         return None
+
+
+def dropboxLink(pwsid):
+    dropbox_access_token = settings.DROPBOX['access_token']
+    if not dropbox_access_token:
+        dropbox_access_token = refresh_dropbox_access_token()
+        if not dropbox_access_token:
+            return JsonResponse({'error': 'Failed to refresh Dropbox token'}, status=401)
+
+    folderPath = f"/uploads/{pwsid}"
+
+    try:
+        #expiration_time = datetime.datetime.now(tz=datetime.UTC) + datetime.timedelta(hours=1)
+        # Initialize Dropbox client
+        dbx = dropbox.Dropbox(dropbox_access_token)
+        linkMetaData = dbx.sharing_create_shared_link_with_settings(folderPath)
+        dropboxLink = linkMetaData.url
+        return dropboxLink
+
+
+    except ApiError as e:
+        # error was thrown because a shared link already exists. Get the most recent one:
+        ## the direct only parameter is to only provide access to the folderPath, no Parent folders above it
+        existingLink = dbx.sharing_list_shared_links(path=folderPath, direct_only=True)
+        url = existingLink.links[-1].url
+        return url
+
+
+
 
 
 
