@@ -1,5 +1,4 @@
-
-// -------------- source form --------------------------
+// Define variables
 const annualFileSelectors = document.querySelectorAll('[id^="annualflow-"][id$="-file_name"]');
 const annualDeleteButtons = document.querySelectorAll('[data-target^="annualFile"]');
 const annualFileDivs = document.querySelectorAll('[id^="div_annualFile"]');
@@ -28,6 +27,8 @@ const loader = document.getElementById('loader');
 const pfasFormElem = Array.from(document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]')).filter(el => !el.id.startsWith("pfas-6"));
 const otherMCLResults = Array.from(document.querySelectorAll('[id^="pfas-6"]')).filter(el => el.id.endsWith("result"));
 const allPfasFormElem = document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]');
+
+// Functions --------------------------------------------------------------------------------------------------------
 
 function renderFileNames(selectorList, fileNameList) {
    selectorList.forEach(elem => {
@@ -70,10 +71,6 @@ function addFiles(button, nodeList) {
     });
 }
 
-addFiles(annualAddFileButton, annualFileDivs);
-addFiles(pfasAddFileButton, pfasFileDivs);
-
-
 function deleteButtons(deleteButtonList, fileNameList, selectorList){
     deleteButtonList.forEach(elem => {
         elem.addEventListener("click", function () {
@@ -109,29 +106,28 @@ function deleteButtons(deleteButtonList, fileNameList, selectorList){
     });
 };
 
-deleteButtons(annualDeleteButtons, annualFileNameList, annualFileSelectors);
-deleteButtons(pfasDeleteButtons, pfasFileNameList, pfasFileSelectors);
-
-
-function updateFilesOnChange(inputList, fileNameList, selectorList) {
-
-    inputList.forEach(file => {
-        file.addEventListener("change", function () {
-            // clear the array
-            fileNameList.length = 0;
-            inputList.forEach(elem => {
-                // if the input is visible and has a file loaded
-                if (elem.checkVisibility() && elem.files.length > 0) {
-                    fileNameList.push(elem.files[0].name);
-                };
-            });
-            renderFileNames(selectorList, fileNameList);
-        });
+function updateFileList(inputList, fileNameList, selectorList){
+    // clear the array
+    fileNameList.length = 0;
+    // push all file names from input list
+    inputList.forEach(elem => {
+        // if the input is visible and has a file loaded
+        if (elem.checkVisibility() && elem.files.length > 0) {
+            fileNameList.push(elem.files[0].name);
+        };
     });
-};
+    // push all file names that are already in selectors. This applies for
+    // when a user is editing the form
+    selectorList.forEach(el => {
+        if (el.value !== ""){
+            if (fileNameList.indexOf(el.value) === -1){
+                console.log(el.value)
+                fileNameList.push(el.value);
+            };
+        };
+    });
+}
 
-updateFilesOnChange(annualFiles, annualFileNameList, annualFileSelectors);
-updateFilesOnChange(pfasFiles, pfasFileNameList, pfasFileSelectors);
 
 // function that acts on each pfas result input.
 // if zero is entered, all other inputs in that row are rendered disabled
@@ -152,6 +148,8 @@ function zeroPfasResults(elem){
         inputsSelects.forEach(e => e.disabled = false)
     }
 }
+
+// Do Stuff -----------------------------------------------------------------------------------------------------------
 
 // functions to run when page is loaded
 document.addEventListener("DOMContentLoaded", function () {
@@ -204,9 +202,21 @@ document.addEventListener("DOMContentLoaded", function () {
         allPfasFormElem.forEach(elem => elem.required = false);
     }
 
+    // when page first loads, determine whether form fields should be disabled
+    // based on whether they have a zero result value
     pfasFormElem.forEach(elem => zeroPfasResults(elem));
 
+    // when page first loads, determine whether form field is required based on
+    // whether a non zero result was entered
     otherMCLResults.forEach(el => checkNonZero(el));
+
+    // when editing an existing form, make the fileList variable load file names that are
+    // present in the selectors when page is first loaded. Populate the file list in the
+    // selectors
+    updateFileList(annualFiles, annualFileNameList, annualFileSelectors);
+    renderFileNames(annualFileSelectors, annualFileNameList);
+    updateFileList(pfasFiles, pfasFileNameList, pfasFileSelectors);
+    renderFileNames(pfasFileSelectors, pfasFileNameList);
 
 
 });
@@ -260,7 +270,27 @@ pfasResults.forEach(elem => addEventListener("change", function () {
 }))
 
 
-// --------- file validation --------------------------
+addFiles(annualAddFileButton, annualFileDivs);
+addFiles(pfasAddFileButton, pfasFileDivs);
+deleteButtons(annualDeleteButtons, annualFileNameList, annualFileSelectors);
+deleteButtons(pfasDeleteButtons, pfasFileNameList, pfasFileSelectors);
+
+annualFiles.forEach(el => addEventListener("change", function(){
+
+    updateFileList(annualFiles, annualFileNameList, annualFileSelectors)
+    renderFileNames(annualFileSelectors, annualFileNameList);
+
+}));
+
+pfasFiles.forEach(el => addEventListener("change", function(){
+
+    updateFileList(pfasFiles, pfasFileNameList, pfasFileSelectors)
+    renderFileNames(pfasFileSelectors, pfasFileNameList);
+
+}))
+
+
+// --------- Do stuff with file validation --------------------------
 
 let annualErrorDiv = document.getElementById('annualErrorDiv');
 let pfasErrorDiv = document.getElementById('pfasErrorDiv');
