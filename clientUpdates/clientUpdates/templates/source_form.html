@@ -158,7 +158,7 @@
                 <input id="maxflow-flow_determination" name="maxflow-flow_determination" type="text" class="form-control" value="{{phase2MaxFlowForm.flow_determination.value|default_if_none:''}}">
             </div>
             <div class="form-group">
-                <label for="maxflow-file_name" class="form-label">This is a placeholder for the filename upload.</label>
+                <label for="maxflow-file_name" class="form-label">Please upload the file that supports the maximum flow rate information entered above.</label>
                 <input {% if action == "/source-form-create/"%}required{% endif %} type="file" class="form-control" id="maxflow-file_name" name="maxflow-file_name" accept=".pdf, .jpg, .jpeg, .png, .csv, .xlsx">
             </div>
 
@@ -182,7 +182,7 @@
                     <i class="bi bi-info-circle h5" style="padding-right:10px; color:blue; width:5%">
                     </i>
                     <p style="margin-bottom:0px;">
-                        Please provide annual production data of the source from 2013 through 2023. If the source
+                        Please provide annual production data of the source from 2013 through 2025. If the source
                         did not exist during a given year, or if the source's flow rate was
                         reduced due to PFAS contamination, please make this indication.
                         <br>
@@ -260,7 +260,10 @@
 
             <div class="form-group">
                 {% for field in annualFilesForm %}
-                    <label for="{{field.html_name}}" class="form-label {% if 'annualFile1' == field.html_name %} {% else %} hidden {% endif %}">This is a placeholder for the filename upload.</label>
+                    <label for="{{field.html_name}}" class="form-label {% if 'annualFile1' == field.html_name %} {% else %} hidden {% endif %}">
+                        Please upload the files that support the annual production data entered above. Once uploaded,
+                        the file name will populate under the "File Name" selection boxes in the table above.
+                    </label>
                     <div class="{% if 'annualFile1' == field.html_name %}d-flex{% else %}hidden{% endif %}" id="{{'div_'|add:field.html_name}}">
                         <input style="width:80%;" type="file" class="form-control form-label" id="{{field.html_name}}" name="{{field.html_name}}" accept=".pdf, .jpg, .jpeg, .png, .csv, .xlsx">
                         {% if 'annualFile1' != field.html_name %}
