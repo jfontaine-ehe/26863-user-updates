@@ -28,6 +28,11 @@ const pfasFormElem = Array.from(document.getElementById('pfasResultsDiv').queryS
 const otherResult = document.getElementById('pfas-6-result');
 const allPfasFormElem = document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]');
 
+const annualErrorDiv = document.getElementById('annualErrorDiv');
+const pfasErrorDiv = document.getElementById('pfasErrorDiv');
+const maxFlowErrorDiv = document.getElementById('maxFlowErrorDiv');
+const otherResultErrorDiv = document.getElementById('otherPFASErrorDiv');
+
 // Functions --------------------------------------------------------------------------------------------------------
 
 function renderFileNames(selectorList, fileNameList) {
@@ -148,6 +153,36 @@ function zeroPfasResults(elem){
         inputsSelects.forEach(e => e.disabled = false)
     }
 }
+
+// clear values
+function clearValues(el){
+    if (el.tagName === "SELECT") {
+        el.selectedIndex = 0;
+    } else{
+        el.value = '';
+    }
+}
+
+// if a non-zero value is provided for the "other analyte" and the "above state MCL" section, make all other parts
+// of that form submission required
+function checkNonZero(node) {
+    let arr = Array.from(node.closest('tr').querySelectorAll('input, select')).filter(el => !el.id.endsWith("result"));
+
+    if (Number(node.value) !== 0 && node.value !== "") {
+        arr.forEach(otherEl => otherEl.required = true);
+    } else{
+        arr.forEach(otherEl => otherEl.required = false);
+    }
+}
+
+function checkOtherHigher(){
+
+    let pfas6Results = Array.from(pfasResults).filter(el => el.id !== 'pfas-6-result')
+    const belowAll = pfas6Results.every(el => (Number(el.value) < Number(otherResult.value)) || (Number(el.value) === 0 && Number(otherResult.value) === 0))
+    return belowAll
+
+}
+
 
 // Do Stuff -----------------------------------------------------------------------------------------------------------
 
@@ -292,10 +327,6 @@ pfasFiles.forEach(el => addEventListener("change", function(){
 
 // --------- Do stuff with file validation --------------------------
 
-let annualErrorDiv = document.getElementById('annualErrorDiv');
-let pfasErrorDiv = document.getElementById('pfasErrorDiv');
-let maxFlowErrorDiv = document.getElementById('maxFlowErrorDiv');
-
 document.getElementById('sourceForm').addEventListener('submit', function(event) {
 
     const clearValidationErrors = () => {
@@ -307,6 +338,9 @@ document.getElementById('sourceForm').addEventListener('submit', function(event)
 
         maxFlowErrorDiv.classList.add('hidden');
         maxFlowFile.classList.remove('is-invalid');
+
+        otherResultErrorDiv.classList.add('hidden');
+        otherResult.classList.remove('is-invalid');
     };
 
     const showValidationError = (inputElement, errorElement) => {
@@ -360,12 +394,19 @@ document.getElementById('sourceForm').addEventListener('submit', function(event)
 
     let maxFlowValid = true;
     if (maxFlowFile.checkVisibility() && maxFlowFile.files.length > 0) {
-    if (!validateFile("maxflow", maxFlowFile)) {
-        maxFlowValid = false;
+        if (!validateFile("maxflow", maxFlowFile)) {
+            maxFlowValid = false;
+        }
     }
-}
 
-    if (!annualValid || !pfasValid || !maxFlowValid) {
+    // if a non-zero value was entered for the 'other' pfas result, make sure that it is higher
+    // than the other six pfas results
+    let checkOther = checkOtherHigher()
+    if (!checkOther){
+        showValidationError(otherResult, otherResultErrorDiv)
+    }
+
+    if (!annualValid || !pfasValid || !maxFlowValid || !checkOther) {
         event.preventDefault();
         alert("Please fix validation errors that exist in the form.")
     } else {
@@ -379,35 +420,9 @@ document.getElementById('sourceForm').addEventListener('submit', function(event)
 
 });
 
-// if a non-zero value is provided for the "other analyte" and the "above state MCL" section, make all other parts
-// of that form submission required
-
-function checkNonZero(node) {
-
-    let arr = Array.from(node.closest('tr').querySelectorAll('input, select')).filter(el => !el.id.endsWith("result"));
-
-    if (Number(node.value) !== 0 && node.value !== "") {
-        arr.forEach(otherEl => otherEl.required = true);
-    } else{
-        arr.forEach(otherEl => otherEl.required = false);
-    }
-
-
-}
+// Continue to do other stuff -----------------------------------------------------------------------------------
 
 otherResult.addEventListener("change", () => checkNonZero(otherResult));
-
-// clear values
-function clearValues(el){
-
-    if (el.tagName === "SELECT") {
-        el.selectedIndex = 0;
-    } else{
-        el.value = '';
-    }
-
-}
-
 
 
 
