@@ -712,6 +712,7 @@ class supplementalSourceTracker(models.Model):
     notif_datetime = models.DateTimeField(blank=True, null=True)
     sup_status = models.TextField(blank=True, null=True)
     completion_date = models.DateField(blank=True, null=True)
+    file_name = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True

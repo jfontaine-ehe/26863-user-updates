@@ -580,6 +580,7 @@ def contact_view(request, claim=None, source_name=None, message=0):
 
                 source.sup_notif_sent = True
                 source.notif_datetime = timezone.now()
+                source.file_name = uploaded_file.name
                 source.sup_status = "Claim Under Review"
 
                 try:
