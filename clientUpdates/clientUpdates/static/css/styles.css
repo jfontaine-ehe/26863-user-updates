@@ -448,8 +448,8 @@ td::before {
 }
 
 .add-form {
-    border-color:#50a34b;
-    background-color:#50a34b;
+    border-color:#50a34b !important;
+    background-color:#50a34b !important;
 }
 
 .mt30{

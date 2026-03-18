@@ -71,7 +71,7 @@
         </tbody>
     </table>
     <div style="display:flex; justify-content:flex-end;">
-        <a type="button" class="btn btn-primary mt30 {% if sourceGenInfo %}no-click{% else %}add-form{% endif %}" href="{% url 'pws-info-create' %}">
+        <a id="addPWSForm" type="button" class="btn btn-primary mt30 {% if sourceGenInfo %}no-click{% else %}add-form{% endif %}" href="{% url 'pws-info-create' %}">
             <p class="bi bi-plus-circle" style="margin:0;">  Add Form</p>
         </a>
     </div>
@@ -139,9 +139,13 @@
         </tbody>
     </table>
     <div style="display:flex; justify-content:flex-end;">
-        <a type="button" class="btn btn-primary add-form mt30" href="{% url 'source-form-create' %}">
+        <a id="addSourceForm" type="button" class="btn btn-primary add-form mt30" href="{% url 'source-form-create' %}">
             <p class="bi bi-plus-circle" style="margin:0;">  Add Form</p>
         </a>
+    </div>
+
+    <div id="loader-container">
+        <div id="loader"></div>
     </div>
 </div>
 
