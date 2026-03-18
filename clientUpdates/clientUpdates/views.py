@@ -715,6 +715,7 @@ def pwsInfoDelete(request, pwsid):
         try:
             instance = get_object_or_404(pwsInfo, pwsid=pwsid)
             instance.delete()
+            logger.info(f"Deleted PWS form for {pwsid}")
             return redirect('landing_page')
         except Exception as e:
             logger.exception(f"Error deleting PWS instance: {e}")
@@ -1013,6 +1014,7 @@ def sourceInfoDelete(request, pwsid, source_name):
 
                 srcPfasResults = phase2PfasResults.objects.filter(pwsid=pwsid, source_name=source_name)
                 srcPfasResults.delete()
+                logger.info(f"{pwsid} | {source_name} | Source information, PFAS Data, Max Flow Data, and Annual Production Data deleted.")
                 return redirect('landing_page')
         except Exception as e:
             logger.exception(f"Error deleting data related to this source: {e}")
