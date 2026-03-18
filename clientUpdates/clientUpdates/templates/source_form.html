@@ -167,11 +167,16 @@
                 is being used and that the file is less than 25 MB in size.
             </div>
 
-
             <div class="form-group">
                 <label for="maxflow-comments">Comments</label>
                 <textarea id="maxflow-comments" name="maxflow-comments" class="form-control">{{phase2MaxFlowForm.comments.value|default_if_none:''}}</textarea>
             </div>
+
+            {% if action != "/source-form-create/" %}
+                <div style="display:flex; justify-content: center; height:60px; align-items:center;">
+                    <a href="{{ dropboxLink }}" class="btn btn-primary" style="width:40%; text-align:center; background-color:cadetblue; border: black 2px solid;" target="_blank">View Files Previously Uploaded</a>
+                </div>
+            {% endif %}
         </div>
 
         <!--___________________________________Annual Flow Rates_________________________________-->
@@ -279,6 +284,12 @@
             <div style="display:flex; justify-content:flex-end;">
                 <button id='annualAddFileButton' type="button" class="btn btn-primary">Add another file</button>
             </div>
+
+            {% if action != "/source-form-create/" %}
+                <div style="display:flex; justify-content: center; height:60px; align-items:center;">
+                    <a href="{{ dropboxLink }}" class="btn btn-primary" style="width:40%; text-align:center; background-color:cadetblue; border: black 2px solid;" target="_blank">View Files Previously Uploaded</a>
+                </div>
+            {% endif %}
         </div>
 
 

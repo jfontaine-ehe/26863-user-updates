@@ -66,12 +66,11 @@ def dropboxLink(pwsid):
         # error was thrown because a shared link already exists. Get the most recent one:
         ## the direct only parameter is to only provide access to the folderPath, no Parent folders above it
         existingLink = dbx.sharing_list_shared_links(path=folderPath, direct_only=True)
+        # extract the url of the link
         url = existingLink.links[-1].url
+        # ensure there is no expiration
+        dbx.sharing_modify_shared_link_settings(url, settings=SharedLinkSettings(), remove_expiration=True)
         return url
-
-
-
-
 
 
 
