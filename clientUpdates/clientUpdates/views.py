@@ -669,6 +669,8 @@ def pwsInfoCreate(request):
                 instance.pws_name = pws_name
                 instance.timestamp = timezone.now()
                 instance.save()
+                logger.info(
+                    f"{pwsid} | PWS Information created.")
                 return render(request, 'form_success.html')
             except Exception as e:
                 logger.exception(f"Error creating new PWS instance: {e}")
@@ -696,6 +698,8 @@ def pwsInfoEdit(request, pwsid):
                 instance.pws_name = pws_name
                 instance.timestamp = timezone.now()
                 instance.save()
+                logger.info(
+                    f"{pwsid} | PWS Information edited.")
                 return render(request, 'form_success.html')
             except Exception as e:
                 logger.exception(f"Error updating PWS instance: {e}")
@@ -814,6 +818,8 @@ def sourceFormCreate(request):
                             upload_to_dropbox(file=request.FILES[file], filetype="Phase2/PFAS", pwsid=pwsid)
                         elif "maxflow" in file:
                             upload_to_dropbox(file=request.FILES[file], filetype="Phase2/Max-Flow", pwsid=pwsid)
+
+                    logger.info(f"{pwsid} | {source_name} | Source information, PFAS Data, Max Flow Data, and Annual Production Data saved.")
 
                     return render(request, 'form_success.html')
 
@@ -945,6 +951,9 @@ def sourceFormEdit(request, pwsid, source_name):
                             upload_to_dropbox(file=request.FILES[file], filetype="Phase2/PFAS", pwsid=pwsid)
                         elif "maxflow" in file:
                             upload_to_dropbox(file=request.FILES[file], filetype="Phase2/Max-Flow", pwsid=pwsid)
+
+                    logger.info(
+                        f"{pwsid} | {source_name} | Source information, PFAS Data, Max Flow Data, and Annual Production Data edited.")
 
                     return render(request, 'form_success.html')
 
