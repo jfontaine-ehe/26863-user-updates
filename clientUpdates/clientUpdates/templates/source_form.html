@@ -141,11 +141,11 @@
             <div style="display:flex; justify-content:space-between;">
                 <div class="form-group" style="width:50%;">
                     <label for="maxflow-flow_rate">Verified maximum flow rate of the Water Source:</label>
-                    <input id="maxflow-flow_rate" name="maxflow-flow_rate" type="number" class="form-control" value="{{phase2MaxFlowForm.flow_rate.value|default_if_none:''}}">
+                    <input required id="maxflow-flow_rate" name="maxflow-flow_rate" type="number" class="form-control" value="{{phase2MaxFlowForm.flow_rate.value|default_if_none:''}}">
                 </div>
                 <div class="form-group" style="width:50%;">
                     <label for="maxflow-units">Units of Provided Flow Rate:</label>
-                    <select id="maxflow-units" name="maxflow-units" class="form-select">
+                    <select required id="maxflow-units" name="maxflow-units" class="form-select">
                         <option disabled {% if not phase2MaxFlowForm.units.value %} selected {% endif %} value=""></option>
                         {% for option in unitOptions %}
                             <option {% if phase2MaxFlowForm.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
@@ -155,7 +155,7 @@
             </div>
             <div class="form-group">
                 <label for="maxflow-flow_determination">How was the verified maximum flow rate determined?</label>
-                <input id="maxflow-flow_determination" name="maxflow-flow_determination" type="text" class="form-control" value="{{phase2MaxFlowForm.flow_determination.value|default_if_none:''}}">
+                <input required id="maxflow-flow_determination" name="maxflow-flow_determination" type="text" class="form-control" value="{{phase2MaxFlowForm.flow_determination.value|default_if_none:''}}">
             </div>
             <div class="form-group">
                 <label for="maxflow-file_name" class="form-label">Please upload the file that supports the maximum flow rate information entered above.</label>
@@ -223,10 +223,10 @@
                             <input disabled id="{{form.year.html_name}}" name="{{form.year.html_name}}" type="number" class="form-control label-center" value="{{form.year.value|floatformat:'0'|default_if_none:''}}">
                         </td>
                         <td class="label-center" style="width:15%">
-                            <input id="{{form.flow_rate.html_name}}" name="{{form.flow_rate.html_name}}" type="number" class="form-control label-center" value="{{form.flow_rate.value}}">
+                            <input id="{{form.flow_rate.html_name}}" name="{{form.flow_rate.html_name}}" type="number" class="form-control label-center" value="{{form.flow_rate.value|default_if_none:''}}">
                         </td>
                         <td class="label-center" style="width:15%">
-                            <select id="{{form.units.html_name}}" name="{{form.units.html_name}}" class="form-select">
+                            <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
                                     {% for option in unitOptions %}
                                         <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
@@ -234,7 +234,7 @@
                             </select>
                         </td>
                         <td class="label-center" style="width:15%">
-                            <select id="{{form.flow_rate_reduced.html_name}}" name="{{form.flow_rate_reduced.html_name}}" class="form-select">
+                            <select requried id="{{form.flow_rate_reduced.html_name}}" name="{{form.flow_rate_reduced.html_name}}" class="form-select">
                                 <option disabled {% if not form.flow_rate_reduced.value %} selected {% endif %} value=""></option>
                                 {% for option in yesNo %}
                                     <option {% if form.flow_rate_reduced.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
@@ -242,7 +242,7 @@
                             </select>
                         </td>
                         <td class="label-center" style="width:15%">
-                            <select id="{{form.did_not_exist.html_name}}" name="{{form.did_not_exist.html_name}}" class="form-select">
+                            <select required id="{{form.did_not_exist.html_name}}" name="{{form.did_not_exist.html_name}}" class="form-select">
                                 <option disabled {% if not form.did_not_exist.value %} selected {% endif %} value=""></option>
                                 {% for option in yesNo %}
                                     <option {% if form.did_not_exist.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
