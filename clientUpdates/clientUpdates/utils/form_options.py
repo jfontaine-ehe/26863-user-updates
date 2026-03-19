@@ -30,7 +30,7 @@ pfasAnalytes = ("PFOA", "PFOS", "PFHxS", "GenX", "PFNA", "PFBS")
 pfasUnits = {("ug/L", "ug/L (ppb)"),
              ("ng/L", "ng/L (ppt)")}
 
-years = list(range(2013, 2024))
+years = list(range(2013, 2026))
 
 pfasInitialData = [{"analyte": "PFOA"},
                    {"analyte": "PFOS"},
