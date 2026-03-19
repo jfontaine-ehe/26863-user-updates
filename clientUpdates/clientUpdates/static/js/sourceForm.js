@@ -48,8 +48,8 @@ function renderFileNames(selectorList, fileNameList) {
         defaultOption.value = "";
         defaultOption.textContent = "Select a file";
         defaultOption.disabled = true;
-        // set default option only if there is no pre-selected value
-        defaultOption.selected = !selected;
+        // set default option only if the currently selected value is not in the fileNameList
+        defaultOption.selected = fileNameList.indexOf(selected) === -1;
         elem.appendChild(defaultOption);
 
         fileNameList.forEach(file => {
@@ -58,7 +58,7 @@ function renderFileNames(selectorList, fileNameList) {
             option.textContent = file;
             if (selected === file){
                 option.selected = true;
-            };
+            }
             elem.appendChild(option);
         });
 
@@ -69,7 +69,6 @@ function renderFileNames(selectorList, fileNameList) {
 function addFiles(button, nodeList) {
     button.addEventListener("click", function () {
         let nearest = Array.from(nodeList).find(elem => elem.classList.contains('hidden'));
-        console.log(nearest);
         nearest.classList.remove("hidden");
         nearest.classList.add("d-flex");
         nearest.classList.add("justify-content-between");
@@ -121,6 +120,7 @@ function updateFileList(inputList, fileNameList, selectorList){
             fileNameList.push(elem.files[0].name);
         };
     });
+
     // push all file names that are already in selectors. This applies for
     // when a user is editing the form
     selectorList.forEach(el => {
@@ -132,7 +132,6 @@ function updateFileList(inputList, fileNameList, selectorList){
         };
     });
 }
-
 
 // function that acts on each pfas result input.
 // if zero is entered, all other inputs in that row are rendered disabled
