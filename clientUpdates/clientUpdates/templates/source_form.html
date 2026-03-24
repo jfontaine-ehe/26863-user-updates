@@ -413,16 +413,17 @@
                         <td style="width:15%;">
                             <input id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-control label-center no-click" value="{{form.analyte.value|default_if_none:''}}">
                         </td>
-                        <td style="width:15%;">
+                        <td style="width:20%;">
                             <input required id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
                         </td>
-                        <td style="width:20%;">
-                            <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
+                        <td style="width:15%;">
+                             <input id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-control label-center no-click" value="ng/L (ppt)">
+                            {% comment %}<select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
                             {% for option in pfasUnits %}
                                 <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
                             {% endfor %}
-                            </select>
+                            </select>{% endcomment %}
                         </td>
                         <td style="width:20%;">
                             <input required id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
@@ -473,16 +474,17 @@
                                 {% endfor %}
                             </select>
                         </td>
-                        <td style="width:15%;">
+                        <td style="width:20%;">
                             <input id="{{form.result.html_name}}" name="{{form.result.html_name}}" type="number" class="form-control label-center" value="{{form.result.value|default_if_none:''}}">
                         </td>
-                        <td style="width:20%;">
-                            <select id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
+                        <td style="width:15%;">
+                            <input id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-control label-center no-click" value="ng/L (ppt)">
+                            {% comment %}<select id="{{form.units.html_name}}" name="{{form.units.html_name}}" type="text" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
                             {% for option in pfasUnits %}
                                 <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
                             {% endfor %}
-                            </select>
+                            </select>{% endcomment %}
                         </td>
                         <td style="width:20%;">
                             <input id="{{form.sample_date.html_name}}" name="{{form.sample_date.html_name}}" type="date" class="form-control" value="{% if form.sample_date.value %}{{form.sample_date.value|stringformat:'s'}}{% endif %}">
