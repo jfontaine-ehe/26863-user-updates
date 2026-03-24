@@ -19,7 +19,7 @@ const pfasCommentsDiv = document.getElementById('pfasCommentsDiv')
 const pfasDetected = document.getElementById('pfas_detected')
 
 const pfasResults = document.querySelectorAll('[id^="pfas-"][id$="-result"]');
-const maxFlowFile = document.getElementById('maxflow-file_name');
+const maxFlowFile = document.getElementById('maxFlowFile');
 
 const submitButton = document.getElementById('submit');
 const loaderContainer = document.getElementById('loader-container');
@@ -34,7 +34,10 @@ const pfasErrorDiv = document.getElementById('pfasErrorDiv');
 const maxFlowErrorDiv = document.getElementById('maxFlowErrorDiv');
 const otherResultErrorDiv = document.getElementById('otherPFASErrorDiv');
 
+const maxFlowFileName = document.getElementById('maxflow-file_name')
+
 // Functions --------------------------------------------------------------------------------------------------------
+
 
 function renderFileNames(selectorList, fileNameList) {
    selectorList.forEach(elem => {
@@ -243,6 +246,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // when page first loads, determine whether form field is required based on
     // whether a non zero result was entered
     checkNonZero(otherResult);
+
+    maxFlowFile.addEventListener("change", function () {
+
+        if (maxFlowFile.files.length > 0) {
+            maxFlowFileName.value = maxFlowFile.files[0].name
+        } else{
+           maxFlowFileName.value = "";
+        }
+        // console.log("change");
+        // maxFlowFileName.value = maxFlowFile.files[0].name ? maxFlowFile.files[0].name : "";
+
+    })
 
     // when editing an existing form, make the fileList variable load file names that are
     // present in the selectors when page is first loaded. Populate the file list in the

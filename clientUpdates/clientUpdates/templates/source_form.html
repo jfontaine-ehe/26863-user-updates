@@ -157,9 +157,14 @@
                 <label for="maxflow-flow_determination">How was the verified maximum flow rate determined?</label>
                 <input required id="maxflow-flow_determination" name="maxflow-flow_determination" type="text" class="form-control" value="{{phase2MaxFlowForm.flow_determination.value|default_if_none:''}}">
             </div>
+
+            <div class="form-group hidden">
+                <input type="text" class="form-control" id="maxflow-file_name" name="maxflow-file_name" value="{{phase2MaxFlowForm.file_name.value|default_if_none:''}}">
+            </div>
+
             <div class="form-group">
-                <label for="maxflow-file_name" class="form-label">Please upload the file that supports the maximum flow rate information entered above.</label>
-                <input {% if action == "/source-form-create/"%}required{% endif %} type="file" class="form-control" id="maxflow-file_name" name="maxflow-file_name" accept=".pdf, .jpg, .jpeg, .png, .csv, .xlsx">
+                <label for="maxFlowFile" class="form-label">Please upload the file that supports the maximum flow rate information entered above.</label>
+                <input {% if action == "/source-form-create/"%}required{% endif %} type="file" class="form-control" id="maxFlowFile" name="maxFlowFile" accept=".pdf, .jpg, .jpeg, .png, .csv, .xlsx">
             </div>
 
             <div id="maxFlowErrorDiv" class="custom-invalid hidden">

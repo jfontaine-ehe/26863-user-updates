@@ -922,7 +922,7 @@ class phase2MaxFlow(models.Model):
     flow_rate = models.FloatField(blank=True, null=True)
     units = models.TextField(blank=True)
     flow_determination = models.TextField(blank=True)
-    file_name = models.FileField(blank=True, null=True)
+    file_name = models.TextField(blank=True, null=True)
     comments = models.TextField(blank=True)
     timestamp = models.DateTimeField(blank=True, null=True)
 

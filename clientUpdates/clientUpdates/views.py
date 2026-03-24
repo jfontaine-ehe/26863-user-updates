@@ -12,7 +12,7 @@ from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRa
                      pwsCreds, phase2SourceInfo, phase2MaxFlow)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
     phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2PfasResultsForm, \
-    formConstants, annualFiles, pfasFiles
+    formConstants, annualFiles, pfasFiles, maxFlowFile
 from .utils.dropbox_utils import upload_to_dropbox, dropboxLink
 
 # Custom functions
@@ -756,11 +756,13 @@ def sourceFormCreate(request):
 
         form7 = pfasFiles(request.POST, request.FILES)
 
+        form8 = maxFlowFile(request.POST, request.FILES)
+
         try:
 
             # transaction.atomic makes sure that either all instances save or all instances fail
             with transaction.atomic():
-                if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid() and form6.is_valid() and form7.is_valid():
+                if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid() and form6.is_valid() and form7.is_valid() and form8.is_valid():
 
                     # extract one-time / constant variables
                     source_name = form5.cleaned_data['source_name']
@@ -816,7 +818,7 @@ def sourceFormCreate(request):
                             upload_to_dropbox(file=request.FILES[file], filetype="Phase2/Annual-Flow", pwsid=pwsid)
                         elif "pfasFile" in file:
                             upload_to_dropbox(file=request.FILES[file], filetype="Phase2/PFAS", pwsid=pwsid)
-                        elif "maxflow" in file:
+                        elif "maxFlow" in file:
                             upload_to_dropbox(file=request.FILES[file], filetype="Phase2/Max-Flow", pwsid=pwsid)
 
                     logger.info(f"{pwsid} | {source_name} | Source information, PFAS Data, Max Flow Data, and Annual Production Data saved.")
@@ -842,6 +844,7 @@ def sourceFormCreate(request):
         form5 = formConstants()
         form6 = annualFiles()
         form7 = pfasFiles()
+        form8 = maxFlowFile()
 
         context = {
 
@@ -852,6 +855,7 @@ def sourceFormCreate(request):
             "formConstants": form5,
             "annualFilesForm": form6,
             "pfasFilesForm": form7,
+            "maxFlowFile": form8,
             "yesNo": yesNo,
             "sourceTypeOptions": sourceTypeOptions,
             "unitOptions": unitOptions,
@@ -896,11 +900,13 @@ def sourceFormEdit(request, pwsid, source_name):
 
         form7 = pfasFiles(request.POST, request.FILES)
 
+        form8 = maxFlowFile(request.POST, request.FILES)
+
         try:
 
             # transaction.atomic makes sure that either all instances save or all instances fail
             with transaction.atomic():
-                if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid() and form6.is_valid() and form7.is_valid():
+                if form1.is_valid() and form2.is_valid() and form3.is_valid() and form4.is_valid() and form5.is_valid() and form6.is_valid() and form7.is_valid() and form8.is_valid():
 
                     # extract one-time / constant variables
                     source_name = form5.cleaned_data['source_name']
@@ -948,7 +954,7 @@ def sourceFormEdit(request, pwsid, source_name):
                             upload_to_dropbox(file=request.FILES[file], filetype="Phase2/Annual-Flow", pwsid=pwsid)
                         elif "pfasFile" in file:
                             upload_to_dropbox(file=request.FILES[file], filetype="Phase2/PFAS", pwsid=pwsid)
-                        elif "maxflow" in file:
+                        elif "maxFlow" in file:
                             upload_to_dropbox(file=request.FILES[file], filetype="Phase2/Max-Flow", pwsid=pwsid)
 
                     logger.info(
@@ -985,6 +991,8 @@ def sourceFormEdit(request, pwsid, source_name):
 
         form7 = pfasFiles()
 
+        form8 = maxFlowFile()
+
         context = {
 
             "phase2SourceInfoForm": form1,
@@ -994,6 +1002,7 @@ def sourceFormEdit(request, pwsid, source_name):
             "formConstants": form5,
             "annualFilesForm": form6,
             "pfasFilesForm": form7,
+            "maxFlowFile": form8,
             "yesNo": yesNo,
             "sourceTypeOptions": sourceTypeOptions,
             "unitOptions": unitOptions,

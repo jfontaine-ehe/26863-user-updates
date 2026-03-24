@@ -254,6 +254,9 @@ class pfasFiles(forms.Form):
     pfasFile6 = forms.FileField(required=False)
     pfasFile7 = forms.FileField(required=False)
 
+class maxFlowFile(forms.Form):
+    maxFlowFile = forms.FileField(required=False)
+
 
 
 
