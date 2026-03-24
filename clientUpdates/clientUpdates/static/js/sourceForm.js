@@ -25,8 +25,9 @@ const submitButton = document.getElementById('submit');
 const loaderContainer = document.getElementById('loader-container');
 const loader = document.getElementById('loader');
 const pfasFormElem = Array.from(document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]')).filter(el => !el.id.startsWith("pfas-6"));
-const otherResult = document.getElementById('pfas-6-result');
+
 const allPfasFormElem = document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]');
+const otherResult = document.getElementById('pfas-6-result');
 
 const annualErrorDiv = document.getElementById('annualErrorDiv');
 const pfasErrorDiv = document.getElementById('pfasErrorDiv');
@@ -139,11 +140,11 @@ function zeroPfasResults(elem){
 
     // get closest row
     let row = elem.closest('tr')
-    // get input and select tags, exclude all "result" fields and pfas-[0-5]-analyte fields
+    // get input and select tags, exclude all "result" fields, pfas-[0-5]-analyte fields, and pfas-[0-5]-units fields
     let inputsSelects =
         Array.
         from(row.querySelectorAll('input, select')).
-        filter(elem => !elem.name.endsWith("result") && !/pfas-[0-5]-analyte$/.test(elem.id));
+        filter(elem => !elem.name.endsWith("result") && !/pfas-[0-5]-(analyte|units)$/.test(elem.id));
 
     // if the value is zero, disable fields
     if (elem.value !== "" && Number(elem.value) === 0){
@@ -162,11 +163,10 @@ function clearValues(el){
     }
 }
 
-// if a non-zero value is provided for the "other analyte" and the "above state MCL" section, make all other parts
+// if a non-zero value is provided for the "other analyte", make all other parts
 // of that form submission required
 function checkNonZero(node) {
     let arr = Array.from(node.closest('tr').querySelectorAll('input, select')).filter(el => !el.id.endsWith("result"));
-
     if (Number(node.value) !== 0 && node.value !== "") {
         arr.forEach(otherEl => otherEl.required = true);
     } else{
@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // when page first loads, determine whether form fields should be disabled
     // based on whether they have a zero result value
-    pfasFormElem.forEach(elem => zeroPfasResults(elem));
+    pfasResults.forEach(elem => zeroPfasResults(elem));
 
     // when page first loads, determine whether form field is required based on
     // whether a non zero result was entered
