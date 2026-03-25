@@ -34,7 +34,12 @@ const pfasErrorDiv = document.getElementById('pfasErrorDiv');
 const maxFlowErrorDiv = document.getElementById('maxFlowErrorDiv');
 const otherResultErrorDiv = document.getElementById('otherPFASErrorDiv');
 
-const maxFlowFileName = document.getElementById('maxflow-file_name')
+const maxFlowFileName = document.getElementById('maxflow-file_name');
+
+const sourceForm = document.getElementById('sourceForm')
+
+let initPfasFileNames = []
+let initAnnualFileNames = []
 
 // Functions --------------------------------------------------------------------------------------------------------
 
@@ -114,7 +119,7 @@ function deleteButtons(deleteButtonList, fileNameList, selectorList){
     });
 };
 
-function updateFileList(inputList, fileNameList, selectorList){
+function updateFileList(inputList, fileNameList, initList){
     // clear the array
     fileNameList.length = 0;
     // push all file names from input list
@@ -125,16 +130,14 @@ function updateFileList(inputList, fileNameList, selectorList){
         };
     });
 
-    // push all file names that are already in selectors. This applies for
-    // when a user is editing the form
-    selectorList.forEach(el => {
-        if (el.value !== ""){
-            if (fileNameList.indexOf(el.value) === -1){
-                console.log(el.value)
-                fileNameList.push(el.value);
-            };
-        };
-    });
+    if (initList.length > 0) {
+        for (let el of initList){
+            if (fileNameList.indexOf(el) === -1){
+                fileNameList.push(el)
+            }
+        }
+    }
+
 }
 
 // function that acts on each pfas result input.
@@ -259,13 +262,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
     })
 
+    if (/edit/.test(sourceForm.action)){
+        console.log("logic worked")
+        pfasFileSelectors.forEach(el => {
+            let fileName = el.value;
+            console.log("fileName: ", fileName);
+            if(initPfasFileNames.indexOf(fileName) === -1 && fileName !== "") {
+                initPfasFileNames.push(el.value)
+            }
+        });
+        console.log(initPfasFileNames);
+        annualFileSelectors.forEach(el => {
+            let fileName = el.value;
+            if(initAnnualFileNames.indexOf(fileName) === -1 && fileName !== "") {
+                initAnnualFileNames.push(el.value)
+            }
+        });
+        console.log(initAnnualFileNames);
+    }
+
+
     // when editing an existing form, make the fileList variable load file names that are
     // present in the selectors when page is first loaded. Populate the file list in the
     // selectors
-    updateFileList(annualFiles, annualFileNameList, annualFileSelectors);
+
+    updateFileList(annualFiles, annualFileNameList, initAnnualFileNames);
     renderFileNames(annualFileSelectors, annualFileNameList);
-    updateFileList(pfasFiles, pfasFileNameList, pfasFileSelectors);
+    updateFileList(pfasFiles, pfasFileNameList, initPfasFileNames);
     renderFileNames(pfasFileSelectors, pfasFileNameList);
+
+
 
 
 });
@@ -326,14 +352,14 @@ deleteButtons(pfasDeleteButtons, pfasFileNameList, pfasFileSelectors);
 
 annualFiles.forEach(el => addEventListener("change", function(){
 
-    updateFileList(annualFiles, annualFileNameList, annualFileSelectors)
+    updateFileList(annualFiles, annualFileNameList, initAnnualFileNames)
     renderFileNames(annualFileSelectors, annualFileNameList);
 
 }));
 
 pfasFiles.forEach(el => addEventListener("change", function(){
 
-    updateFileList(pfasFiles, pfasFileNameList, pfasFileSelectors)
+    updateFileList(pfasFiles, pfasFileNameList, initPfasFileNames)
     renderFileNames(pfasFileSelectors, pfasFileNameList);
 
 }))
@@ -341,7 +367,7 @@ pfasFiles.forEach(el => addEventListener("change", function(){
 
 // --------- Do stuff with file validation --------------------------
 
-document.getElementById('sourceForm').addEventListener('submit', function(event) {
+sourceForm.addEventListener('submit', function(event) {
 
     const clearValidationErrors = () => {
         annualErrorDiv.classList.add('hidden');
