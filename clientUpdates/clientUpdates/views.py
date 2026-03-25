@@ -1036,6 +1036,6 @@ def sourceInfoDelete(request, pwsid, source_name):
             logger.exception(f"Error deleting data related to this source: {e}")
             raise
 
-
+@never_cache
 def phase2HelpInfo(request):
     return render(request, template_name='phase2_helpful_info.html')
