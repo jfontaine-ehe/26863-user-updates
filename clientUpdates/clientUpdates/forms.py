@@ -1,6 +1,6 @@
 from django import forms
 from django.utils import timezone
-from .models import FlowRate, PfasResult, pwsInfo, phase2SourceInfo, phase2MaxFlow, phase2AnnualFlow, phase2PfasResults
+from .models import FlowRate, PfasResult, phase2PwsInfo, phase2SourceInfo, phase2MaxFlow, phase2AnnualFlow, phase2PfasResults
 
 
 class MaxFlowRateUpdateForm(forms.ModelForm):
@@ -138,7 +138,7 @@ class ContactForm(forms.Form):
 class pwsInfoForm(forms.ModelForm):
     class Meta:
 
-        model = pwsInfo
+        model = phase2PwsInfo
 
         fields = [
             'pwsid',

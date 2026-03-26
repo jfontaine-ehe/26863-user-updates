@@ -11,7 +11,7 @@ import django_localflavor_us.us_states as us_states
 from .models import (Pws, Source, PfasResult, FlowRate, ClaimSource, ClaimFlowRate,
                      ClaimPfasResult, paymentInfo,
                      TB_ClaimPfasResult, TB_ClaimFlowRate, supplementalSourceTracker, TB_ClaimSource,
-                     pwsPaymentDist, srcPaymentDist, ClaimSubmission, pwsInfo, phase2AnnualFlow, phase2PfasResults,
+                     pwsPaymentDist, srcPaymentDist, ClaimSubmission, phase2PwsInfo, phase2AnnualFlow, phase2PfasResults,
                      pwsCreds, phase2SourceInfo, phase2MaxFlow)
 from .forms import MaxFlowRateUpdateForm, AnnualProductionForm, PfasResultUpdateForm, ContactForm, pwsInfoForm, \
     phase2SourceInfoForm, phase2MaxFlowForm, phase2AnnualFlowForm, phase2PfasResultsForm, \
@@ -236,7 +236,7 @@ def landing_page(request):
     # exception handling for if the query in the above try statement returns nothing.
     except ClaimSubmission.DoesNotExist:
 
-        pwsGenInfo = pwsInfo.objects.filter(pwsid=pwsid)
+        pwsGenInfo = phase2PwsInfo.objects.filter(pwsid=pwsid)
         sourceGenInfo = phase2SourceInfo.objects.filter(pwsid=pwsid)
 
         context = {
@@ -751,7 +751,7 @@ def pwsInfoCreate(request):
 
 @never_cache
 def pwsInfoEdit(request, pwsid):
-    pwsInfoInstance = get_object_or_404(pwsInfo, pwsid=pwsid)
+    pwsInfoInstance = get_object_or_404(phase2PwsInfo, pwsid=pwsid)
     pws_name = get_object_or_404(pwsCreds, pwsid=pwsid).pws_name
     if request.method == "POST":
         form = pwsInfoForm(request.POST, instance=pwsInfoInstance)
@@ -781,7 +781,7 @@ def pwsInfoEdit(request, pwsid):
 def pwsInfoDelete(request, pwsid):
     if request.method == "POST":
         try:
-            instance = get_object_or_404(pwsInfo, pwsid=pwsid)
+            instance = get_object_or_404(phase2PwsInfo, pwsid=pwsid)
             instance.delete()
             logger.info(f"Deleted PWS form for {pwsid}")
             return redirect('landing_page')

@@ -128,7 +128,7 @@ def upload_to_dropbox(file, filetype, pwsid):
         # Upload the file to both dropbox and locally
         with file.open('rb') as f:
             dbx.files_upload(f.read(), dropbox_path, mode=dropbox.files.WriteMode.overwrite)
-            upload_to_local(pwsid=pwsid, file=file, folder="Supplemental Claim")
+            upload_to_local(pwsid=pwsid, file=file, folder=filetype)
 
         # Return success response
         logger.info(f"{file} uploaded to Dropbox and local storage successfully for {pwsid}.")
@@ -142,7 +142,7 @@ def upload_to_dropbox(file, filetype, pwsid):
             dbx = dropbox.Dropbox(dropbox_access_token)
             with file.open('rb') as f:
                 dbx.files_upload(f.read(), dropbox_path, mode=dropbox.files.WriteMode.overwrite)
-                upload_to_local(pwsid=pwsid, file=file, folder="Supplemental Claim")
+                upload_to_local(pwsid=pwsid, file=file, folder=filetype)
             logger.info(f"{file} uploaded to Dropbox and local storage successfully for {pwsid}.")
             return JsonResponse({'success': 'File uploaded to Dropbox successfully', 'path': dropbox_path})
         return JsonResponse({'error': 'Dropbox authentication failed'}, status=401)

@@ -834,7 +834,7 @@ class pwsCreds(models.Model):
         db_table = 'consortium_pws_creds'
 
 
-class pwsInfo(models.Model):
+class phase2PwsInfo(models.Model):
     id = models.AutoField(primary_key=True, null=False, blank=False)
     pwsid = models.TextField(blank=True, null=True)
     pws_name = models.TextField(blank=True, null=True)
@@ -883,7 +883,7 @@ class pwsInfo(models.Model):
 
     class Meta:
         managed = True
-        db_table = 'pws_info'
+        db_table = 'phase2_pws_info'
 
 
 class phase2SourceInfo(models.Model):
