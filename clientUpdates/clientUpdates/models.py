@@ -929,7 +929,7 @@ class phase2MaxFlow(models.Model):
 
     class Meta:
         managed = True
-        db_table = 'phase2_source_max_flow'
+        db_table = 'phase2_max_flow'
 
 
 class phase2AnnualFlow(models.Model):
@@ -949,7 +949,7 @@ class phase2AnnualFlow(models.Model):
 
     class Meta:
         managed = True
-        db_table = 'phase2_source_annual_flow'
+        db_table = 'phase2_annual_flow'
 
 
 class phase2PfasResults(models.Model):

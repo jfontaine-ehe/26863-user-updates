@@ -183,7 +183,9 @@ function checkNonZero(node) {
 function checkOtherHigher(){
 
     let pfas6Results = Array.from(pfasResults).filter(el => el.id !== 'pfas-6-result')
-    const belowAll = pfas6Results.every(el => (Number(el.value) < Number(otherResult.value)) || (Number(el.value) === 0 && Number(otherResult.value) === 0))
+    let belowAll = pfas6Results.every(el => (Number(el.value) < Number(otherResult.value) || (Number(el.value) === 0 && Number(otherResult.value) === 0)));
+    // default to true if the other result is blank
+    if (otherResult.value === "") {belowAll = true};
     return belowAll
 
 }
