@@ -877,7 +877,6 @@ class phase2PwsInfo(models.Model):
     pfas_detected_06222023 = models.TextField(blank=True, null=True)
     pfas_detected_06302023 = models.TextField(blank=True, null=True)
     pfas_detected_05152024 = models.TextField(blank=True, null=True)
-    eurofins_auth = models.TextField(blank=True, null=True)
     comments = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(blank=True, null=True)
 

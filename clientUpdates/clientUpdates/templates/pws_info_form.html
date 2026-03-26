@@ -277,19 +277,6 @@
         </div>
 
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
-            <h3>Eurofins Authorization</h3>
-            <div class="form-group" style="display:flex; justify-content:space-between;">
-                <label for="eurofins_auth" class="tf-label">Eurofins has been contracted to analyze water testing for this settlement. Do you authorize Eurofins
-                    to transmit future sampling results to EH&E?</label>
-                <select required id="eurofins_auth" name="eurofins_auth" class="form-select tf-select">
-                    <option disabled {% if not form.eurofins_auth.value %} selected {% endif %} value=""></option>
-                    <option {% if form.eurofins_auth.value == "Yes" %} selected {% endif %} value="Yes">Yes</option>
-                    <option {% if form.eurofins_auth.value == "No" %} selected {% endif %} value="No">No</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>Comments</h3>
             <div class="form-group">
                 <label for="comments">If you have any questions or comments about your form submittal, please include

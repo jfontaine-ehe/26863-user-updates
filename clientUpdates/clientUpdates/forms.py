@@ -182,7 +182,6 @@ class pwsInfoForm(forms.ModelForm):
             'pfas_detected_06222023',
             'pfas_detected_06302023',
             'pfas_detected_05152024',
-            'eurofins_auth',
             'comments'
         ]
 
