@@ -239,7 +239,7 @@
                             </select>
                         </td>
                         <td class="label-center" style="width:15%">
-                            <select requried id="{{form.flow_rate_reduced.html_name}}" name="{{form.flow_rate_reduced.html_name}}" class="form-select">
+                            <select required id="{{form.flow_rate_reduced.html_name}}" name="{{form.flow_rate_reduced.html_name}}" class="form-select">
                                 <option disabled {% if not form.flow_rate_reduced.value %} selected {% endif %} value=""></option>
                                 {% for option in yesNo %}
                                     <option {% if form.flow_rate_reduced.value == option %} selected {% endif %} value="{{option}}">{{option}}</option>
