@@ -908,6 +908,7 @@ class phase2SourceInfo(models.Model):
     detected_b4_jun3023 = models.TextField(blank=True)
     detected_after_jun3023 = models.TextField(blank=True)
     timestamp = models.DateTimeField(blank=True, null=True)
+    draft_complete = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True
@@ -925,6 +926,7 @@ class phase2MaxFlow(models.Model):
     file_name = models.TextField(blank=True, null=True)
     comments = models.TextField(blank=True)
     timestamp = models.DateTimeField(blank=True, null=True)
+    draft_complete = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True
@@ -945,6 +947,7 @@ class phase2AnnualFlow(models.Model):
     file_name = models.TextField(blank=True)
     comments = models.TextField(blank=True)
     timestamp = models.DateTimeField(blank=True, null=True)
+    draft_complete = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True
@@ -963,6 +966,7 @@ class phase2PfasResults(models.Model):
     file_name = models.TextField(blank=True)
     comments = models.TextField(blank=True)
     timestamp = models.DateTimeField(blank=True, null=True)
+    draft_complete = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = True
