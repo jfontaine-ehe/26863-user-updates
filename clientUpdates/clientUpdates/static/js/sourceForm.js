@@ -37,7 +37,9 @@ const otherResultErrorDiv = document.getElementById('otherPFASErrorDiv');
 
 const maxFlowFileName = document.getElementById('maxflow-file_name');
 
-const sourceForm = document.getElementById('sourceForm')
+const sourceForm = document.getElementById('sourceForm');
+
+const draft_complete = document.getElementById('draft_complete');
 
 let initPfasFileNames = []
 let initAnnualFileNames = []
@@ -475,6 +477,11 @@ function validation(){
             maxFlowValid = false;
         }
     }
+    // on submit (not save), ensure a filename has been assigned
+    else if(maxFlowFile.files.length===0 && maxFlowFileName.value === "" && draft_complete.value === "complete"){
+            maxFlowValid = false;
+            showValidationError(maxFlowFile, maxFlowErrorDiv);
+    }
 
     // if a non-zero value was entered for the 'other' pfas result, make sure that it is higher
     // than the other six pfas results
@@ -527,7 +534,7 @@ document.getElementById('save_draft').addEventListener("click", function (event)
 
         document.querySelectorAll('[required]').
         forEach(el => el.required = false);
-        document.getElementById('draft_complete').value = "draft";
+        draft_complete.value = "draft";
 
         loaderContainer.style.display = 'flex';
         loader.style.display = 'block';
