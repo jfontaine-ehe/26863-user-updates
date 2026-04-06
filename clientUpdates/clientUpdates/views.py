@@ -726,12 +726,17 @@ def pwsInfoCreate(request):
 
     if request.method == "POST":
         form = pwsInfoForm(request.POST)
+
+        # determine whether the form was submitted as a draft or not
+        draft_complete = request.POST.get('draft_complete')
+
         if form.is_valid():
             try:
                 instance = form.save(commit=False)
                 instance.pwsid = pwsid
                 instance.pws_name = pws_name
                 instance.timestamp = timezone.now()
+                instance.draft_complete = draft_complete
                 instance.save()
                 logger.info(
                     f"{pwsid} | PWS Information created.")
@@ -755,12 +760,17 @@ def pwsInfoEdit(request, pwsid):
     pws_name = get_object_or_404(pwsCreds, pwsid=pwsid).pws_name
     if request.method == "POST":
         form = pwsInfoForm(request.POST, instance=pwsInfoInstance)
+
+        # determine whether the form was submitted as a draft or not
+        draft_complete = request.POST.get('draft_complete')
+
         if form.is_valid():
             try:
                 instance = form.save(commit=False)
                 instance.pwsid = pwsid
                 instance.pws_name = pws_name
                 instance.timestamp = timezone.now()
+                instance.draft_complete = draft_complete
                 instance.save()
                 logger.info(
                     f"{pwsid} | PWS Information edited.")
