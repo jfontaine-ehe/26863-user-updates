@@ -4,6 +4,7 @@ const annualDeleteButtons = document.querySelectorAll('[data-target^="annualFile
 const annualFileDivs = document.querySelectorAll('[id^="div_annualFile"]');
 const annualFiles = document.querySelectorAll('[id^="annualFile"]');
 const annualAddFileButton = document.getElementById('annualAddFileButton');
+const annualFlowRates = document.querySelectorAll('[id^="annualflow-"][id$="-flow_rate"]');
 let annualFileNameList = [];
 
 const pfasFileSelectors = document.querySelectorAll('[id^="pfas-"][id$="-file_name"]');
@@ -160,6 +161,33 @@ function zeroPfasResults(elem){
     }
 }
 
+function zeroAnnualFlowRates(elem){
+
+    // get closest row
+    let row = elem.closest('tr')
+    // get input and select tags, exclude all "result" fields, pfas-[0-5]-analyte fields, and pfas-[0-5]-units fields
+    let inputsSelects =
+        Array.
+        from(row.querySelectorAll('input, select')).
+            filter(elem => elem.name.endsWith("file_name") || elem.name.endsWith("units"))
+        //filter(elem => !elem.name.endsWith("flow_rate") && !/annualflow-([0-9]|1[0-2])-year$/.test(elem.id) && !elem.nam);
+
+    console.log(inputsSelects);
+
+    // if the value is zero, disable fields
+    if (elem.value !== "" && Number(elem.value) === 0){
+        inputsSelects.forEach(e => e.disabled = true)
+    } else {
+        inputsSelects.forEach(e => e.disabled = false)
+    }
+}
+
+
+
+
+
+
+
 // clear values
 function clearValues(el){
     if (el.tagName === "SELECT") {
@@ -247,6 +275,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // when page first loads, determine whether form fields should be disabled
     // based on whether they have a zero result value
     pfasResults.forEach(elem => zeroPfasResults(elem));
+    annualFlowRates.forEach(elem => zeroAnnualFlowRates(elem));
 
     // when page first loads, determine whether form field is required based on
     // whether a non zero result was entered
@@ -344,6 +373,11 @@ pfasDetected.addEventListener("change", function (e) {
 // attach zeroPfasResults function to pfasResults on change
 pfasResults.forEach(elem => addEventListener("change", function () {
     zeroPfasResults(elem);
+}))
+
+// attach zeroAnnualFlowRates function to annualFlowRates on change
+annualFlowRates.forEach(elem => addEventListener("change", function () {
+    zeroAnnualFlowRates(elem);
 }))
 
 
