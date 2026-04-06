@@ -480,8 +480,8 @@
                         {{ form.id }}
                     <tr>
                         <td style="width:15%;">
-                            <select id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select">
-                                <option disabled {% if not form.analyte.value %} selected {% endif %} value="" class="label-center">Choose Analyte</option>
+                            <select id="{{form.analyte.html_name}}" name="{{form.analyte.html_name}}" type="text" class="form-select" >
+                                <option disabled {% if not form.analyte.value %} selected {% endif %} value="" class="label-center">Analyte</option>
                                 {% for option in otherAnalytes %}
                                     <option {% if form.analyte.value == option %} selected {% endif %} value="{{option}}" class="label-center">{{option}}</option>
                                 {% endfor %}

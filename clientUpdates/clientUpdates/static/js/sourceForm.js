@@ -338,7 +338,7 @@ pfasEverTested.addEventListener("change", function (e) {
         pfasCommentsDiv.classList.add('hidden');
         allPfasFormElem.forEach(elem => elem.required = false);
         allPfasFormElem.forEach(el => {
-            if (!/pfas-[0-5]-analyte$/.test(el.id)) {
+            if (!/pfas-[0-5]-(analyte)$/.test(el.id) || el.endsWith("units")) {
                 clearValues(el);
             }
         });
@@ -360,7 +360,7 @@ pfasDetected.addEventListener("change", function (e) {
         pfasCommentsDiv.classList.add('hidden');
         allPfasFormElem.forEach(elem => elem.required = false);
         allPfasFormElem.forEach(el => {
-            if (!/pfas-[0-5]-analyte$/.test(el.id)) {
+            if (!/pfas-[0-5]-(analyte)$/.test(el.id) || el.endsWith("units")) {
                 clearValues(el);
             }
         });
