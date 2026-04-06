@@ -748,7 +748,7 @@ def pwsInfoCreate(request):
                                                   "sdwisActivityCodes": sdwisActivityCodes,
                                                   "action": "/pws-info-create/"})
 
-
+@login_required
 @never_cache
 def pwsInfoEdit(request, pwsid):
     pwsInfoInstance = get_object_or_404(phase2PwsInfo, pwsid=pwsid)
@@ -777,7 +777,7 @@ def pwsInfoEdit(request, pwsid):
                                                   "sdwisActivityCodes": sdwisActivityCodes,
                                                   "action": f"url pws-info-edit {pwsid}"})
 
-
+@login_required
 def pwsInfoDelete(request, pwsid):
     if request.method == "POST":
         try:
@@ -1105,6 +1105,7 @@ def sourceFormEdit(request, pwsid, source_name):
     except Exception as e:
         logger.error(e)
 
+@login_required
 def sourceInfoDelete(request, pwsid, source_name):
     if request.method == "POST":
         try:
@@ -1126,5 +1127,6 @@ def sourceInfoDelete(request, pwsid, source_name):
             logger.exception(f"Error deleting data related to this source: {e}")
             raise
 
+@login_required
 def phase2HelpInfo(request):
     return render(request, template_name='phase2_helpful_info.html')
