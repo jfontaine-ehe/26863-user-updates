@@ -64,7 +64,7 @@
                     <form action="{% url 'pws-info-delete' pwsid=record.pwsid %}" method="post">
                         {% csrf_token %}
                         <button type="submit" value="submit" class="btn btn-danger">
-                            <b class="bi bi-trash" style="color:#e3d8d8;">  Delete Form</b>
+                            <b class="bi bi-trash">  Delete Form</b>
                         </button>
                     </form>
                 </td>
@@ -134,7 +134,7 @@
                     <form action="{% url 'source-info-delete' pwsid=record.pwsid source_name=record.source_name %}" method="post">
                         {% csrf_token %}
                         <button type="submit" value="submit" class="btn btn-danger">
-                            <b class="bi bi-trash" style="color:#e3d8d8;">  Delete Form</b>
+                            <b class="bi bi-trash">  Delete Form</b>
                         </button>
                     </form>
                 </td>
