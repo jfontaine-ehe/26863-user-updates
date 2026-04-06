@@ -21,7 +21,7 @@ const pfasDetected = document.getElementById('pfas_detected')
 const pfasResults = document.querySelectorAll('[id^="pfas-"][id$="-result"]');
 const maxFlowFile = document.getElementById('maxFlowFile');
 
-const submitButton = document.getElementById('submit');
+const submitButton = document.getElementById('final-submit');
 const loaderContainer = document.getElementById('loader-container');
 const loader = document.getElementById('loader');
 const pfasFormElem = Array.from(document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]')).filter(el => !el.id.startsWith("pfas-6"));
@@ -369,7 +369,8 @@ pfasFiles.forEach(el => addEventListener("change", function(){
 
 // --------- Do stuff with file validation --------------------------
 
-sourceForm.addEventListener('submit', function(event) {
+
+function validation(){
 
     const clearValidationErrors = () => {
         annualErrorDiv.classList.add('hidden');
@@ -449,6 +450,19 @@ sourceForm.addEventListener('submit', function(event) {
     }
 
     if (!annualValid || !pfasValid || !maxFlowValid || !checkOther) {
+        return false;
+    } else {
+        return true;
+    }
+
+
+
+}
+
+sourceForm.addEventListener('submit', function(event) {
+
+    let is_valid = validation();
+    if (!is_valid) {
         event.preventDefault();
         alert("Please fix validation errors that exist in the form.")
     } else {
@@ -466,7 +480,27 @@ sourceForm.addEventListener('submit', function(event) {
 
 otherResult.addEventListener("change", () => checkNonZero(otherResult));
 
+// when the "Save as Draft" button is clicked, remove required attribute from all fields, assign a
+// value of "draft" to the draft_complete field, and submit the form
+document.getElementById('save_draft').addEventListener("click", function (event){
 
+    document.querySelectorAll('[required]').
+        forEach(el => el.required = false);
+
+    document.getElementById('draft_complete').value = "draft";
+
+
+    let is_valid = validation();
+    if (!is_valid){
+        event.preventDefault();
+        alert("Please fix validation errors that exist in the form.")
+    } else{
+        loaderContainer.style.display = 'flex';
+        loader.style.display = 'block';
+        sourceForm.submit();
+    }
+
+})
 
 
 
