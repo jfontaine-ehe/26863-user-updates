@@ -484,17 +484,17 @@ otherResult.addEventListener("change", () => checkNonZero(otherResult));
 // value of "draft" to the draft_complete field, and submit the form
 document.getElementById('save_draft').addEventListener("click", function (event){
 
-    document.querySelectorAll('[required]').
-        forEach(el => el.required = false);
-
-    document.getElementById('draft_complete').value = "draft";
-
 
     let is_valid = validation();
     if (!is_valid){
         event.preventDefault();
         alert("Please fix validation errors that exist in the form.")
     } else{
+
+        document.querySelectorAll('[required]').
+        forEach(el => el.required = false);
+        document.getElementById('draft_complete').value = "draft";
+
         loaderContainer.style.display = 'flex';
         loader.style.display = 'block';
         sourceForm.submit();
