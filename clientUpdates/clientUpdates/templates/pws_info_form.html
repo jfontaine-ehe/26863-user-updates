@@ -3,7 +3,7 @@
 
 {% block content %}
 <div>
-    <form id="pwsInfoForm" action="{% if true %}{{action}}{% endif %}" method="post" onSubmit="return confirm('Are you sure you would like to submit this form?')">
+    <form id="pwsInfoForm" action="{% if true %}{{action}}{% endif %}" method="post">
         {% csrf_token %}
 
         <!--Basic PWS Info and Facility Address-->
@@ -11,7 +11,7 @@
         <div class="card-alt" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>General PWS Information</h3>
             <div class="form-group">
-                <label for="ein">Employee Identification Number</label>
+                <label for="ein">Employer Identification Number</label>
                 <input required id="ein" name="ein" type="text" class="form-control" value="{{form.ein.value|default_if_none:''}}">
             </div>
             <div class="form-group">
