@@ -6,6 +6,11 @@ sdwisOwnerCodes = {("L", "L-Local Government"),
                    ("F", "F-Federal Government"),
                    ("unknown", "Unknown")}
 
+sdwisPrivateTypes = {("Private For-Profit Utility", "Private For-Profit Utility"),
+                     ("Nonprofit Utility", "Nonprofit Utility"),
+                     ("Ancillary Utility", "Ancillary Utility"),
+                     ("Other", "Other")}
+
 sdwisFacilityCodes = {("cws", "Community Water System"),
                       ("ntncws", "Non-Transient Non-Community Water System"),
                       ("tncws", "Transient Non-Community Water System"),

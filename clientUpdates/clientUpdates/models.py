@@ -872,6 +872,8 @@ class phase2PwsInfo(models.Model):
     pws_in_usa = models.TextField(blank=True, null=True)
     pws_owned_state_fed = models.TextField(blank=True, null=True)
     sdwis_owner_code = models.TextField(blank=True, null=True)
+    sdwis_private_type = models.TextField(blank=True, null=True)
+    sdwis_statefed_sue = models.TextField(blank=True, null=True)
     sdwis_facility_code = models.TextField(blank=True, null=True)
     sdwis_activity_code = models.TextField(blank=True, null=True)
     pfas_detected_06222023 = models.TextField(blank=True, null=True)

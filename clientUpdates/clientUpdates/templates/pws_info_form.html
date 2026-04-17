@@ -256,6 +256,24 @@
                     {% endfor %}
                 </select>
             </div>
+            <div hidden id="privateCodeDiv" class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
+                <label for="sdwis_private_type" class="tf-label">If the PWS has an owner type code of "P-Private," what is the operation type of the PWS?</label>
+                <select id="sdwis_private_type" name="sdwis_private_type" class="form-select tf-select2">
+                    <option disabled {% if not form.sdwis_private_type.value %} selected {% endif %} value=""></option>
+                    {% for i in sdwisPrivateTypes %}
+                        <option {% if form.sdwis_private_type.value == i.0 %} selected {% endif %} value="{{i.0}}">{{i.1}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div hidden id="stateFedSueDiv" class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
+                <label for="sdwis_statefed_sue" class="tf-label">If the PWS has an owner type code of either "S-State Government" or "F-Federal Government," does the PWS have the authority to sue or be sued in its own name?</label>
+                <select id="sdwis_statefed_sue" name="sdwis_statefed_sue" class="form-select tf-select2">
+                    <option disabled {% if not form.sdwis_statefed_sue.value %} selected {% endif %} value=""></option>
+                    {% for i in yesNo %}
+                        <option {% if form.sdwis_statefed_sue.value == i %} selected {% endif %} value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select>
+            </div>
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between;">
                 <label for="sdwis_facility_code" class="tf-label">What is the PWS Facility Code as listed in SDWIS?</label>
                 <select required id="sdwis_facility_code" name="sdwis_facility_code" class="form-select tf-select2">

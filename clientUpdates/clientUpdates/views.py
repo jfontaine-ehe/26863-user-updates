@@ -749,6 +749,8 @@ def pwsInfoCreate(request):
     return render(request, "pws_info_form.html", {"form": form,
                                                   "stateOptions": us_states.STATE_CHOICES,
                                                   "sdwisOwnerCodes": sdwisOwnerCodes,
+                                                  "sdwisPrivateTypes": sdwisPrivateTypes,
+                                                  "yesNo": yesNo,
                                                   "sdwisFacilityCodes": sdwisFacilityCodes,
                                                   "sdwisActivityCodes": sdwisActivityCodes,
                                                   "action": "/pws-info-create/"})
@@ -784,6 +786,8 @@ def pwsInfoEdit(request, pwsid):
                                                   "stateOptions": us_states.STATE_CHOICES,
                                                   "sdwisOwnerCodes": sdwisOwnerCodes,
                                                   "sdwisFacilityCodes": sdwisFacilityCodes,
+                                                  "sdwisPrivateTypes": sdwisPrivateTypes,
+                                                  "yesNo": yesNo,
                                                   "sdwisActivityCodes": sdwisActivityCodes,
                                                   "action": f"url pws-info-edit {pwsid}"})
 
