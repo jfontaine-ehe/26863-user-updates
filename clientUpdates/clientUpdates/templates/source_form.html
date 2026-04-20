@@ -103,6 +103,23 @@
 
         <!--Hidden divs but will appear based on yes/no responses-->
 
+        <div class="card-alt hidden" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>Operator Clarification</h3>
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
+                <label for="other_operates_source" class="tf-label">Who operates the source?</label>
+                <input id="other_operates_source" name="other_operates_source" class="form-control" type="text" value="{{phase2SourceInfoForm.other_operates_source.value|default_if_none:''}}">
+            </div>
+        </div>
+
+        <div class="card-alt hidden" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
+            <h3>Purchased Water Information</h3>
+            <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
+                <label for="purchased_water_from" class="tf-label">What PWS was water purchased from relative to this source?</label>
+                <input id="purchased_water_from" name="purchased_water_from" class="form-control" type="text" value="{{phase2SourceInfoForm.purchased_water_from.value|default_if_none:''}}">
+            </div>
+        </div>
+
+
         <div id="coOwnerInfo" class="card-alt hidden" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); width:75%; margin:20px auto;">
             <h3>Source Co-Owner Information</h3>
             <div class="form-group">
@@ -518,7 +535,6 @@
                 The concentration entered above must be <span style="font-weight:bold; font-style:italic">higher</span>
                 than the PFOA, PFOS, PFHxS, GenX, PFNA, and PFBS concentrations in the table above.
             </div>
-
             <h4>PFAS File Uploads</h4>
             <div class="form-group">
                 {% for field in pfasFilesForm %}

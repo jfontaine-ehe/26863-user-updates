@@ -174,8 +174,6 @@ function zeroAnnualFlowRates(elem){
             filter(elem => elem.name.endsWith("file_name") || elem.name.endsWith("units"))
         //filter(elem => !elem.name.endsWith("flow_rate") && !/annualflow-([0-9]|1[0-2])-year$/.test(elem.id) && !elem.nam);
 
-    console.log(inputsSelects);
-
     // if the value is zero, disable fields
     if (elem.value !== "" && Number(elem.value) === 0){
         inputsSelects.forEach(e => e.disabled = true)
@@ -228,6 +226,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const sourceTypeSelect = document.getElementById('source_type');
     const sourceTypeOtherDiv = document.getElementById('sourceTypeOther');
     const sourceTypeOther = document.getElementById('source_type_other');
+    const pwsOperator = document.getElementById('pws_operates_source');
+    const otherOperator = document.getElementById('other_operates_source');
     const sourceCoOwned = document.getElementById('source_co_owned');
     const coOwnerInfoDiv = document.getElementById('coOwnerInfo');
     const coOwnerPWSID = document.getElementById('co_owner_pwsid')
@@ -235,27 +235,34 @@ document.addEventListener("DOMContentLoaded", function () {
     const isPartOfIDWS = document.getElementById('is_part_of_idws')
     const idwsExplanationDiv = document.getElementById('idwsExplanation')
     const idwsExplanation = document.getElementById('idws_explanation')
+    const purchasedFrom = document.getElementById('purchased_water_from');
+    const pwsPurchased = document.getElementById('pws_purchased');
 
 
     // create function that toggles whether the 'hidden' class is applied
     function toggleHiddenRequired() {
-        console.log("here");
 
         // True/False Statements
         tf1 = sourceTypeSelect.value === "Other";
-        tf2 = sourceCoOwned.value === "Yes"
-        tf3 = isPartOfIDWS.value === "Yes"
+        tf2 = sourceCoOwned.value === "Yes";
+        tf3 = isPartOfIDWS.value === "Yes";
+        tf4 = pwsOperator.value === "No";
+        tf5 = pwsPurchased.value === "Yes";
 
         // toggle whether the elements are hidden or not
         sourceTypeOtherDiv.classList.toggle("hidden", !tf1);
         coOwnerInfoDiv.classList.toggle("hidden", !tf2);
         idwsExplanationDiv.classList.toggle("hidden", !tf3);
+        otherOperator.parentElement.parentElement.classList.toggle("hidden", !tf4);
+        purchasedFrom.parentElement.parentElement.classList.toggle("hidden", !tf5);
 
         // toggle whether they are required.
         sourceTypeOther.required = tf1;
         coOwnerPWSID.required = tf2;
         coOwnerExplained.required = tf2;
         idwsExplanation.required = tf3;
+        otherOperator.required = tf4;
+        purchasedFrom.required = tf5;
 
     };
 
@@ -266,6 +273,8 @@ document.addEventListener("DOMContentLoaded", function () {
     sourceTypeSelect.addEventListener("change", toggleHiddenRequired);
     sourceCoOwned.addEventListener("change", toggleHiddenRequired);
     isPartOfIDWS.addEventListener("change", toggleHiddenRequired);
+    pwsOperator.addEventListener("change", toggleHiddenRequired);
+    pwsPurchased.addEventListener("change", toggleHiddenRequired);
 
     // when page is first loaded, hide pfas section if necessary based on results
     if (pfasEverTested.value === "No" || pfasDetected.value === "No") {
