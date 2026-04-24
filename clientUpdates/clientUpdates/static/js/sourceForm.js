@@ -44,6 +44,8 @@ const draft_complete = document.getElementById('draft_complete');
 let initPfasFileNames = []
 let initAnnualFileNames = []
 
+const sourceName = document.getElementById('source_name');
+
 // Functions --------------------------------------------------------------------------------------------------------
 
 
@@ -239,12 +241,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const pwsPurchased = document.getElementById('pws_purchased');
 
 
+
     // create function that toggles whether the 'hidden' class is applied
     function toggleHiddenRequired() {
 
         // define variables used more than once
         let detectedDates = Array.from(pfasDetected.parentElement.parentElement.querySelectorAll("div.form-group.grey-bottom")).filter(el => el.querySelector("[id^='detected_b4'], [id^='detected_after']"));
-        console.log(detectedDates);
+
         // True/False Statements
         tf1 = sourceTypeSelect.value === "Other";
         tf2 = sourceCoOwned.value === "Yes";
@@ -252,6 +255,7 @@ document.addEventListener("DOMContentLoaded", function () {
         tf4 = pwsOperator.value === "No";
         tf5 = pwsPurchased.value === "Yes";
         tf6 = pfasDetected.value === "Yes";
+        tf7 = pfasEverTested.value === "Yes";
 
         // toggle whether the elements are hidden or not
         sourceTypeOtherDiv.classList.toggle("hidden", !tf1);
@@ -260,6 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
         otherOperator.parentElement.parentElement.classList.toggle("hidden", !tf4);
         purchasedFrom.parentElement.parentElement.classList.toggle("hidden", !tf5);
         detectedDates.forEach(el => el.classList.toggle("hidden", !tf6));
+        pfasDetected.parentElement.classList.toggle("hidden", !tf7)
 
         // toggle whether they are required.
         sourceTypeOther.required = tf1;
@@ -269,6 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
         otherOperator.required = tf4;
         purchasedFrom.required = tf5;
         detectedDates.forEach(el => el.required = tf6)
+        pfasDetected.required = tf7;
 
     };
 
@@ -282,6 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
     pwsOperator.addEventListener("change", toggleHiddenRequired);
     pwsPurchased.addEventListener("change", toggleHiddenRequired);
     pfasDetected.addEventListener("change", toggleHiddenRequired);
+    pfasEverTested.addEventListener("change", toggleHiddenRequired);
 
     // when page is first loaded, hide pfas section if necessary based on results
     if (pfasEverTested.value === "No" || pfasDetected.value === "No") {
@@ -420,7 +427,7 @@ pfasFiles.forEach(el => addEventListener("change", function(){
 // --------- Do stuff with file validation --------------------------
 
 
-function validation(){
+function validation(complete){
 
     const clearValidationErrors = () => {
         annualErrorDiv.classList.add('hidden');
@@ -434,6 +441,8 @@ function validation(){
 
         otherResultErrorDiv.classList.add('hidden');
         otherResult.classList.remove('is-invalid');
+
+        document.querySelectorAll("[id=sourceNameErrorDiv]").forEach(el => el.remove());
     };
 
     const showValidationError = (inputElement, errorElement) => {
@@ -467,6 +476,20 @@ function validation(){
 
     clearValidationErrors();
 
+    // ensure a source name is provided
+    const assertSourceName = () => {
+        if(sourceName.value === ""){
+            const errorDiv = document.createElement('div');
+            errorDiv.id = "sourceNameErrorDiv";
+            errorDiv.className = 'custom-invalid';
+            errorDiv.textContent = "Please provide a source name.";
+            sourceName.insertAdjacentElement("afterend", errorDiv);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     let annualValid = true;
     annualFiles.forEach(elem => {
         if (elem.checkVisibility() && elem.files.length > 0){
@@ -492,7 +515,7 @@ function validation(){
         }
     }
     // on submit (not save), ensure a filename has been assigned
-    else if(maxFlowFile.files.length===0 && maxFlowFileName.value === "" && draft_complete.value === "complete"){
+    else if(maxFlowFile.files.length===0 && maxFlowFileName.value === "" && complete){
             maxFlowValid = false;
             showValidationError(maxFlowFile, maxFlowErrorDiv);
     }
@@ -504,7 +527,7 @@ function validation(){
         showValidationError(otherResult, otherResultErrorDiv)
     }
 
-    if (!annualValid || !pfasValid || !maxFlowValid || !checkOther) {
+    if (!annualValid || !pfasValid || !maxFlowValid || !checkOther || !assertSourceName()) {
         return false;
     } else {
         return true;
@@ -516,7 +539,7 @@ function validation(){
 
 sourceForm.addEventListener('submit', function(event) {
 
-    let is_valid = validation();
+    let is_valid = validation(true);
     if (!is_valid) {
         event.preventDefault();
         alert("Please fix validation errors that exist in the form.")
@@ -539,8 +562,7 @@ otherResult.addEventListener("change", () => checkNonZero(otherResult));
 // value of "draft" to the draft_complete field, and submit the form
 document.getElementById('save_draft').addEventListener("click", function (event){
 
-
-    let is_valid = validation();
+    let is_valid = validation(false);
     if (!is_valid){
         event.preventDefault();
         alert("Please fix validation errors that exist in the form.")
