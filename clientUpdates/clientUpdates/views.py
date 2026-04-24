@@ -953,6 +953,7 @@ def sourceFormCreate(request):
             "yesNo": yesNo,
             "sourceTypeOptions": sourceTypeOptions,
             "unitOptions": unitOptions,
+            "annualUnitOptions": annualUnitOptions,
             "years": years,
             "otherAnalytes": otherAnalytes,
             "action": "/source-form-create/"
@@ -1108,6 +1109,7 @@ def sourceFormEdit(request, pwsid, source_name):
                 "yesNo": yesNo,
                 "sourceTypeOptions": sourceTypeOptions,
                 "unitOptions": unitOptions,
+                "annualUnitOptions": annualUnitOptions,
                 "years": years,
                 "otherAnalytes": otherAnalytes,
                 "action": f"url source-form-edit {pwsid} {source_name}",

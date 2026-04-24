@@ -30,6 +30,8 @@ sourceTypeOptions = {("GW", "Groundwater Well"), ("SW", "Surface Water"), ("Othe
 unitOptions = {("GPM", "GPM (Gallons Per Minute)"), ("GPY", "GPY (Gallons Per Year)"),
                ("MGD", "MGD (Million Gallons Per Day)"), ("AFPY", "AFPY (Acre-feet Per Year)")}
 
+annualUnitOptions = {("GPY", "GPY (Gallons Per Year)"), ("AFPY", "AFPY (Acre-feet Per Year)"), ("MGY", "MGY (Million Gallons Per Year)"), ("MGD", "MGD (Million Gallons Per Day)")}
+
 pfasAnalytes = ("PFOA", "PFOS", "PFHxS", "GenX", "PFNA", "PFBS")
 
 # pfasUnits = {("ug/L", "ug/L (ppb)"),

@@ -251,7 +251,7 @@
                         <td class="label-center" style="width:15%">
                             <select required id="{{form.units.html_name}}" name="{{form.units.html_name}}" class="form-select">
                                 <option disabled {% if not form.units.value %} selected {% endif %} value=""></option>
-                                    {% for option in unitOptions %}
+                                    {% for option in annualUnitOptions %}
                                         <option {% if form.units.value == option.0 %} selected {% endif %} value="{{option.0}}">{{option.1}}</option>
                                     {% endfor %}
                             </select>
