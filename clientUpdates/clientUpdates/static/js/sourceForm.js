@@ -25,9 +25,9 @@ const maxFlowFile = document.getElementById('maxFlowFile');
 const submitButton = document.getElementById('final-submit');
 const loaderContainer = document.getElementById('loader-container');
 const loader = document.getElementById('loader');
-const pfasFormElem = Array.from(document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]')).filter(el => !el.id.startsWith("pfas-6"));
+const pfasFormElem = Array.from(document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="sample_date"], [id$="file_name"]')).filter(el => !el.id.startsWith("pfas-6"));
 
-const allPfasFormElem = document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="units"], [id$="sample_date"], [id$="file_name"]');
+const allPfasFormElem = document.getElementById('pfasResultsDiv').querySelectorAll('[id$="analyte"], [id$="units"], [id$="result"], [id$="sample_date"], [id$="file_name"]');
 const otherResult = document.getElementById('pfas-6-result');
 
 const annualErrorDiv = document.getElementById('annualErrorDiv');
@@ -242,12 +242,16 @@ document.addEventListener("DOMContentLoaded", function () {
     // create function that toggles whether the 'hidden' class is applied
     function toggleHiddenRequired() {
 
+        // define variables used more than once
+        let detectedDates = Array.from(pfasDetected.parentElement.parentElement.querySelectorAll("div.form-group.grey-bottom")).filter(el => el.querySelector("[id^='detected_b4'], [id^='detected_after']"));
+        console.log(detectedDates);
         // True/False Statements
         tf1 = sourceTypeSelect.value === "Other";
         tf2 = sourceCoOwned.value === "Yes";
         tf3 = isPartOfIDWS.value === "Yes";
         tf4 = pwsOperator.value === "No";
         tf5 = pwsPurchased.value === "Yes";
+        tf6 = pfasDetected.value === "Yes";
 
         // toggle whether the elements are hidden or not
         sourceTypeOtherDiv.classList.toggle("hidden", !tf1);
@@ -255,6 +259,7 @@ document.addEventListener("DOMContentLoaded", function () {
         idwsExplanationDiv.classList.toggle("hidden", !tf3);
         otherOperator.parentElement.parentElement.classList.toggle("hidden", !tf4);
         purchasedFrom.parentElement.parentElement.classList.toggle("hidden", !tf5);
+        detectedDates.forEach(el => el.classList.toggle("hidden", !tf6));
 
         // toggle whether they are required.
         sourceTypeOther.required = tf1;
@@ -263,6 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
         idwsExplanation.required = tf3;
         otherOperator.required = tf4;
         purchasedFrom.required = tf5;
+        detectedDates.forEach(el => el.required = tf6)
 
     };
 
@@ -275,6 +281,7 @@ document.addEventListener("DOMContentLoaded", function () {
     isPartOfIDWS.addEventListener("change", toggleHiddenRequired);
     pwsOperator.addEventListener("change", toggleHiddenRequired);
     pwsPurchased.addEventListener("change", toggleHiddenRequired);
+    pfasDetected.addEventListener("change", toggleHiddenRequired);
 
     // when page is first loaded, hide pfas section if necessary based on results
     if (pfasEverTested.value === "No" || pfasDetected.value === "No") {
@@ -327,13 +334,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // when editing an existing form, make the fileList variable load file names that are
     // present in the selectors when page is first loaded. Populate the file list in the
     // selectors
-
     updateFileList(annualFiles, annualFileNameList, initAnnualFileNames);
     renderFileNames(annualFileSelectors, annualFileNameList);
     updateFileList(pfasFiles, pfasFileNameList, initPfasFileNames);
     renderFileNames(pfasFileSelectors, pfasFileNameList);
-
-
 
 
 });
@@ -345,9 +349,10 @@ pfasEverTested.addEventListener("change", function (e) {
     if(pfasEverTested.value === "No" || (pfasEverTested.value === "Yes" && pfasDetected.value === "No")){
         pfasResultsDiv.classList.add('hidden');
         pfasCommentsDiv.classList.add('hidden');
+        console.log(allPfasFormElem);
         allPfasFormElem.forEach(elem => elem.required = false);
         allPfasFormElem.forEach(el => {
-            if (!/pfas-[0-5]-(analyte)$/.test(el.id) || el.endsWith("units")) {
+            if (!/pfas-[0-5]-(analyte)$/.test(el.id) && !el.id.endsWith("units")) {
                 clearValues(el);
             }
         });
@@ -369,7 +374,7 @@ pfasDetected.addEventListener("change", function (e) {
         pfasCommentsDiv.classList.add('hidden');
         allPfasFormElem.forEach(elem => elem.required = false);
         allPfasFormElem.forEach(el => {
-            if (!/pfas-[0-5]-(analyte)$/.test(el.id) || el.endsWith("units")) {
+            if (!/pfas-[0-5]-(analyte)$/.test(el.id) && !el.id.endsWith("units")) {
                 clearValues(el);
             }
         });

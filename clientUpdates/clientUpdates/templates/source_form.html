@@ -115,7 +115,7 @@
             <h3>Purchased Water Information</h3>
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
                 <label for="purchased_water_from" class="tf-label">What PWS was water purchased from relative to this source?</label>
-                <input id="purchased_water_from" name="purchased_water_from" class="form-control" type="text" value="{{phase2SourceInfoForm.purchased_water_from.value|default_if_none:''}}">
+                <input id="purchased_water_from" name="purchased_water_from" class="form-control" style="width:20%" type="text" value="{{phase2SourceInfoForm.purchased_water_from.value|default_if_none:''}}">
             </div>
         </div>
 
@@ -339,7 +339,7 @@
             </div>
 
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
-                <label for="pfas_detected" class="tf-label">For any testing of PFAS that has been conducted for this Water Source, has there ever been any Measureable Concentrations (detections) of PFAS?</label>
+                <label for="pfas_detected" class="tf-label">For any testing of PFAS that has been conducted for this Water Source, has there ever been any Measurable Concentrations (detections) of PFAS?</label>
                 <select required id="pfas_detected" name="pfas_detected" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.pfas_detected.value %} selected {% endif %} value=""></option>
                     {% for option in yesNo %}
@@ -349,7 +349,7 @@
             </div>
 
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
-                <label for="detected_b4_jun2223" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS on or before June 22, 2023?</label>
+                <label for="detected_b4_jun2223" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS <b>on or before</b> June 22, 2023?</label>
                 <select required id="detected_b4_jun2223" name="detected_b4_jun2223" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.detected_b4_jun2223.value %} selected {% endif %} value=""></option>
                     {% for option in yesNo %}
@@ -359,7 +359,7 @@
             </div>
 
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
-                <label for="detected_after_jun2223" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS on or before June 22, 2023?</label>
+                <label for="detected_after_jun2223" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS <b>after</b> June 22, 2023?</label>
                 <select required id="detected_after_jun2223" name="detected_after_jun2223" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.detected_after_jun2223.value %} selected {% endif %} value=""></option>
                     {% for option in yesNo %}
@@ -369,7 +369,7 @@
             </div>
 
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
-                <label for="detected_b4_jun3023" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS on or before June 22, 2023?</label>
+                <label for="detected_b4_jun3023" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS <b>on or before</b> June 30, 2023?</label>
                 <select required id="detected_b4_jun3023" name="detected_b4_jun3023" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.detected_b4_jun3023.value %} selected {% endif %} value=""></option>
                     {% for option in yesNo %}
@@ -379,7 +379,7 @@
             </div>
 
             <div class="form-group grey-bottom" style="display:flex; justify-content:space-between; border-bottom: 2px solid rgba(210, 210, 210, 0.5);">
-                <label for="detected_after_jun3023" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS on or before June 22, 2023?</label>
+                <label for="detected_after_jun3023" class="tf-label">Was this Water Source tested or otherwise analyzed for PFAS and found to contain any Measurable Concentration of PFAS <b>after</b> June 30, 2023?</label>
                 <select required id="detected_after_jun3023" name="detected_after_jun3023" class="form-select tf-select">
                     <option disabled {% if not phase2SourceInfoForm.detected_after_jun3023.value %} selected {% endif %} value=""></option>
                     {% for option in yesNo %}
