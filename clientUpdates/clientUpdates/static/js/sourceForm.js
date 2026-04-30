@@ -291,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function () {
     pfasEverTested.addEventListener("change", toggleHiddenRequired);
 
     // when page is first loaded, hide pfas section if necessary based on results
-    if (pfasEverTested.value === "No" || pfasDetected.value === "No") {
+    if (pfasEverTested.value !== "Yes" || pfasDetected.value !== "Yes") {
         pfasResultsDiv.classList.add('hidden');
         pfasCommentsDiv.classList.add('hidden');
         allPfasFormElem.forEach(elem => elem.required = false);
@@ -319,22 +319,18 @@ document.addEventListener("DOMContentLoaded", function () {
     })
 
     if (/edit/.test(sourceForm.action)){
-        console.log("logic worked")
         pfasFileSelectors.forEach(el => {
             let fileName = el.value;
-            console.log("fileName: ", fileName);
             if(initPfasFileNames.indexOf(fileName) === -1 && fileName !== "") {
                 initPfasFileNames.push(el.value)
             }
         });
-        console.log(initPfasFileNames);
         annualFileSelectors.forEach(el => {
             let fileName = el.value;
             if(initAnnualFileNames.indexOf(fileName) === -1 && fileName !== "") {
                 initAnnualFileNames.push(el.value)
             }
         });
-        console.log(initAnnualFileNames);
     }
 
 
@@ -356,7 +352,6 @@ pfasEverTested.addEventListener("change", function (e) {
     if(pfasEverTested.value === "No" || (pfasEverTested.value === "Yes" && pfasDetected.value === "No")){
         pfasResultsDiv.classList.add('hidden');
         pfasCommentsDiv.classList.add('hidden');
-        console.log(allPfasFormElem);
         allPfasFormElem.forEach(elem => elem.required = false);
         allPfasFormElem.forEach(el => {
             if (!/pfas-[0-5]-(analyte)$/.test(el.id) && !el.id.endsWith("units")) {
