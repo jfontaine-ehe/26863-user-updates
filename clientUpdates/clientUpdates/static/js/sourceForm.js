@@ -45,6 +45,9 @@ let initPfasFileNames = []
 let initAnnualFileNames = []
 
 const sourceName = document.getElementById('source_name');
+const initialSourceValue = document.getElementById('source_name').value;
+// define variables used more than once
+let detectedDates = Array.from(pfasDetected.parentElement.parentElement.querySelectorAll("div.form-group.grey-bottom")).filter(el => el.querySelector("[id^='detected_b4'], [id^='detected_after']"));
 
 // Functions --------------------------------------------------------------------------------------------------------
 
@@ -185,11 +188,6 @@ function zeroAnnualFlowRates(elem){
 }
 
 
-
-
-
-
-
 // clear values
 function clearValues(el){
     if (el.tagName === "SELECT") {
@@ -245,9 +243,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // create function that toggles whether the 'hidden' class is applied
     function toggleHiddenRequired() {
 
-        // define variables used more than once
-        let detectedDates = Array.from(pfasDetected.parentElement.parentElement.querySelectorAll("div.form-group.grey-bottom")).filter(el => el.querySelector("[id^='detected_b4'], [id^='detected_after']"));
-
         // True/False Statements
         tf1 = sourceTypeSelect.value === "Other";
         tf2 = sourceCoOwned.value === "Yes";
@@ -263,6 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
         idwsExplanationDiv.classList.toggle("hidden", !tf3);
         otherOperator.parentElement.parentElement.classList.toggle("hidden", !tf4);
         purchasedFrom.parentElement.parentElement.classList.toggle("hidden", !tf5);
+        // hide divs related to detection dates
         detectedDates.forEach(el => el.classList.toggle("hidden", !tf6));
         pfasDetected.parentElement.classList.toggle("hidden", !tf7)
 
@@ -273,7 +269,8 @@ document.addEventListener("DOMContentLoaded", function () {
         idwsExplanation.required = tf3;
         otherOperator.required = tf4;
         purchasedFrom.required = tf5;
-        detectedDates.forEach(el => el.required = tf6)
+        // toggle required attribute for inputs within detected date divs
+        detectedDates.forEach(el => el.querySelector("[id^='detected_b4'], [id^='detected_after']").required = tf6)
         pfasDetected.required = tf7;
 
     };
@@ -471,8 +468,14 @@ function validation(complete){
 
     clearValidationErrors();
 
-    // ensure a source name is provided
+    // ensure a unique source name is provided
     const assertSourceName = () => {
+        const items = document.querySelectorAll("#source-names li");
+        const sourceSet = new Set(Array.from(items).map(li => li.textContent));
+        // delete the inital source value if it exist. This is part of checking for duplicate source names
+        sourceSet.delete(initialSourceValue);
+        console.log(initialSourceValue);
+
         if(sourceName.value === ""){
             const errorDiv = document.createElement('div');
             errorDiv.id = "sourceNameErrorDiv";
@@ -480,10 +483,22 @@ function validation(complete){
             errorDiv.textContent = "Please provide a source name.";
             sourceName.insertAdjacentElement("afterend", errorDiv);
             return false;
-        } else {
+        }
+        else if (sourceSet.has(sourceName.value)) {
+            const errorDiv = document.createElement('div');
+            errorDiv.id = "sourceNameErrorDiv";
+            errorDiv.className = 'custom-invalid';
+            errorDiv.textContent = "This source name already exists. Please provide a unique source name.";
+            sourceName.insertAdjacentElement("afterend", errorDiv);
+            return false;
+        }
+
+        else {
             return true;
         }
+
     }
+
 
     let annualValid = true;
     annualFiles.forEach(elem => {
