@@ -79,7 +79,7 @@ function renderFileNames(selectorList, fileNameList) {
         const defaultOption = document.createElement("option");
         defaultOption.value = "";
         defaultOption.textContent = "Select a file";
-        defaultOption.disabled = true;
+        //defaultOption.disabled = true;
         // set default option only if the currently selected value is not in the fileNameList
         defaultOption.selected = fileNameList.indexOf(selected) === -1;
         elem.appendChild(defaultOption);
