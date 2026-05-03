@@ -321,6 +321,7 @@ function validation(complete){
     };
 
     const showValidationError = (inputElement, errorElement) => {
+        console.log(errorElement);
         if (errorElement) {
             errorElement.classList.remove('hidden')
         }
@@ -406,10 +407,10 @@ function validation(complete){
             maxFlowValid = false;
         }
     }
-    // on submit (not save), ensure a filename has been assigned
+    //on submit (not save), ensure a filename has been assigned
     else if(maxFlowFile.files.length===0 && maxFlowFileName.value === "" && complete){
-            maxFlowValid = false;
-            showValidationError(maxFlowFile, maxFlowErrorDiv);
+        maxFlowValid = false;
+        showValidationError(maxFlowFile, maxFlowErrorDiv);
     }
 
     // if a non-zero value was entered for the 'other' pfas result, make sure that it is higher
@@ -565,6 +566,17 @@ sourceForm.addEventListener('submit', function(event) {
 
 // apply the checkNonZero function to the otherResult element
 otherResult.addEventListener("change", () => checkNonZero(otherResult));
+
+
+
+
+
+
+
+
+
+
+
 
 // when the "Save as Draft" button is clicked, remove required attribute from all fields, assign a
 // value of "draft" to the draft_complete field, and submit the form
