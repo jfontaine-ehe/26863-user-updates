@@ -49,7 +49,7 @@ const initialSourceValue = document.getElementById('source_name').value;
 
 let detectedDatesDivs = Array.from(pfasDetected.parentElement.parentElement.querySelectorAll("div.form-group.grey-bottom")).filter(el => el.querySelector("[id^='detected_b4'], [id^='detected_after']"));
 let detectedDateInputs = Array.from(document.querySelectorAll("[id^='detected_b4'], [id^='detected_after']"))
-console.log(detectedDateInputs);
+
 const sourceTypeSelect = document.getElementById('source_type');
 const sourceTypeOtherDiv = document.getElementById('sourceTypeOther');
 const sourceTypeOther = document.getElementById('source_type_other');
@@ -66,6 +66,7 @@ const purchasedFrom = document.getElementById('purchased_water_from');
 const pwsPurchased = document.getElementById('pws_purchased');
 // Functions --------------------------------------------------------------------------------------------------------
 
+// render file name options in a given set of selectors
 function renderFileNames(selectorList, fileNameList) {
    selectorList.forEach(elem => {
 
@@ -96,7 +97,7 @@ function renderFileNames(selectorList, fileNameList) {
    });
 };
 
-
+// add a new file input
 function addFiles(button, nodeList) {
     button.addEventListener("click", function () {
         let nearest = Array.from(nodeList).find(elem => elem.classList.contains('hidden'));
@@ -106,6 +107,7 @@ function addFiles(button, nodeList) {
     });
 }
 
+// delete file input when clicked, re-render file names if necessary
 function deleteButtons(deleteButtonList, fileNameList, selectorList){
     deleteButtonList.forEach(elem => {
         elem.addEventListener("click", function () {
@@ -141,6 +143,7 @@ function deleteButtons(deleteButtonList, fileNameList, selectorList){
     });
 };
 
+// a function that updates a given filelist
 function updateFileList(inputList, fileNameList, initList){
     // clear the array
     fileNameList.length = 0;
@@ -182,6 +185,8 @@ function zeroPfasResults(elem){
     }
 }
 
+// determine form logic when zeroes are entered for annual
+// flow rates
 function zeroAnnualFlowRates(elem){
 
     // get closest row
@@ -222,6 +227,7 @@ function checkNonZero(node) {
     }
 }
 
+// check if the other analyte is higher than the rest
 function checkOtherHigher(){
 
     let pfas6Results = Array.from(pfasResults).filter(el => el.id !== 'pfas-6-result')
@@ -234,7 +240,6 @@ function checkOtherHigher(){
 
 // conditionally hide pfas section, and whether the pfas section is required, based on
 // the pfas detection question
-
 function showRequirePFASResultsSection() {
 
     let canShow = pfasEverTested.value === "Yes" && pfasDetected.value === "Yes"
@@ -251,44 +256,9 @@ function showRequirePFASResultsSection() {
 
 }
 
-
-// Do Stuff -----------------------------------------------------------------------------------------------------------
-
-// functions to run when page is loaded
-document.addEventListener("DOMContentLoaded", function () {
-
-    // function toggleHiddenRequired2(el, check, target) {
-    //
-    //     let elValue = el.value;
-    //     let isMatch = elValue === check;
-    //     const targetElements = target instanceof Element ? [target] : Array.from(target);
-    //     targetElements.forEach(tar => {
-    //         tar.classList.toggle("hidden", !isMatch);
-    //         tar.required = isMatch;
-    //         if (!isMatch){clearValues(tar)}
-    //     })
-    //
-    // }
-
-    // function toggleRequired(el, check, target) {
-    //
-    //     let elValue = el.value;
-    //     let isMatch = elValue === check;
-    //     const targetElements = target instanceof Element ? [target] : Array.from(target);
-    //     targetElements.forEach(tar => {
-    //         tar.required = isMatch;
-    //     })
-    //
-    // }
-
-    // toggleHiddenRequired2(sourceTypeSelect, "Other", sourceTypeOther)
-    // toggleHiddenRequired2(sourceCoOwned, "Yes", coOwnerPWSID)
-    // toggleHiddenRequired2(isPartOfIDWS, "Yes", idwsExplanationDiv)
-
-
-
-    // create function that toggles whether the 'hidden' class is applied
-    function toggleHiddenRequired() {
+// create function that toggles whether the 'hidden' class is applied and
+// whether the 'required' attribute is applied for different questions
+function toggleHiddenRequired() {
 
         // True/False Statements
         tf1 = sourceTypeSelect.value === "Other";
@@ -330,159 +300,7 @@ document.addEventListener("DOMContentLoaded", function () {
         detectedDateInputs.forEach(el => {if(!tf6){clearValues(el)}});
         if(!tf7){clearValues(pfasDetected)}
 
-
-
-    };
-
-    // once the page is loaded, trigger the function to hide/show based on value
-    toggleHiddenRequired();
-
-    // apply function any time there are changes
-    sourceTypeSelect.addEventListener("change", toggleHiddenRequired);
-    sourceCoOwned.addEventListener("change", toggleHiddenRequired);
-    isPartOfIDWS.addEventListener("change", toggleHiddenRequired);
-    pwsOperator.addEventListener("change", toggleHiddenRequired);
-    pwsPurchased.addEventListener("change", toggleHiddenRequired);
-    pfasDetected.addEventListener("change", toggleHiddenRequired);
-    pfasEverTested.addEventListener("change", toggleHiddenRequired);
-
-
-    // when page is first loaded, hide pfas section if necessary based on results
-    showRequirePFASResultsSection()
-
-    // when results of pfasEverTested or pfasDetected change, apply function that
-    // determines if the PFAS Results Section should be hidden/required
-    pfasEverTested.addEventListener("change", showRequirePFASResultsSection)
-    pfasDetected.addEventListener("change", showRequirePFASResultsSection)
-
-    // when page first loads, determine whether form fields should be disabled
-    // based on whether they have a zero result value
-    pfasResults.forEach(elem => zeroPfasResults(elem));
-    annualFlowRates.forEach(elem => zeroAnnualFlowRates(elem));
-
-    // when page first loads, determine whether form field is required based on
-    // whether a non zero result was entered
-    checkNonZero(otherResult);
-
-    maxFlowFile.addEventListener("change", function () {
-
-        if (maxFlowFile.files.length > 0) {
-            maxFlowFileName.value = maxFlowFile.files[0].name
-        } else{
-           maxFlowFileName.value = "";
-        }
-        // console.log("change");
-        // maxFlowFileName.value = maxFlowFile.files[0].name ? maxFlowFile.files[0].name : "";
-
-    })
-
-    if (/edit/.test(sourceForm.action)){
-        pfasFileSelectors.forEach(el => {
-            let fileName = el.value;
-            if(initPfasFileNames.indexOf(fileName) === -1 && fileName !== "") {
-                initPfasFileNames.push(el.value)
-            }
-        });
-        annualFileSelectors.forEach(el => {
-            let fileName = el.value;
-            if(initAnnualFileNames.indexOf(fileName) === -1 && fileName !== "") {
-                initAnnualFileNames.push(el.value)
-            }
-        });
-    }
-
-
-    // when editing an existing form, make the fileList variable load file names that are
-    // present in the selectors when page is first loaded. Populate the file list in the
-    // selectors
-    updateFileList(annualFiles, annualFileNameList, initAnnualFileNames);
-    renderFileNames(annualFileSelectors, annualFileNameList);
-    updateFileList(pfasFiles, pfasFileNameList, initPfasFileNames);
-    renderFileNames(pfasFileSelectors, pfasFileNameList);
-
-
-});
-
-
-
-
-
-// pfasEverTested.addEventListener("change", function (e) {
-//
-//     if(pfasEverTested.value !== "Yes")
-//
-//     if(pfasEverTested.value === "No" || (pfasEverTested.value === "Yes" && pfasDetected.value === "No")){
-//         pfasResultsDiv.classList.add('hidden');
-//         pfasCommentsDiv.classList.add('hidden');
-//         allPfasFormElem.forEach(elem => elem.required = false);
-//         allPfasFormElem.forEach(el => {
-//             if (!/pfas-[0-5]-(analyte)$/.test(el.id) && !el.id.endsWith("units")) {
-//                 clearValues(el);
-//             }
-//         });
-//
-//     } else {
-//         pfasResultsDiv.classList.remove('hidden');
-//         pfasCommentsDiv.classList.remove('hidden');
-//         pfasFormElem.forEach(elem => elem.required = true);
-//     }
-//
-// })
-
-// conditionally hide pfas section, and whether the pfas section is required, based on
-// the pfas detection question
-// pfasDetected.addEventListener("change", function (e) {
-//
-//     if(pfasDetected.value === "No" || (pfasDetected.value === "Yes" && pfasEverTested.value === "No")){
-//         pfasResultsDiv.classList.add('hidden');
-//         pfasCommentsDiv.classList.add('hidden');
-//         allPfasFormElem.forEach(elem => elem.required = false);
-//         allPfasFormElem.forEach(el => {
-//             if (!/pfas-[0-5]-(analyte)$/.test(el.id) && !el.id.endsWith("units")) {
-//                 clearValues(el);
-//             }
-//         });
-//     } else {
-//         pfasResultsDiv.classList.remove('hidden');
-//         pfasCommentsDiv.classList.remove('hidden');
-//         pfasFormElem.forEach(elem => elem.required = true);
-//     }
-//
-// })
-
-// attach zeroPfasResults function to pfasResults on change
-pfasResults.forEach(elem => addEventListener("change", function () {
-    zeroPfasResults(elem);
-}))
-
-// attach zeroAnnualFlowRates function to annualFlowRates on change
-annualFlowRates.forEach(elem => addEventListener("change", function () {
-    zeroAnnualFlowRates(elem);
-}))
-
-
-addFiles(annualAddFileButton, annualFileDivs);
-addFiles(pfasAddFileButton, pfasFileDivs);
-deleteButtons(annualDeleteButtons, annualFileNameList, annualFileSelectors);
-deleteButtons(pfasDeleteButtons, pfasFileNameList, pfasFileSelectors);
-
-annualFiles.forEach(el => addEventListener("change", function(){
-
-    updateFileList(annualFiles, annualFileNameList, initAnnualFileNames)
-    renderFileNames(annualFileSelectors, annualFileNameList);
-
-}));
-
-pfasFiles.forEach(el => addEventListener("change", function(){
-
-    updateFileList(pfasFiles, pfasFileNameList, initPfasFileNames)
-    renderFileNames(pfasFileSelectors, pfasFileNameList);
-
-}))
-
-
-// --------- Do stuff with file validation --------------------------
-
+};
 
 function validation(complete){
 
@@ -539,7 +357,6 @@ function validation(complete){
         const sourceSet = new Set(Array.from(items).map(li => li.textContent));
         // delete the inital source value if it exist. This is part of checking for duplicate source names
         sourceSet.delete(initialSourceValue);
-        console.log(initialSourceValue);
 
         if(sourceName.value === ""){
             const errorDiv = document.createElement('div');
@@ -612,9 +429,127 @@ function validation(complete){
 
 }
 
+// Do Stuff -----------------------------------------------------------------------------------------------------------
+
+// functions to run when page is loaded
+document.addEventListener("DOMContentLoaded", function () {
+
+    // once the page is loaded, trigger the function to hide/show based on value
+    toggleHiddenRequired();
+
+    // apply function any time there are changes
+    sourceTypeSelect.addEventListener("change", toggleHiddenRequired);
+    sourceCoOwned.addEventListener("change", toggleHiddenRequired);
+    isPartOfIDWS.addEventListener("change", toggleHiddenRequired);
+    pwsOperator.addEventListener("change", toggleHiddenRequired);
+    pwsPurchased.addEventListener("change", toggleHiddenRequired);
+    pfasDetected.addEventListener("change", toggleHiddenRequired);
+    pfasEverTested.addEventListener("change", toggleHiddenRequired);
+
+
+    // when page is first loaded, hide pfas section if necessary based on results
+    showRequirePFASResultsSection()
+
+    // when results of pfasEverTested or pfasDetected change, apply function that
+    // determines if the PFAS Results Section should be hidden/required
+    pfasEverTested.addEventListener("change", showRequirePFASResultsSection)
+    pfasDetected.addEventListener("change", showRequirePFASResultsSection)
+
+    // when page first loads, determine whether form fields should be disabled
+    // based on whether they have a zero result value
+    pfasResults.forEach(elem => zeroPfasResults(elem));
+    annualFlowRates.forEach(elem => zeroAnnualFlowRates(elem));
+
+    // when page first loads, determine whether form field is required based on
+    // whether a non zero result was entered
+    checkNonZero(otherResult);
+
+    // assign value to the maxFlowFileName element based on input change
+    maxFlowFile.addEventListener("change", function () {
+
+        if (maxFlowFile.files.length > 0) {
+            maxFlowFileName.value = maxFlowFile.files[0].name
+        } else{
+           maxFlowFileName.value = "";
+        }
+
+    })
+
+    // when a user edits a form, establish the file names that were already
+    // associated
+    if (/edit/.test(sourceForm.action)){
+        pfasFileSelectors.forEach(el => {
+            let fileName = el.value;
+            if(initPfasFileNames.indexOf(fileName) === -1 && fileName !== "") {
+                initPfasFileNames.push(el.value)
+            }
+        });
+        annualFileSelectors.forEach(el => {
+            let fileName = el.value;
+            if(initAnnualFileNames.indexOf(fileName) === -1 && fileName !== "") {
+                initAnnualFileNames.push(el.value)
+            }
+        });
+    }
+
+
+    // when editing an existing form, make the fileList variable load file names that are
+    // present in the selectors when page is first loaded. Populate the file list in the
+    // selectors
+    updateFileList(annualFiles, annualFileNameList, initAnnualFileNames);
+    renderFileNames(annualFileSelectors, annualFileNameList);
+    updateFileList(pfasFiles, pfasFileNameList, initPfasFileNames);
+    renderFileNames(pfasFileSelectors, pfasFileNameList);
+
+
+});
+
+
+// attach zeroPfasResults function to pfasResults on change
+pfasResults.forEach(elem => addEventListener("change", function () {
+    zeroPfasResults(elem);
+}))
+
+// attach zeroAnnualFlowRates function to annualFlowRates on change
+annualFlowRates.forEach(elem => addEventListener("change", function () {
+    zeroAnnualFlowRates(elem);
+}))
+
+// allow the appearance of new file inputs for annual flow file uploads
+addFiles(annualAddFileButton, annualFileDivs);
+// allow the appearance of new file inputs for pfas file uploads
+addFiles(pfasAddFileButton, pfasFileDivs);
+// allow the ability to delete file inputs for annual file uploads
+deleteButtons(annualDeleteButtons, annualFileNameList, annualFileSelectors);
+// allow the ability to delete file inputs for pfas file uploads
+deleteButtons(pfasDeleteButtons, pfasFileNameList, pfasFileSelectors);
+
+
+// whenever a file input changes for the annual flow file uploads, update the associated file list and update
+// the associated selector elements
+annualFiles.forEach(el => addEventListener("change", function(){
+
+    updateFileList(annualFiles, annualFileNameList, initAnnualFileNames)
+    renderFileNames(annualFileSelectors, annualFileNameList);
+
+}));
+
+// whenever a file input changes for the PFAS file uploads, update the associated file list and update
+// the associated selector elements
+pfasFiles.forEach(el => addEventListener("change", function(){
+
+    updateFileList(pfasFiles, pfasFileNameList, initPfasFileNames)
+    renderFileNames(pfasFileSelectors, pfasFileNameList);
+
+}))
+
+
+// what to do when the form is submitted
 sourceForm.addEventListener('submit', function(event) {
 
+    // check validation
     let is_valid = validation(true);
+    // if validation is false, preven default and have user address errors
     if (!is_valid) {
         event.preventDefault();
         alert("Please fix validation errors that exist in the form.")
@@ -629,8 +564,7 @@ sourceForm.addEventListener('submit', function(event) {
 
 });
 
-// Continue to do other stuff -----------------------------------------------------------------------------------
-
+// apply the checkNonZero function to the otherResult element
 otherResult.addEventListener("change", () => checkNonZero(otherResult));
 
 // when the "Save as Draft" button is clicked, remove required attribute from all fields, assign a
