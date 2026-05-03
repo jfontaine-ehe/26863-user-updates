@@ -245,7 +245,7 @@ function showRequirePFASResultsSection() {
     let canShow = pfasEverTested.value === "Yes" && pfasDetected.value === "Yes"
     pfasResultsDiv.classList.toggle("hidden", !canShow);
     pfasCommentsDiv.classList.toggle("hidden", !canShow);
-    allPfasFormElem.forEach(el => el.required = canShow);
+    pfasFormElem.forEach(el => el.required = canShow);
     if (!canShow){
         allPfasFormElem.forEach(el => {
             if (!/pfas-[0-5]-(analyte)$/.test(el.id) && !el.id.endsWith("units")) {
