@@ -46,11 +46,25 @@ let initAnnualFileNames = []
 
 const sourceName = document.getElementById('source_name');
 const initialSourceValue = document.getElementById('source_name').value;
-// define variables used more than once
-let detectedDates = Array.from(pfasDetected.parentElement.parentElement.querySelectorAll("div.form-group.grey-bottom")).filter(el => el.querySelector("[id^='detected_b4'], [id^='detected_after']"));
 
+let detectedDatesDivs = Array.from(pfasDetected.parentElement.parentElement.querySelectorAll("div.form-group.grey-bottom")).filter(el => el.querySelector("[id^='detected_b4'], [id^='detected_after']"));
+let detectedDateInputs = Array.from(document.querySelectorAll("[id^='detected_b4'], [id^='detected_after']"))
+console.log(detectedDateInputs);
+const sourceTypeSelect = document.getElementById('source_type');
+const sourceTypeOtherDiv = document.getElementById('sourceTypeOther');
+const sourceTypeOther = document.getElementById('source_type_other');
+const pwsOperator = document.getElementById('pws_operates_source');
+const otherOperator = document.getElementById('other_operates_source');
+const sourceCoOwned = document.getElementById('source_co_owned');
+const coOwnerInfoDiv = document.getElementById('coOwnerInfo');
+const coOwnerPWSID = document.getElementById('co_owner_pwsid')
+const coOwnerExplained = document.getElementById('co_owner_explained')
+const isPartOfIDWS = document.getElementById('is_part_of_idws')
+const idwsExplanationDiv = document.getElementById('idwsExplanation')
+const idwsExplanation = document.getElementById('idws_explanation')
+const purchasedFrom = document.getElementById('purchased_water_from');
+const pwsPurchased = document.getElementById('pws_purchased');
 // Functions --------------------------------------------------------------------------------------------------------
-
 
 function renderFileNames(selectorList, fileNameList) {
    selectorList.forEach(elem => {
@@ -218,25 +232,58 @@ function checkOtherHigher(){
 
 }
 
+// conditionally hide pfas section, and whether the pfas section is required, based on
+// the pfas detection question
+
+function showRequirePFASResultsSection() {
+
+    let canShow = pfasEverTested.value === "Yes" && pfasDetected.value === "Yes"
+    pfasResultsDiv.classList.toggle("hidden", !canShow);
+    pfasCommentsDiv.classList.toggle("hidden", !canShow);
+    allPfasFormElem.forEach(el => el.required = canShow);
+    if (!canShow){
+        allPfasFormElem.forEach(el => {
+            if (!/pfas-[0-5]-(analyte)$/.test(el.id) && !el.id.endsWith("units")) {
+                clearValues(el);
+            }
+        });
+    }
+
+}
+
 
 // Do Stuff -----------------------------------------------------------------------------------------------------------
 
 // functions to run when page is loaded
 document.addEventListener("DOMContentLoaded", function () {
-    const sourceTypeSelect = document.getElementById('source_type');
-    const sourceTypeOtherDiv = document.getElementById('sourceTypeOther');
-    const sourceTypeOther = document.getElementById('source_type_other');
-    const pwsOperator = document.getElementById('pws_operates_source');
-    const otherOperator = document.getElementById('other_operates_source');
-    const sourceCoOwned = document.getElementById('source_co_owned');
-    const coOwnerInfoDiv = document.getElementById('coOwnerInfo');
-    const coOwnerPWSID = document.getElementById('co_owner_pwsid')
-    const coOwnerExplained = document.getElementById('co_owner_explained')
-    const isPartOfIDWS = document.getElementById('is_part_of_idws')
-    const idwsExplanationDiv = document.getElementById('idwsExplanation')
-    const idwsExplanation = document.getElementById('idws_explanation')
-    const purchasedFrom = document.getElementById('purchased_water_from');
-    const pwsPurchased = document.getElementById('pws_purchased');
+
+    // function toggleHiddenRequired2(el, check, target) {
+    //
+    //     let elValue = el.value;
+    //     let isMatch = elValue === check;
+    //     const targetElements = target instanceof Element ? [target] : Array.from(target);
+    //     targetElements.forEach(tar => {
+    //         tar.classList.toggle("hidden", !isMatch);
+    //         tar.required = isMatch;
+    //         if (!isMatch){clearValues(tar)}
+    //     })
+    //
+    // }
+
+    // function toggleRequired(el, check, target) {
+    //
+    //     let elValue = el.value;
+    //     let isMatch = elValue === check;
+    //     const targetElements = target instanceof Element ? [target] : Array.from(target);
+    //     targetElements.forEach(tar => {
+    //         tar.required = isMatch;
+    //     })
+    //
+    // }
+
+    // toggleHiddenRequired2(sourceTypeSelect, "Other", sourceTypeOther)
+    // toggleHiddenRequired2(sourceCoOwned, "Yes", coOwnerPWSID)
+    // toggleHiddenRequired2(isPartOfIDWS, "Yes", idwsExplanationDiv)
 
 
 
@@ -259,7 +306,7 @@ document.addEventListener("DOMContentLoaded", function () {
         otherOperator.parentElement.parentElement.classList.toggle("hidden", !tf4);
         purchasedFrom.parentElement.parentElement.classList.toggle("hidden", !tf5);
         // hide divs related to detection dates
-        detectedDates.forEach(el => el.classList.toggle("hidden", !tf6));
+        detectedDatesDivs.forEach(el => el.classList.toggle("hidden", !tf6));
         pfasDetected.parentElement.classList.toggle("hidden", !tf7)
 
         // toggle whether they are required.
@@ -270,8 +317,20 @@ document.addEventListener("DOMContentLoaded", function () {
         otherOperator.required = tf4;
         purchasedFrom.required = tf5;
         // toggle required attribute for inputs within detected date divs
-        detectedDates.forEach(el => el.querySelector("[id^='detected_b4'], [id^='detected_after']").required = tf6)
+        detectedDateInputs.forEach(el => el.required = tf6);
         pfasDetected.required = tf7;
+
+
+        // toggle whether values should be cleared
+        if(!tf1){clearValues(sourceTypeOther)}
+        if(!tf2){clearValues(coOwnerPWSID); clearValues(coOwnerExplained)}
+        if(!tf3){clearValues(idwsExplanation)}
+        if(!tf4){clearValues(otherOperator)}
+        if(!tf5){clearValues(purchasedFrom)}
+        detectedDateInputs.forEach(el => {if(!tf6){clearValues(el)}});
+        if(!tf7){clearValues(pfasDetected)}
+
+
 
     };
 
@@ -287,12 +346,14 @@ document.addEventListener("DOMContentLoaded", function () {
     pfasDetected.addEventListener("change", toggleHiddenRequired);
     pfasEverTested.addEventListener("change", toggleHiddenRequired);
 
+
     // when page is first loaded, hide pfas section if necessary based on results
-    if (pfasEverTested.value !== "Yes" || pfasDetected.value !== "Yes") {
-        pfasResultsDiv.classList.add('hidden');
-        pfasCommentsDiv.classList.add('hidden');
-        allPfasFormElem.forEach(elem => elem.required = false);
-    }
+    showRequirePFASResultsSection()
+
+    // when results of pfasEverTested or pfasDetected change, apply function that
+    // determines if the PFAS Results Section should be hidden/required
+    pfasEverTested.addEventListener("change", showRequirePFASResultsSection)
+    pfasDetected.addEventListener("change", showRequirePFASResultsSection)
 
     // when page first loads, determine whether form fields should be disabled
     // based on whether they have a zero result value
@@ -342,48 +403,52 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
+
+
+
+
+// pfasEverTested.addEventListener("change", function (e) {
+//
+//     if(pfasEverTested.value !== "Yes")
+//
+//     if(pfasEverTested.value === "No" || (pfasEverTested.value === "Yes" && pfasDetected.value === "No")){
+//         pfasResultsDiv.classList.add('hidden');
+//         pfasCommentsDiv.classList.add('hidden');
+//         allPfasFormElem.forEach(elem => elem.required = false);
+//         allPfasFormElem.forEach(el => {
+//             if (!/pfas-[0-5]-(analyte)$/.test(el.id) && !el.id.endsWith("units")) {
+//                 clearValues(el);
+//             }
+//         });
+//
+//     } else {
+//         pfasResultsDiv.classList.remove('hidden');
+//         pfasCommentsDiv.classList.remove('hidden');
+//         pfasFormElem.forEach(elem => elem.required = true);
+//     }
+//
+// })
+
 // conditionally hide pfas section, and whether the pfas section is required, based on
 // the pfas detection question
-pfasEverTested.addEventListener("change", function (e) {
-
-    if(pfasEverTested.value === "No" || (pfasEverTested.value === "Yes" && pfasDetected.value === "No")){
-        pfasResultsDiv.classList.add('hidden');
-        pfasCommentsDiv.classList.add('hidden');
-        allPfasFormElem.forEach(elem => elem.required = false);
-        allPfasFormElem.forEach(el => {
-            if (!/pfas-[0-5]-(analyte)$/.test(el.id) && !el.id.endsWith("units")) {
-                clearValues(el);
-            }
-        });
-
-    } else {
-        pfasResultsDiv.classList.remove('hidden');
-        pfasCommentsDiv.classList.remove('hidden');
-        pfasFormElem.forEach(elem => elem.required = true);
-    }
-
-})
-
-// conditionally hide pfas section, and whether the pfas section is required, based on
-// the pfas detection question
-pfasDetected.addEventListener("change", function (e) {
-
-    if(pfasDetected.value === "No" || (pfasDetected.value === "Yes" && pfasEverTested.value === "No")){
-        pfasResultsDiv.classList.add('hidden');
-        pfasCommentsDiv.classList.add('hidden');
-        allPfasFormElem.forEach(elem => elem.required = false);
-        allPfasFormElem.forEach(el => {
-            if (!/pfas-[0-5]-(analyte)$/.test(el.id) && !el.id.endsWith("units")) {
-                clearValues(el);
-            }
-        });
-    } else {
-        pfasResultsDiv.classList.remove('hidden');
-        pfasCommentsDiv.classList.remove('hidden');
-        pfasFormElem.forEach(elem => elem.required = true);
-    }
-
-})
+// pfasDetected.addEventListener("change", function (e) {
+//
+//     if(pfasDetected.value === "No" || (pfasDetected.value === "Yes" && pfasEverTested.value === "No")){
+//         pfasResultsDiv.classList.add('hidden');
+//         pfasCommentsDiv.classList.add('hidden');
+//         allPfasFormElem.forEach(elem => elem.required = false);
+//         allPfasFormElem.forEach(el => {
+//             if (!/pfas-[0-5]-(analyte)$/.test(el.id) && !el.id.endsWith("units")) {
+//                 clearValues(el);
+//             }
+//         });
+//     } else {
+//         pfasResultsDiv.classList.remove('hidden');
+//         pfasCommentsDiv.classList.remove('hidden');
+//         pfasFormElem.forEach(elem => elem.required = true);
+//     }
+//
+// })
 
 // attach zeroPfasResults function to pfasResults on change
 pfasResults.forEach(elem => addEventListener("change", function () {
