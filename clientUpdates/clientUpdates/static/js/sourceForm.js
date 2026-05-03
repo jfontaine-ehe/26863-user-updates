@@ -501,7 +501,6 @@ document.addEventListener("DOMContentLoaded", function () {
     updateFileList(pfasFiles, pfasFileNameList, initPfasFileNames);
     renderFileNames(pfasFileSelectors, pfasFileNameList);
 
-
 });
 
 
